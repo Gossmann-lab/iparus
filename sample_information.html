@@ -1,0 +1,1921 @@
+
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Sample Information</title>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+        <style>
+            body { padding: 20px; background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+            .container-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
+            h3 { color: #1e293b; margin-bottom: 20px; font-weight: 600; font-size: 1.4rem; border-bottom: 2px solid #e2e8f0; padding-bottom: 15px; }
+
+            /* استایل جدول */
+            table.dataTable thead th { background-color: #1e293b; color: white; padding: 12px; font-weight: 500; white-space: nowrap; border-bottom: none; }
+            table.dataTable tbody td { vertical-align: middle; color: #334155; white-space: nowrap; font-size: 0.95rem; }
+
+            /* استایل لینک‌های NCBI */
+            .ncbi-link { color: #2563eb; text-decoration: none; font-weight: 500; }
+            .ncbi-link:hover { text-decoration: underline; color: #1d4ed8; }
+
+            /* استایل بج‌ها */
+            .badge-custom { background: #f1f5f9; padding: 4px 10px; border-radius: 12px; font-size: 0.85em; font-weight: 500; color: #475569; border: 1px solid #cbd5e1; }
+        </style>
+    </head>
+    <body>
+        <div class="container-box">
+            <h3>📊 Detailed Metadata & Sample Information</h3>
+            <div style="width: 100%;">
+                <table class="dataframe table table-hover table-bordered nowrap">
+  <thead>
+    <tr style="text-align: right;">
+      <th>sample_name</th>
+      <th>file_name</th>
+      <th>SRA_accession</th>
+      <th>SRA_acc_2nd_run</th>
+      <th>sampling_location</th>
+      <th>latitude</th>
+      <th>longitude</th>
+      <th>sex</th>
+      <th>tissue</th>
+      <th>avg_coverage</th>
+      <th>publication</th>
+      <th>file_size_gb</th>
+      <th>species</th>
+      <th>comments</th>
+      <th>sra_internal_id</th>
+      <th>experiment_accessions</th>
+      <th>sample_accessions</th>
+      <th>project_accessions</th>
+      <th>bioproject_id</th>
+      <th>biosample_id</th>
+      <th>biosample_accession</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>3918</td>
+      <td>SRR1793405_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793405" target="_blank" class="ncbi-link">SRR1793405</a></td>
+      <td>-</td>
+      <td>Yanbian, Sichuan</td>
+      <td>26.473056</td>
+      <td>101.599167</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.34536</td>
+      <td>Qu et al. 2015</td>
+      <td>5.726426</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242865</td>
+      <td>SRX868846</td>
+      <td>SRS839646</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333188</td>
+      <td>SAMN03333188</td>
+    </tr>
+    <tr>
+      <td>4000</td>
+      <td>SRR1793406_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793406" target="_blank" class="ncbi-link">SRR1793406</a></td>
+      <td>-</td>
+      <td>Yanbian, Sichuan</td>
+      <td>24.980833</td>
+      <td>98.739167</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.51657</td>
+      <td>Qu et al. 2015</td>
+      <td>5.857670</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242867</td>
+      <td>SRX868848</td>
+      <td>SRS839647</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333189</td>
+      <td>SAMN03333189</td>
+    </tr>
+    <tr>
+      <td>5226</td>
+      <td>SRR1793407_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793407" target="_blank" class="ncbi-link">SRR1793407</a></td>
+      <td>-</td>
+      <td>Gaoligong, Yunnan</td>
+      <td>24.980833</td>
+      <td>98.739167</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>5.31888</td>
+      <td>Qu et al. 2015</td>
+      <td>6.475792</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242871</td>
+      <td>SRX868852</td>
+      <td>SRS839649</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333190</td>
+      <td>SAMN03333190</td>
+    </tr>
+    <tr>
+      <td>5236</td>
+      <td>SRR1793415_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793415" target="_blank" class="ncbi-link">SRR1793415</a></td>
+      <td>-</td>
+      <td>Gaoligong, Yunnan</td>
+      <td>24.980833</td>
+      <td>98.739167</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>5.36531</td>
+      <td>Qu et al. 2015</td>
+      <td>6.633108</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242877</td>
+      <td>SRX868858</td>
+      <td>SRS839651</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333191</td>
+      <td>SAMN03333191</td>
+    </tr>
+    <tr>
+      <td>5242</td>
+      <td>SRR1793417_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793417" target="_blank" class="ncbi-link">SRR1793417</a></td>
+      <td>-</td>
+      <td>Gaoligong, Yunnan</td>
+      <td>24.980833</td>
+      <td>98.739167</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>5.70718</td>
+      <td>Qu et al. 2015</td>
+      <td>6.874896</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242879</td>
+      <td>SRX868860</td>
+      <td>SRS839652</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333192</td>
+      <td>SAMN03333192</td>
+    </tr>
+    <tr>
+      <td>5332</td>
+      <td>SRR1793419_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793419" target="_blank" class="ncbi-link">SRR1793419</a></td>
+      <td>-</td>
+      <td>Gaoligong, Yunnan</td>
+      <td>24.980833</td>
+      <td>98.739167</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>5.03692</td>
+      <td>Qu et al. 2015</td>
+      <td>6.189879</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242880</td>
+      <td>SRX868861</td>
+      <td>SRS839653</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333193</td>
+      <td>SAMN03333193</td>
+    </tr>
+    <tr>
+      <td>5333</td>
+      <td>SRR1793420_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793420" target="_blank" class="ncbi-link">SRR1793420</a></td>
+      <td>-</td>
+      <td>Gaoligong, Yunnan</td>
+      <td>24.980833</td>
+      <td>98.739167</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.50167</td>
+      <td>Qu et al. 2015</td>
+      <td>5.879192</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242881</td>
+      <td>SRX868862</td>
+      <td>SRS839654</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333194</td>
+      <td>SAMN03333194</td>
+    </tr>
+    <tr>
+      <td>13924</td>
+      <td>SRR1793421_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793421" target="_blank" class="ncbi-link">SRR1793421</a></td>
+      <td>-</td>
+      <td>Lijiang, Yunnan</td>
+      <td>27.1</td>
+      <td>100.07</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.13705</td>
+      <td>Qu et al. 2015</td>
+      <td>5.816903</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242882</td>
+      <td>SRX868863</td>
+      <td>SRS839655</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333195</td>
+      <td>SAMN03333195</td>
+    </tr>
+    <tr>
+      <td>13938</td>
+      <td>SRR1793422_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793422" target="_blank" class="ncbi-link">SRR1793422</a></td>
+      <td>-</td>
+      <td>Lijiang, Yunnan</td>
+      <td>27.1</td>
+      <td>100.07</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.77562</td>
+      <td>Qu et al. 2015</td>
+      <td>5.920144</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242883</td>
+      <td>SRX868864</td>
+      <td>SRS839656</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333196</td>
+      <td>SAMN03333196</td>
+    </tr>
+    <tr>
+      <td>13995</td>
+      <td>SRR1793423_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793423" target="_blank" class="ncbi-link">SRR1793423</a></td>
+      <td>-</td>
+      <td>Lijiang, Yunnan</td>
+      <td>27.1</td>
+      <td>100.07</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.20065</td>
+      <td>Qu et al. 2015</td>
+      <td>5.624591</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242884</td>
+      <td>SRX868865</td>
+      <td>SRS839657</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333197</td>
+      <td>SAMN03333197</td>
+    </tr>
+    <tr>
+      <td>13996</td>
+      <td>SRR1793424_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793424" target="_blank" class="ncbi-link">SRR1793424</a></td>
+      <td>-</td>
+      <td>Lijiang, Yunnan</td>
+      <td>27.1</td>
+      <td>100.07</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.04565</td>
+      <td>Qu et al. 2015</td>
+      <td>5.351611</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242885</td>
+      <td>SRX868866</td>
+      <td>SRS839658</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333198</td>
+      <td>SAMN03333198</td>
+    </tr>
+    <tr>
+      <td>11555</td>
+      <td>SRR1793425_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793425" target="_blank" class="ncbi-link">SRR1793425</a></td>
+      <td>-</td>
+      <td>Eerguna, Inner Mongolia</td>
+      <td>51.973611</td>
+      <td>120.550556</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.92886</td>
+      <td>Qu et al. 2015</td>
+      <td>6.009417</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>1242886</td>
+      <td>SRX868867</td>
+      <td>SRS839659</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333199</td>
+      <td>SAMN03333199</td>
+    </tr>
+    <tr>
+      <td>11556</td>
+      <td>SRR1793427_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793427" target="_blank" class="ncbi-link">SRR1793427</a></td>
+      <td>-</td>
+      <td>Eerguna, Inner Mongolia</td>
+      <td>51.973611</td>
+      <td>120.550556</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>5.26981</td>
+      <td>Qu et al. 2015</td>
+      <td>6.813901</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>1242887</td>
+      <td>SRX868868</td>
+      <td>SRS839660</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333200</td>
+      <td>SAMN03333200</td>
+    </tr>
+    <tr>
+      <td>11557</td>
+      <td>SRR1793428_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793428" target="_blank" class="ncbi-link">SRR1793428</a></td>
+      <td>-</td>
+      <td>Eerguna, Inner Mongolia</td>
+      <td>51.973611</td>
+      <td>120.550556</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>5.05083</td>
+      <td>Qu et al. 2015</td>
+      <td>6.353468</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>1242888</td>
+      <td>SRX868869</td>
+      <td>SRS839661</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333201</td>
+      <td>SAMN03333201</td>
+    </tr>
+    <tr>
+      <td>11564</td>
+      <td>SRR1793429_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793429" target="_blank" class="ncbi-link">SRR1793429</a></td>
+      <td>-</td>
+      <td>Eerguna, Inner Mongolia</td>
+      <td>51.973611</td>
+      <td>120.550556</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>3.95867</td>
+      <td>Qu et al. 2015</td>
+      <td>5.277837</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>1242889</td>
+      <td>SRX868870</td>
+      <td>SRS839662</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333202</td>
+      <td>SAMN03333202</td>
+    </tr>
+    <tr>
+      <td>15078</td>
+      <td>SRR1793430_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793430" target="_blank" class="ncbi-link">SRR1793430</a></td>
+      <td>-</td>
+      <td>Teshig, Mongolia</td>
+      <td>50.238056</td>
+      <td>103.282222</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.68295</td>
+      <td>Qu et al. 2015</td>
+      <td>5.909874</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>1242890</td>
+      <td>SRX868871</td>
+      <td>SRS839663</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333203</td>
+      <td>SAMN03333203</td>
+    </tr>
+    <tr>
+      <td>15081</td>
+      <td>SRR1793431_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793431" target="_blank" class="ncbi-link">SRR1793431</a></td>
+      <td>-</td>
+      <td>Teshig, Mongolia</td>
+      <td>50.238056</td>
+      <td>103.282222</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>5.26341</td>
+      <td>Qu et al. 2015</td>
+      <td>6.821630</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>1242891</td>
+      <td>SRX868872</td>
+      <td>SRS839664</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333204</td>
+      <td>SAMN03333204</td>
+    </tr>
+    <tr>
+      <td>15100</td>
+      <td>SRR1793432_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793432" target="_blank" class="ncbi-link">SRR1793432</a></td>
+      <td>-</td>
+      <td>Tushig, Mongolia</td>
+      <td>50.520556</td>
+      <td>105.003056</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.36959</td>
+      <td>Qu et al. 2015</td>
+      <td>5.885731</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>1242892</td>
+      <td>SRX868873</td>
+      <td>SRS839665</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333205</td>
+      <td>SAMN03333205</td>
+    </tr>
+    <tr>
+      <td>15110</td>
+      <td>SRR1793433_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793433" target="_blank" class="ncbi-link">SRR1793433</a></td>
+      <td>-</td>
+      <td>Tushig, Mongolia</td>
+      <td>50.520556</td>
+      <td>105.003056</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.20124</td>
+      <td>Qu et al. 2015</td>
+      <td>5.734132</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>1242893</td>
+      <td>SRX868874</td>
+      <td>SRS839666</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333206</td>
+      <td>SAMN03333206</td>
+    </tr>
+    <tr>
+      <td>15111</td>
+      <td>SRR1793434_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793434" target="_blank" class="ncbi-link">SRR1793434</a></td>
+      <td>-</td>
+      <td>Tushig, Mongolia</td>
+      <td>50.520556</td>
+      <td>105.003056</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.21799</td>
+      <td>Qu et al. 2015</td>
+      <td>5.846332</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>1242894</td>
+      <td>SRX868875</td>
+      <td>SRS839667</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333207</td>
+      <td>SAMN03333207</td>
+    </tr>
+    <tr>
+      <td>17252</td>
+      <td>SRR1793435_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793435" target="_blank" class="ncbi-link">SRR1793435</a></td>
+      <td>-</td>
+      <td>Altai Region, Russia</td>
+      <td>52.0575</td>
+      <td>86.106389</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.94130</td>
+      <td>Qu et al. 2015</td>
+      <td>6.326963</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>1242895</td>
+      <td>SRX868876</td>
+      <td>SRS839668</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333208</td>
+      <td>SAMN03333208</td>
+    </tr>
+    <tr>
+      <td>8204</td>
+      <td>SRR1793436_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793436" target="_blank" class="ncbi-link">SRR1793436</a></td>
+      <td>-</td>
+      <td>Shennongjia, Hubei</td>
+      <td>31.88</td>
+      <td>110.92</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.66487</td>
+      <td>Qu et al. 2015</td>
+      <td>6.304960</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242896</td>
+      <td>SRX868877</td>
+      <td>SRS839669</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333209</td>
+      <td>SAMN03333209</td>
+    </tr>
+    <tr>
+      <td>8236</td>
+      <td>SRR1793437_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793437" target="_blank" class="ncbi-link">SRR1793437</a></td>
+      <td>-</td>
+      <td>Shennongjia, Hubei</td>
+      <td>31.88</td>
+      <td>110.92</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.79634</td>
+      <td>Qu et al. 2015</td>
+      <td>6.004684</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242897</td>
+      <td>SRX868878</td>
+      <td>SRS839670</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333210</td>
+      <td>SAMN03333210</td>
+    </tr>
+    <tr>
+      <td>10076</td>
+      <td>SRR1793438_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793438" target="_blank" class="ncbi-link">SRR1793438</a></td>
+      <td>-</td>
+      <td>Jixi, Anhui</td>
+      <td>30.2</td>
+      <td>115.54</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>5.07124</td>
+      <td>Qu et al. 2015</td>
+      <td>6.275785</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242898</td>
+      <td>SRX868879</td>
+      <td>SRS839671</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333211</td>
+      <td>SAMN03333211</td>
+    </tr>
+    <tr>
+      <td>10635</td>
+      <td>SRR1793439_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793439" target="_blank" class="ncbi-link">SRR1793439</a></td>
+      <td>-</td>
+      <td>Panjin, Liaoning</td>
+      <td>40.653333</td>
+      <td>121.460556</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.97934</td>
+      <td>Qu et al. 2015</td>
+      <td>6.282971</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242899</td>
+      <td>SRX868880</td>
+      <td>SRS839672</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333212</td>
+      <td>SAMN03333212</td>
+    </tr>
+    <tr>
+      <td>10636</td>
+      <td>SRR1793440_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793440" target="_blank" class="ncbi-link">SRR1793440</a></td>
+      <td>-</td>
+      <td>Panjin, Liaoning</td>
+      <td>40.653333</td>
+      <td>121.460556</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.50727</td>
+      <td>Qu et al. 2015</td>
+      <td>6.042420</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242900</td>
+      <td>SRX868881</td>
+      <td>SRS839673</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333213</td>
+      <td>SAMN03333213</td>
+    </tr>
+    <tr>
+      <td>10637</td>
+      <td>SRR1793441_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793441" target="_blank" class="ncbi-link">SRR1793441</a></td>
+      <td>-</td>
+      <td>Panjin, Liaoning</td>
+      <td>40.653333</td>
+      <td>121.460556</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.70569</td>
+      <td>Qu et al. 2015</td>
+      <td>6.459961</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242901</td>
+      <td>SRX868882</td>
+      <td>SRS839674</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333214</td>
+      <td>SAMN03333214</td>
+    </tr>
+    <tr>
+      <td>10732</td>
+      <td>SRR1793442_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793442" target="_blank" class="ncbi-link">SRR1793442</a></td>
+      <td>-</td>
+      <td>Kuandian, Liaoning</td>
+      <td>40.985</td>
+      <td>125.425556</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>3.85130</td>
+      <td>Qu et al. 2015</td>
+      <td>5.208526</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242902</td>
+      <td>SRX868883</td>
+      <td>SRS839675</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333215</td>
+      <td>SAMN03333215</td>
+    </tr>
+    <tr>
+      <td>10860</td>
+      <td>SRR1793443_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793443" target="_blank" class="ncbi-link">SRR1793443</a></td>
+      <td>-</td>
+      <td>Kuandian, Liaoning</td>
+      <td>40.985</td>
+      <td>125.425556</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.22157</td>
+      <td>Qu et al. 2015</td>
+      <td>5.882843</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242903</td>
+      <td>SRX868884</td>
+      <td>SRS839676</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333216</td>
+      <td>SAMN03333216</td>
+    </tr>
+    <tr>
+      <td>11929</td>
+      <td>SRR1793444_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793444" target="_blank" class="ncbi-link">SRR1793444</a></td>
+      <td>-</td>
+      <td>Sunan, Gansu</td>
+      <td>37.839722</td>
+      <td>102.012778</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.87307</td>
+      <td>Qu et al. 2015</td>
+      <td>6.548645</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242904</td>
+      <td>SRX868885</td>
+      <td>SRS839677</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333217</td>
+      <td>SAMN03333217</td>
+    </tr>
+    <tr>
+      <td>11944</td>
+      <td>SRR1793445_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793445" target="_blank" class="ncbi-link">SRR1793445</a></td>
+      <td>-</td>
+      <td>Sunan, Gansu</td>
+      <td>37.839722</td>
+      <td>102.012778</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.90501</td>
+      <td>Qu et al. 2015</td>
+      <td>6.484256</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242905</td>
+      <td>SRX868886</td>
+      <td>SRS839678</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333218</td>
+      <td>SAMN03333218</td>
+    </tr>
+    <tr>
+      <td>12003</td>
+      <td>SRR1793447_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR1793447" target="_blank" class="ncbi-link">SRR1793447</a></td>
+      <td>-</td>
+      <td>Yongdeng, Gansu</td>
+      <td>36.685556</td>
+      <td>102.736667</td>
+      <td>-</td>
+      <td>muscle</td>
+      <td>4.73453</td>
+      <td>Qu et al. 2015</td>
+      <td>6.347140</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>1242906</td>
+      <td>SRX868887</td>
+      <td>SRS839679</td>
+      <td>SRP053341</td>
+      <td>PRJNA274877</td>
+      <td>SAMN03333219</td>
+      <td>SAMN03333219</td>
+    </tr>
+    <tr>
+      <td>1198</td>
+      <td>SRR2961328_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961328" target="_blank" class="ncbi-link">SRR2961328</a></td>
+      <td>SRR2961673</td>
+      <td>Vienna, Austria</td>
+      <td>48.06</td>
+      <td>15.91</td>
+      <td><span class="badge-custom">Female</span></td>
+      <td>blood</td>
+      <td>14.37270</td>
+      <td>Laine et al. 2016</td>
+      <td>18.154703</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052016</td>
+      <td>SRX1452605</td>
+      <td>SRS1180333</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296347</td>
+      <td>SAMN04296347</td>
+    </tr>
+    <tr>
+      <td>973</td>
+      <td>SRR2961671_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961671" target="_blank" class="ncbi-link">SRR2961671</a></td>
+      <td>SRR2961672</td>
+      <td>Antwerp, Belgium</td>
+      <td>51.16</td>
+      <td>4.29</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>9.19169</td>
+      <td>Laine et al. 2016</td>
+      <td>11.718549</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052275</td>
+      <td>SRX1452864</td>
+      <td>SRS1180558</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296348</td>
+      <td>SAMN04296348</td>
+    </tr>
+    <tr>
+      <td>477</td>
+      <td>SRR2961674_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961674" target="_blank" class="ncbi-link">SRR2961674</a></td>
+      <td>SRR2961675</td>
+      <td>Cambridge, UK</td>
+      <td>52.24</td>
+      <td>-0.14</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>8.09247</td>
+      <td>Laine et al. 2016</td>
+      <td>10.390314</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052276</td>
+      <td>SRX1452865</td>
+      <td>SRS1180559</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296349</td>
+      <td>SAMN04296349</td>
+    </tr>
+    <tr>
+      <td>935</td>
+      <td>SRR2961676_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961676" target="_blank" class="ncbi-link">SRR2961676</a></td>
+      <td>SRR2961677</td>
+      <td>Pirio/Muro, Corsica</td>
+      <td>42.22</td>
+      <td>8.45</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>10.30880</td>
+      <td>Laine et al. 2016</td>
+      <td>11.569120</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052277</td>
+      <td>SRX1452866</td>
+      <td>SRS1180560</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296350</td>
+      <td>SAMN04296350</td>
+    </tr>
+    <tr>
+      <td>52</td>
+      <td>SRR2961678_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961678" target="_blank" class="ncbi-link">SRR2961678</a></td>
+      <td>SRR2961679</td>
+      <td>Velky Kosr, Czech Republic</td>
+      <td>49.32</td>
+      <td>17.04</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>6.83910</td>
+      <td>Laine et al. 2016</td>
+      <td>8.040349</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052278</td>
+      <td>SRX1452867</td>
+      <td>SRS1180561</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296351</td>
+      <td>SAMN04296351</td>
+    </tr>
+    <tr>
+      <td>731</td>
+      <td>SRR2961680_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961680" target="_blank" class="ncbi-link">SRR2961680</a></td>
+      <td>SRR2961681</td>
+      <td>Tartu, Estonia</td>
+      <td>58.07</td>
+      <td>25.05</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>14.92750</td>
+      <td>Laine et al. 2016</td>
+      <td>16.678124</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052281</td>
+      <td>SRX1452870</td>
+      <td>SRS1180564</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296352</td>
+      <td>SAMN04296352</td>
+    </tr>
+    <tr>
+      <td>770</td>
+      <td>SRR2961684_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961684" target="_blank" class="ncbi-link">SRR2961684</a></td>
+      <td>SRR2961687</td>
+      <td>Tartu, Estonia</td>
+      <td>58.07</td>
+      <td>25.05</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>6.69489</td>
+      <td>Laine et al. 2016</td>
+      <td>7.429218</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052282</td>
+      <td>SRX1452871</td>
+      <td>SRS1180565</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296353</td>
+      <td>SAMN04296353</td>
+    </tr>
+    <tr>
+      <td>317</td>
+      <td>SRR2961689_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961689" target="_blank" class="ncbi-link">SRR2961689</a></td>
+      <td>SRR2961690</td>
+      <td>Oulu, Finland</td>
+      <td>65.0</td>
+      <td>25.3</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>13.90100</td>
+      <td>Laine et al. 2016</td>
+      <td>15.636177</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052283</td>
+      <td>SRX1452872</td>
+      <td>SRS1180567</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296354</td>
+      <td>SAMN04296354</td>
+    </tr>
+    <tr>
+      <td>896</td>
+      <td>SRR2961695_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961695" target="_blank" class="ncbi-link">SRR2961695</a></td>
+      <td>SRR2961696</td>
+      <td>La Rouviere, France</td>
+      <td>43.4</td>
+      <td>3.4</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>9.13526</td>
+      <td>Laine et al. 2016</td>
+      <td>11.836886</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052284</td>
+      <td>SRX1452873</td>
+      <td>SRS1180566</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296355</td>
+      <td>SAMN04296355</td>
+    </tr>
+    <tr>
+      <td>233</td>
+      <td>SRR2961697_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961697" target="_blank" class="ncbi-link">SRR2961697</a></td>
+      <td>SRR2961698</td>
+      <td>Montpellier, France</td>
+      <td>43.37</td>
+      <td>3.52</td>
+      <td><span class="badge-custom">Female</span></td>
+      <td>blood</td>
+      <td>11.32450</td>
+      <td>Laine et al. 2016</td>
+      <td>14.979545</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052285</td>
+      <td>SRX1452874</td>
+      <td>SRS1180568</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296356</td>
+      <td>SAMN04296356</td>
+    </tr>
+    <tr>
+      <td>906</td>
+      <td>SRR2961699_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961699" target="_blank" class="ncbi-link">SRR2961699</a></td>
+      <td>SRR2961700</td>
+      <td>La Rouviere, France</td>
+      <td>43.4</td>
+      <td>3.4</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>6.94818</td>
+      <td>Laine et al. 2016</td>
+      <td>8.269685</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052286</td>
+      <td>SRX1452875</td>
+      <td>SRS1180569</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296357</td>
+      <td>SAMN04296357</td>
+    </tr>
+    <tr>
+      <td>823</td>
+      <td>SRR2961701_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961701" target="_blank" class="ncbi-link">SRR2961701</a></td>
+      <td>SRR2961704</td>
+      <td>Seewisen, Germany</td>
+      <td>47.99</td>
+      <td>11.35</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>9.04726</td>
+      <td>Laine et al. 2016</td>
+      <td>10.370439</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052287</td>
+      <td>SRX1452876</td>
+      <td>SRS1180570</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296358</td>
+      <td>SAMN04296358</td>
+    </tr>
+    <tr>
+      <td>11</td>
+      <td>SRR2961712_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961712" target="_blank" class="ncbi-link">SRR2961712</a></td>
+      <td>-</td>
+      <td>Pilis Mountains, Hungary</td>
+      <td>47.43</td>
+      <td>19.1</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>9.49017</td>
+      <td>Laine et al. 2016</td>
+      <td>10.576755</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>2052290</td>
+      <td>SRX1452879</td>
+      <td>SRS1180580</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296359</td>
+      <td>SAMN04296359</td>
+    </tr>
+    <tr>
+      <td>1387</td>
+      <td>SRR2961716_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961716" target="_blank" class="ncbi-link">SRR2961716</a></td>
+      <td>SRR2961717</td>
+      <td>Tromso, Norway</td>
+      <td>69.2</td>
+      <td>19.34</td>
+      <td><span class="badge-custom">Female</span></td>
+      <td>blood</td>
+      <td>11.53070</td>
+      <td>Laine et al. 2016</td>
+      <td>14.860327</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052301</td>
+      <td>SRX1452890</td>
+      <td>SRS1180583</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296360</td>
+      <td>SAMN04296360</td>
+    </tr>
+    <tr>
+      <td>1376</td>
+      <td>SRR2961718_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961718" target="_blank" class="ncbi-link">SRR2961718</a></td>
+      <td>SRR2961719</td>
+      <td>Groblas, Poland</td>
+      <td>50.06</td>
+      <td>20.25</td>
+      <td><span class="badge-custom">Female</span></td>
+      <td>blood</td>
+      <td>4.79463</td>
+      <td>Laine et al. 2016</td>
+      <td>6.305111</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052302</td>
+      <td>SRX1452891</td>
+      <td>SRS1180584</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296361</td>
+      <td>SAMN04296361</td>
+    </tr>
+    <tr>
+      <td>235</td>
+      <td>SRR2961722_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961722" target="_blank" class="ncbi-link">SRR2961722</a></td>
+      <td>SRR2961723</td>
+      <td>Loch Lomond, Scotland</td>
+      <td>56.08</td>
+      <td>-4.37</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>9.09326</td>
+      <td>Laine et al. 2016</td>
+      <td>10.251605</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052305</td>
+      <td>SRX1452894</td>
+      <td>SRS1180587</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296362</td>
+      <td>SAMN04296362</td>
+    </tr>
+    <tr>
+      <td>1280</td>
+      <td>SRR2961725_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961725" target="_blank" class="ncbi-link">SRR2961725</a></td>
+      <td>SRR2961727</td>
+      <td>Mariola, Spain</td>
+      <td>38.44</td>
+      <td>-0.33</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>6.91358</td>
+      <td>Laine et al. 2016</td>
+      <td>8.971415</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052308</td>
+      <td>SRX1452897</td>
+      <td>SRS1180590</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296363</td>
+      <td>SAMN04296363</td>
+    </tr>
+    <tr>
+      <td>1235</td>
+      <td>SRR2961728_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961728" target="_blank" class="ncbi-link">SRR2961728</a></td>
+      <td>SRR2961729</td>
+      <td>Font Roja, Spain</td>
+      <td>38.39</td>
+      <td>-0.32</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>8.41654</td>
+      <td>Laine et al. 2016</td>
+      <td>9.907472</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052310</td>
+      <td>SRX1452899</td>
+      <td>SRS1180591</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296364</td>
+      <td>SAMN04296364</td>
+    </tr>
+    <tr>
+      <td>105</td>
+      <td>SRR2961731_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961731" target="_blank" class="ncbi-link">SRR2961731</a></td>
+      <td>SRR2961733</td>
+      <td>Gotland, Sweden</td>
+      <td>57.05</td>
+      <td>18.18</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>9.56733</td>
+      <td>Laine et al. 2016</td>
+      <td>11.079908</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052312</td>
+      <td>SRX1452901</td>
+      <td>SRS1180594</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296365</td>
+      <td>SAMN04296365</td>
+    </tr>
+    <tr>
+      <td>836</td>
+      <td>SRR2961736_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961736" target="_blank" class="ncbi-link">SRR2961736</a></td>
+      <td>SRR2961737</td>
+      <td>-</td>
+      <td>-</td>
+      <td>-</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>13.21220</td>
+      <td>Laine et al. 2016</td>
+      <td>14.439001</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052315</td>
+      <td>SRX1452904</td>
+      <td>SRS1180598</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296376</td>
+      <td>SAMN04296376</td>
+    </tr>
+    <tr>
+      <td>TL38228</td>
+      <td>SRR2961746_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961746" target="_blank" class="ncbi-link">SRR2961746</a></td>
+      <td>SRR2961748</td>
+      <td>Wytham Woods, Oxford, Uk</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>8.56293</td>
+      <td>Laine et al. 2016</td>
+      <td>9.881548</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052323</td>
+      <td>SRX1452912</td>
+      <td>SRS1180607</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296366</td>
+      <td>SAMN04296366</td>
+    </tr>
+    <tr>
+      <td>TL38138</td>
+      <td>SRR2961750_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961750" target="_blank" class="ncbi-link">SRR2961750</a></td>
+      <td>SRR2961752</td>
+      <td>Wytham Woods, Oxford, Uk</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>8.73808</td>
+      <td>Laine et al. 2016</td>
+      <td>10.121383</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052328</td>
+      <td>SRX1452917</td>
+      <td>SRS1180610</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296367</td>
+      <td>SAMN04296367</td>
+    </tr>
+    <tr>
+      <td>TL38197</td>
+      <td>SRR2961753_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961753" target="_blank" class="ncbi-link">SRR2961753</a></td>
+      <td>SRR2961754</td>
+      <td>Wytham Woods, Oxford, Uk</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>9.82644</td>
+      <td>Laine et al. 2016</td>
+      <td>11.640025</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052331</td>
+      <td>SRX1452920</td>
+      <td>SRS1180613</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296368</td>
+      <td>SAMN04296368</td>
+    </tr>
+    <tr>
+      <td>TL38174</td>
+      <td>SRR2961756_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961756" target="_blank" class="ncbi-link">SRR2961756</a></td>
+      <td>SRR2961758</td>
+      <td>Wytham Woods, Oxford, Uk</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Female</span></td>
+      <td>blood</td>
+      <td>11.66980</td>
+      <td>Laine et al. 2016</td>
+      <td>15.033041</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052334</td>
+      <td>SRX1452923</td>
+      <td>SRS1180616</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296369</td>
+      <td>SAMN04296369</td>
+    </tr>
+    <tr>
+      <td>TL38215</td>
+      <td>SRR2961759_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961759" target="_blank" class="ncbi-link">SRR2961759</a></td>
+      <td>SRR2961760</td>
+      <td>Wytham Woods, Oxford, Uk</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>7.81236</td>
+      <td>Laine et al. 2016</td>
+      <td>9.193990</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052336</td>
+      <td>SRX1452925</td>
+      <td>SRS1180618</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296370</td>
+      <td>SAMN04296370</td>
+    </tr>
+    <tr>
+      <td>TL38187</td>
+      <td>SRR2961762_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961762" target="_blank" class="ncbi-link">SRR2961762</a></td>
+      <td>SRR2961763</td>
+      <td>Wytham Woods, Oxford, Uk</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Female</span></td>
+      <td>blood</td>
+      <td>8.85625</td>
+      <td>Laine et al. 2016</td>
+      <td>10.294449</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052337</td>
+      <td>SRX1452926</td>
+      <td>SRS1180620</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296371</td>
+      <td>SAMN04296371</td>
+    </tr>
+    <tr>
+      <td>TL39629</td>
+      <td>SRR2961765_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961765" target="_blank" class="ncbi-link">SRR2961765</a></td>
+      <td>SRR2961767</td>
+      <td>Wytham Woods, Oxford, Uk</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>7.33943</td>
+      <td>Laine et al. 2016</td>
+      <td>8.266873</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052340</td>
+      <td>SRX1452929</td>
+      <td>SRS1180623</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296372</td>
+      <td>SAMN04296372</td>
+    </tr>
+    <tr>
+      <td>TL39600</td>
+      <td>SRR2961769_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961769" target="_blank" class="ncbi-link">SRR2961769</a></td>
+      <td>SRR2961771</td>
+      <td>Wytham Woods, Oxford, Uk</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Female</span></td>
+      <td>blood</td>
+      <td>9.20385</td>
+      <td>Laine et al. 2016</td>
+      <td>10.807727</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052343</td>
+      <td>SRX1452932</td>
+      <td>SRS1180626</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296373</td>
+      <td>SAMN04296373</td>
+    </tr>
+    <tr>
+      <td>TL39399</td>
+      <td>SRR2961773_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961773" target="_blank" class="ncbi-link">SRR2961773</a></td>
+      <td>SRR2961774</td>
+      <td>Wytham Woods, Oxford, Uk</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>12.03990</td>
+      <td>Laine et al. 2016</td>
+      <td>14.042457</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052346</td>
+      <td>SRX1452935</td>
+      <td>SRS1180628</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296374</td>
+      <td>SAMN04296374</td>
+    </tr>
+    <tr>
+      <td>TL39490</td>
+      <td>SRR2961775_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR2961775" target="_blank" class="ncbi-link">SRR2961775</a></td>
+      <td>SRR2961776</td>
+      <td>Wytham Woods, Oxford, Uk</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Female</span></td>
+      <td>blood</td>
+      <td>6.65298</td>
+      <td>Laine et al. 2016</td>
+      <td>8.064323</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2052347</td>
+      <td>SRX1452936</td>
+      <td>SRS1180629</td>
+      <td>SRP066678</td>
+      <td>PRJNA304164</td>
+      <td>SAMN04296375</td>
+      <td>SAMN04296375</td>
+    </tr>
+    <tr>
+      <td>GT_RawGenomeReads</td>
+      <td>SRR3085443_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR3085443" target="_blank" class="ncbi-link">SRR3085443</a></td>
+      <td>SRR3085445</td>
+      <td>Animal Breeding and Genomics Centre, Wageningen, The Netherlands</td>
+      <td>51.99</td>
+      <td>5.67</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>18.61960</td>
+      <td>Laine et al. 2016</td>
+      <td>31.752467</td>
+      <td><em>Parus major</em></td>
+      <td>fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)</td>
+      <td>2145250</td>
+      <td>SRX1517152</td>
+      <td>SRS1185780</td>
+      <td>SRP055861</td>
+      <td>PRJNA208335</td>
+      <td>SAMN04306664</td>
+      <td>SAMN04306664</td>
+    </tr>
+    <tr>
+      <td>TR44666</td>
+      <td>SRR5423293_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR5423293" target="_blank" class="ncbi-link">SRR5423293</a></td>
+      <td>-</td>
+      <td>Oxford, Great Britain</td>
+      <td>51.77</td>
+      <td>-1.34</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>52.70510</td>
+      <td>Corcoran et al. 2017</td>
+      <td>35.592411</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>3916173</td>
+      <td>SRX2714714</td>
+      <td>SRS2105685</td>
+      <td>SRP103218</td>
+      <td>PRJNA381923</td>
+      <td>SAMN06692363</td>
+      <td>SAMN06692363</td>
+    </tr>
+    <tr>
+      <td>943</td>
+      <td>SRR5423294_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR5423294" target="_blank" class="ncbi-link">SRR5423294</a></td>
+      <td>-</td>
+      <td>Pirio/Muro, Corsica, France</td>
+      <td>42.22</td>
+      <td>8.45</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>57.53910</td>
+      <td>Corcoran et al. 2017</td>
+      <td>33.868168</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>3916174</td>
+      <td>SRX2714715</td>
+      <td>SRS2105686</td>
+      <td>SRP103218</td>
+      <td>PRJNA381923</td>
+      <td>SAMN06692362</td>
+      <td>SAMN06692362</td>
+    </tr>
+    <tr>
+      <td>917</td>
+      <td>SRR5423295_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR5423295" target="_blank" class="ncbi-link">SRR5423295</a></td>
+      <td>-</td>
+      <td>La Rouviere, France</td>
+      <td>43.4</td>
+      <td>3.4</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>49.14740</td>
+      <td>Corcoran et al. 2017</td>
+      <td>43.461356</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>3916175</td>
+      <td>SRX2714716</td>
+      <td>SRS2105687</td>
+      <td>SRP103218</td>
+      <td>PRJNA381923</td>
+      <td>SAMN06692361</td>
+      <td>SAMN06692361</td>
+    </tr>
+    <tr>
+      <td>61</td>
+      <td>SRR5423296_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR5423296" target="_blank" class="ncbi-link">SRR5423296</a></td>
+      <td>-</td>
+      <td>Velky Kosr, Czech Republic</td>
+      <td>49.32</td>
+      <td>17.04</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>53.98960</td>
+      <td>Corcoran et al. 2017</td>
+      <td>47.638769</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>3916176</td>
+      <td>SRX2714717</td>
+      <td>SRS2105688</td>
+      <td>SRP103218</td>
+      <td>PRJNA381923</td>
+      <td>SAMN06692360</td>
+      <td>SAMN06692360</td>
+    </tr>
+    <tr>
+      <td>318</td>
+      <td>SRR5423297_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR5423297" target="_blank" class="ncbi-link">SRR5423297</a></td>
+      <td>-</td>
+      <td>Oulu, Finland</td>
+      <td>65.0</td>
+      <td>25.3</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>63.24480</td>
+      <td>Corcoran et al. 2017</td>
+      <td>54.628844</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>3916177</td>
+      <td>SRX2714718</td>
+      <td>SRS2105689</td>
+      <td>SRP103218</td>
+      <td>PRJNA381923</td>
+      <td>SAMN06692359</td>
+      <td>SAMN06692359</td>
+    </tr>
+    <tr>
+      <td>249</td>
+      <td>SRR5423298_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR5423298" target="_blank" class="ncbi-link">SRR5423298</a></td>
+      <td>-</td>
+      <td>Loch Lomond, Scotland</td>
+      <td>56.08</td>
+      <td>-4.37</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>54.16340</td>
+      <td>Corcoran et al. 2017</td>
+      <td>34.024789</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>3916178</td>
+      <td>SRX2714719</td>
+      <td>SRS2105690</td>
+      <td>SRP103218</td>
+      <td>PRJNA381923</td>
+      <td>SAMN06692358</td>
+      <td>SAMN06692358</td>
+    </tr>
+    <tr>
+      <td>167</td>
+      <td>SRR5423299_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR5423299" target="_blank" class="ncbi-link">SRR5423299</a></td>
+      <td>-</td>
+      <td>Gotland, Sweden</td>
+      <td>57.05</td>
+      <td>18.18</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>54.51260</td>
+      <td>Corcoran et al. 2017</td>
+      <td>48.486643</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>3916179</td>
+      <td>SRX2714720</td>
+      <td>SRS2105691</td>
+      <td>SRP103218</td>
+      <td>PRJNA381923</td>
+      <td>SAMN06692357</td>
+      <td>SAMN06692357</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>SRR5423300_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR5423300" target="_blank" class="ncbi-link">SRR5423300</a></td>
+      <td>-</td>
+      <td>Pilis Mountains, Hungary</td>
+      <td>47.43</td>
+      <td>19.1</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>59.92950</td>
+      <td>Corcoran et al. 2017</td>
+      <td>52.883045</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>3916180</td>
+      <td>SRX2714721</td>
+      <td>SRS2105692</td>
+      <td>SRP103218</td>
+      <td>PRJNA381923</td>
+      <td>SAMN06692356</td>
+      <td>SAMN06692356</td>
+    </tr>
+    <tr>
+      <td>1485</td>
+      <td>SRR5423301_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR5423301" target="_blank" class="ncbi-link">SRR5423301</a></td>
+      <td>-</td>
+      <td>Austria</td>
+      <td>48.06</td>
+      <td>15.91</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>52.21680</td>
+      <td>Corcoran et al. 2017</td>
+      <td>36.520846</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>3916181</td>
+      <td>SRX2714722</td>
+      <td>SRS2105693</td>
+      <td>SRP103218</td>
+      <td>PRJNA381923</td>
+      <td>SAMN06692355</td>
+      <td>SAMN06692355</td>
+    </tr>
+    <tr>
+      <td>1280</td>
+      <td>SRR5423302_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR5423302" target="_blank" class="ncbi-link">SRR5423302</a></td>
+      <td>-</td>
+      <td>Mariola, Spain</td>
+      <td>38.44</td>
+      <td>-0.33</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>blood</td>
+      <td>51.80250</td>
+      <td>Corcoran et al. 2017</td>
+      <td>49.799602</td>
+      <td><em>Parus major</em></td>
+      <td>-</td>
+      <td>3916182</td>
+      <td>SRX2714723</td>
+      <td>SRS2105694</td>
+      <td>SRP103218</td>
+      <td>PRJNA381923</td>
+      <td>SAMN06692354</td>
+      <td>SAMN06692354</td>
+    </tr>
+    <tr>
+      <td>Great tit 500bp</td>
+      <td>SRR765717_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR765717" target="_blank" class="ncbi-link">SRR765717</a></td>
+      <td>-</td>
+      <td>Lijiang, Yunnan, China</td>
+      <td>26.904109</td>
+      <td>100.247189</td>
+      <td>-</td>
+      <td>liver</td>
+      <td>12.62800</td>
+      <td>Qu et al. 2013</td>
+      <td>16.235798</td>
+      <td><em>Parus minor</em></td>
+      <td>Qu et al. 2013 and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>336837</td>
+      <td>SRX245721</td>
+      <td>SRS398273</td>
+      <td>SRP018733</td>
+      <td>PRJNA179234</td>
+      <td>SAMN01925483</td>
+      <td>SAMN01925483</td>
+    </tr>
+    <tr>
+      <td>B041</td>
+      <td>SRR9656355_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR9656355" target="_blank" class="ncbi-link">SRR9656355</a></td>
+      <td>-</td>
+      <td>Foping, Shanxi</td>
+      <td>33.524599</td>
+      <td>107.987323</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>muscle</td>
+      <td>15.98280</td>
+      <td>Cheng et al. 2020; Cheng et al. 2021</td>
+      <td>11.902771</td>
+      <td><em>Parus minor</em></td>
+      <td>Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>8501145</td>
+      <td>SRX6417671</td>
+      <td>SRS5074660</td>
+      <td>SRP213766</td>
+      <td>PRJNA553273</td>
+      <td>SAMN12233385</td>
+      <td>SAMN12233385</td>
+    </tr>
+    <tr>
+      <td>GZ10358</td>
+      <td>SRR9656356_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR9656356" target="_blank" class="ncbi-link">SRR9656356</a></td>
+      <td>-</td>
+      <td>Libo, Guizhou</td>
+      <td>25.266179</td>
+      <td>108.054464</td>
+      <td><span class="badge-custom">Female</span></td>
+      <td>muscle</td>
+      <td>11.89660</td>
+      <td>Cheng et al. 2020; Cheng et al. 2021</td>
+      <td>10.703262</td>
+      <td><em>Parus minor</em></td>
+      <td>Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>8501144</td>
+      <td>SRX6417670</td>
+      <td>SRS5074659</td>
+      <td>SRP213766</td>
+      <td>PRJNA553273</td>
+      <td>SAMN12233384</td>
+      <td>SAMN12233384</td>
+    </tr>
+    <tr>
+      <td>B1059</td>
+      <td>SRR9656357_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR9656357" target="_blank" class="ncbi-link">SRR9656357</a></td>
+      <td>-</td>
+      <td>Chaoan, Guangdong</td>
+      <td>23.714069</td>
+      <td>116.542572</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>muscle</td>
+      <td>13.39840</td>
+      <td>Cheng et al. 2020; Cheng et al. 2021</td>
+      <td>11.785235</td>
+      <td><em>Parus minor</em></td>
+      <td>Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>8501143</td>
+      <td>SRX6417669</td>
+      <td>SRS5074658</td>
+      <td>SRP213766</td>
+      <td>PRJNA553273</td>
+      <td>SAMN12233383</td>
+      <td>SAMN12233383</td>
+    </tr>
+    <tr>
+      <td>BS09166</td>
+      <td>SRR9656367_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR9656367" target="_blank" class="ncbi-link">SRR9656367</a></td>
+      <td>-</td>
+      <td>Baishan, Jilin</td>
+      <td>41.861011</td>
+      <td>126.529325</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>muscle</td>
+      <td>12.91300</td>
+      <td>Cheng et al. 2020; Cheng et al. 2021</td>
+      <td>11.295358</td>
+      <td><em>Parus minor</em></td>
+      <td>Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>8501133</td>
+      <td>SRX6417659</td>
+      <td>SRS5074648</td>
+      <td>SRP213766</td>
+      <td>PRJNA553273</td>
+      <td>SAMN12233386</td>
+      <td>SAMN12233386</td>
+    </tr>
+    <tr>
+      <td>14BJ51</td>
+      <td>SRR9656368_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR9656368" target="_blank" class="ncbi-link">SRR9656368</a></td>
+      <td>-</td>
+      <td>Huairou, Beijing</td>
+      <td>40.3778</td>
+      <td>116.6782</td>
+      <td><span class="badge-custom">Female</span></td>
+      <td>muscle</td>
+      <td>15.94580</td>
+      <td>Cheng et al. 2020; Cheng et al. 2021</td>
+      <td>14.082862</td>
+      <td><em>Parus minor</em></td>
+      <td>Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>8501132</td>
+      <td>SRX6417658</td>
+      <td>SRS5074647</td>
+      <td>SRP213766</td>
+      <td>PRJNA553273</td>
+      <td>SAMN12233387</td>
+      <td>SAMN12233387</td>
+    </tr>
+    <tr>
+      <td>1-E8</td>
+      <td>SRR9656369_sorted_dedup.bam</td>
+      <td><a href="https://trace.ncbi.nlm.nih.gov/Traces/sra/?run=SRR9656369" target="_blank" class="ncbi-link">SRR9656369</a></td>
+      <td>-</td>
+      <td>Mangkang, Tibet</td>
+      <td>29.273316</td>
+      <td>98.691881</td>
+      <td><span class="badge-custom">Male</span></td>
+      <td>muscle</td>
+      <td>14.80090</td>
+      <td>Cheng et al. 2020; Cheng et al. 2021</td>
+      <td>11.392058</td>
+      <td><em>Parus minor</em></td>
+      <td>Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor</td>
+      <td>8501131</td>
+      <td>SRX6417657</td>
+      <td>SRS5074646</td>
+      <td>SRP213766</td>
+      <td>PRJNA553273</td>
+      <td>SAMN12233388</td>
+      <td>SAMN12233388</td>
+    </tr>
+  </tbody>
+</table>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+        <script>
+            $(document).ready(function() {
+                // فعال‌سازی DataTables با اسکرول افقی
+                $('table').DataTable({
+                    "pageLength": 15,
+                    "scrollX": true, // فعال کردن اسکرول افقی برای ستون‌های زیاد
+                    "language": { "search": "🔍 Search Metadata:" }
+                });
+            });
+        </script>
+    </body>
+    </html>
+    
