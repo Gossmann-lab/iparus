@@ -1,0 +1,1661 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Genomic Samples Data</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        body { padding: 20px; background-color: #f8fafc; font-family: 'Inter', sans-serif; }
+        .container { background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
+
+        .header-section { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 2px solid #e2e8f0; padding-bottom: 10px; }
+        h2 { color: #1e293b; margin: 0; font-weight: 600; }
+
+        .btn-download-selected { 
+            background-color: #34d399; color: white; border: none; padding: 8px 18px; 
+            border-radius: 8px; font-weight: 600; font-size: 0.95em; transition: all 0.2s ease-in-out; 
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            box-shadow: 0 2px 4px rgba(52, 211, 153, 0.3); white-space: nowrap; cursor: pointer;
+        }
+        .btn-download-selected:hover { background-color: #10b981; color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(16, 185, 129, 0.4); }
+
+        .btn-download { 
+            background-color: #60a5fa; color: white; padding: 6px 16px; text-decoration: none; 
+            border-radius: 8px; font-size: 0.85em; font-weight: 600; transition: all 0.2s ease-in-out; 
+            display: inline-flex; align-items: center; justify-content: center; gap: 6px; 
+            box-shadow: 0 2px 4px rgba(96, 165, 250, 0.3); white-space: nowrap; border: 1px solid transparent;
+        }
+        .btn-download:hover { background-color: #3b82f6; color: white; transform: translateY(-2px); box-shadow: 0 4px 10px rgba(59, 130, 246, 0.4); }
+
+        .btn-icon { width: 16px; height: 16px; stroke-width: 2.5; }
+
+        .hidden-col { display: none; }
+        .hash-code { font-family: 'Courier New', monospace; color: #64748b; font-size: 0.8em; background: #f1f5f9; padding: 2px 6px; border-radius: 4px; border: 1px solid #e2e8f0; }
+        .checkbox-col { text-align: center; vertical-align: middle; }
+        .sex-badge { background: #f1f5f9; padding: 3px 8px; border-radius: 12px; font-size: 0.85em; font-weight: 500;}
+
+        table.dataTable thead th { background-color: #1e293b; color: white; padding: 12px; border-bottom: none; font-weight: 500; }
+        table.dataTable tbody td { vertical-align: middle; color: #334155; }
+        tr.group-gray td { background-color: #f8fafc !important; }
+        tr.group-white td { background-color: #ffffff !important; }
+        tr.group-change td { border-top: 2px solid #cbd5e1 !important; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header-section">
+        <h2>🧬 Sample Sequence Files</h2>
+        <button id="downloadSelectedBtn" class="btn-download-selected">
+            <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+            </svg>
+            Download Selected
+        </button>
+    </div>
+
+    <table id="samplesTable" class="table table-hover" style="width:100%">
+        <thead>
+            <tr>
+                <th style="width: 40px; text-align: center;"><input type="checkbox" id="selectAll" title="Select All"></th>
+                <th>Sample ID</th>
+                <th>Species</th>
+                <th>Sex</th>
+                <th>File Name</th>
+                <th>Location</th>
+                <th>MD5 Hash</th>
+                <th>Action</th>
+                <th class="hidden-col">Link_Id</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793435_sorted_dedup_subset.bam"></td>
+        <td><strong>17252</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793435_sorted_dedup.bam</td>
+        <td>Altai Region, Russia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793435_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Altai_Region_Russia</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR3085443_sorted_dedup_subset.bam"></td>
+        <td><strong>GT_RawGenomeReads</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR3085443_sorted_dedup.bam</td>
+        <td>Animal Breeding and Genomics Centre, Wageningen, The Netherlands</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR3085443_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Animal_Breeding_and_Genomics_Centre_Wageningen_The_Netherlands</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961671_sorted_dedup_subset.bam"></td>
+        <td><strong>973</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961671_sorted_dedup.bam</td>
+        <td>Antwerp, Belgium</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961671_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Antwerp_Belgium</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423301_sorted_dedup_subset.bam"></td>
+        <td><strong>1485</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR5423301_sorted_dedup.bam</td>
+        <td>Austria</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423301_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Austria</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656367_sorted_dedup_subset.bam"></td>
+        <td><strong>BS09166</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR9656367_sorted_dedup.bam</td>
+        <td>Baishan, Jilin</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656367_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Baishan_Jilin</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961674_sorted_dedup_subset.bam"></td>
+        <td><strong>477</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961674_sorted_dedup.bam</td>
+        <td>Cambridge, UK</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961674_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Cambridge_UK</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656357_sorted_dedup_subset.bam"></td>
+        <td><strong>B1059</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR9656357_sorted_dedup.bam</td>
+        <td>Chaoan, Guangdong</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656357_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Chaoan_Guangdong</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793425_sorted_dedup_subset.bam"></td>
+        <td><strong>11555</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793425_sorted_dedup.bam</td>
+        <td>Eerguna, Inner Mongolia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793425_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Eerguna_Inner_Mongolia</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793427_sorted_dedup_subset.bam"></td>
+        <td><strong>11556</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793427_sorted_dedup.bam</td>
+        <td>Eerguna, Inner Mongolia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793427_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Eerguna_Inner_Mongolia</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793428_sorted_dedup_subset.bam"></td>
+        <td><strong>11557</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793428_sorted_dedup.bam</td>
+        <td>Eerguna, Inner Mongolia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793428_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Eerguna_Inner_Mongolia</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793429_sorted_dedup_subset.bam"></td>
+        <td><strong>11564</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793429_sorted_dedup.bam</td>
+        <td>Eerguna, Inner Mongolia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793429_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Eerguna_Inner_Mongolia</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961728_sorted_dedup_subset.bam"></td>
+        <td><strong>1235</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961728_sorted_dedup.bam</td>
+        <td>Font Roja, Spain</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961728_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Font_Roja_Spain</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656355_sorted_dedup_subset.bam"></td>
+        <td><strong>B041</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR9656355_sorted_dedup.bam</td>
+        <td>Foping, Shanxi</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656355_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Foping_Shanxi</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793407_sorted_dedup_subset.bam"></td>
+        <td><strong>5226</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793407_sorted_dedup.bam</td>
+        <td>Gaoligong, Yunnan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793407_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Gaoligong_Yunnan</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793415_sorted_dedup_subset.bam"></td>
+        <td><strong>5236</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793415_sorted_dedup.bam</td>
+        <td>Gaoligong, Yunnan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793415_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Gaoligong_Yunnan</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793417_sorted_dedup_subset.bam"></td>
+        <td><strong>5242</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793417_sorted_dedup.bam</td>
+        <td>Gaoligong, Yunnan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793417_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Gaoligong_Yunnan</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793419_sorted_dedup_subset.bam"></td>
+        <td><strong>5332</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793419_sorted_dedup.bam</td>
+        <td>Gaoligong, Yunnan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793419_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Gaoligong_Yunnan</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793420_sorted_dedup_subset.bam"></td>
+        <td><strong>5333</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793420_sorted_dedup.bam</td>
+        <td>Gaoligong, Yunnan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793420_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Gaoligong_Yunnan</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961731_sorted_dedup_subset.bam"></td>
+        <td><strong>105</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961731_sorted_dedup.bam</td>
+        <td>Gotland, Sweden</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961731_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Gotland_Sweden</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423299_sorted_dedup_subset.bam"></td>
+        <td><strong>167</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR5423299_sorted_dedup.bam</td>
+        <td>Gotland, Sweden</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423299_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Gotland_Sweden</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961718_sorted_dedup_subset.bam"></td>
+        <td><strong>1376</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Female</span></td>
+        <td>SRR2961718_sorted_dedup.bam</td>
+        <td>Groblas, Poland</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961718_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Groblas_Poland</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656368_sorted_dedup_subset.bam"></td>
+        <td><strong>14BJ51</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">Female</span></td>
+        <td>SRR9656368_sorted_dedup.bam</td>
+        <td>Huairou, Beijing</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656368_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Huairou_Beijing</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793438_sorted_dedup_subset.bam"></td>
+        <td><strong>10076</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793438_sorted_dedup.bam</td>
+        <td>Jixi, Anhui</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793438_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Jixi_Anhui</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793442_sorted_dedup_subset.bam"></td>
+        <td><strong>10732</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793442_sorted_dedup.bam</td>
+        <td>Kuandian, Liaoning</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793442_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Kuandian_Liaoning</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793443_sorted_dedup_subset.bam"></td>
+        <td><strong>10860</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793443_sorted_dedup.bam</td>
+        <td>Kuandian, Liaoning</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793443_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Kuandian_Liaoning</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961695_sorted_dedup_subset.bam"></td>
+        <td><strong>896</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961695_sorted_dedup.bam</td>
+        <td>La Rouviere, France</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961695_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">La_Rouviere_France</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961699_sorted_dedup_subset.bam"></td>
+        <td><strong>906</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961699_sorted_dedup.bam</td>
+        <td>La Rouviere, France</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961699_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">La_Rouviere_France</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423295_sorted_dedup_subset.bam"></td>
+        <td><strong>917</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR5423295_sorted_dedup.bam</td>
+        <td>La Rouviere, France</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423295_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">La_Rouviere_France</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656356_sorted_dedup_subset.bam"></td>
+        <td><strong>GZ10358</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">Female</span></td>
+        <td>SRR9656356_sorted_dedup.bam</td>
+        <td>Libo, Guizhou</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656356_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Libo_Guizhou</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793421_sorted_dedup_subset.bam"></td>
+        <td><strong>13924</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793421_sorted_dedup.bam</td>
+        <td>Lijiang, Yunnan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793421_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Lijiang_Yunnan</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793422_sorted_dedup_subset.bam"></td>
+        <td><strong>13938</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793422_sorted_dedup.bam</td>
+        <td>Lijiang, Yunnan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793422_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Lijiang_Yunnan</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793423_sorted_dedup_subset.bam"></td>
+        <td><strong>13995</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793423_sorted_dedup.bam</td>
+        <td>Lijiang, Yunnan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793423_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Lijiang_Yunnan</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793424_sorted_dedup_subset.bam"></td>
+        <td><strong>13996</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793424_sorted_dedup.bam</td>
+        <td>Lijiang, Yunnan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793424_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Lijiang_Yunnan</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR765717_sorted_dedup_subset.bam"></td>
+        <td><strong>Great tit 500bp</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR765717_sorted_dedup.bam</td>
+        <td>Lijiang, Yunnan, China</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR765717_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Lijiang_Yunnan_China</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961722_sorted_dedup_subset.bam"></td>
+        <td><strong>235</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961722_sorted_dedup.bam</td>
+        <td>Loch Lomond, Scotland</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961722_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Loch_Lomond_Scotland</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423298_sorted_dedup_subset.bam"></td>
+        <td><strong>249</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR5423298_sorted_dedup.bam</td>
+        <td>Loch Lomond, Scotland</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423298_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Loch_Lomond_Scotland</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656369_sorted_dedup_subset.bam"></td>
+        <td><strong>1-E8</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR9656369_sorted_dedup.bam</td>
+        <td>Mangkang, Tibet</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR9656369_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Mangkang_Tibet</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961725_sorted_dedup_subset.bam"></td>
+        <td><strong>1280</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961725_sorted_dedup.bam</td>
+        <td>Mariola, Spain</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961725_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Mariola_Spain</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423302_sorted_dedup_subset.bam"></td>
+        <td><strong>1280</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR5423302_sorted_dedup.bam</td>
+        <td>Mariola, Spain</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423302_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Mariola_Spain</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961697_sorted_dedup_subset.bam"></td>
+        <td><strong>233</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Female</span></td>
+        <td>SRR2961697_sorted_dedup.bam</td>
+        <td>Montpellier, France</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961697_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Montpellier_France</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961689_sorted_dedup_subset.bam"></td>
+        <td><strong>317</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961689_sorted_dedup.bam</td>
+        <td>Oulu, Finland</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961689_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Oulu_Finland</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423297_sorted_dedup_subset.bam"></td>
+        <td><strong>318</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR5423297_sorted_dedup.bam</td>
+        <td>Oulu, Finland</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423297_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Oulu_Finland</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423293_sorted_dedup_subset.bam"></td>
+        <td><strong>TR44666</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR5423293_sorted_dedup.bam</td>
+        <td>Oxford, Great Britain</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423293_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Oxford_Great_Britain</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793439_sorted_dedup_subset.bam"></td>
+        <td><strong>10635</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793439_sorted_dedup.bam</td>
+        <td>Panjin, Liaoning</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793439_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Panjin_Liaoning</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793440_sorted_dedup_subset.bam"></td>
+        <td><strong>10636</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793440_sorted_dedup.bam</td>
+        <td>Panjin, Liaoning</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793440_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Panjin_Liaoning</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793441_sorted_dedup_subset.bam"></td>
+        <td><strong>10637</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793441_sorted_dedup.bam</td>
+        <td>Panjin, Liaoning</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793441_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Panjin_Liaoning</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961712_sorted_dedup_subset.bam"></td>
+        <td><strong>11</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961712_sorted_dedup.bam</td>
+        <td>Pilis Mountains, Hungary</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961712_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Pilis_Mountains_Hungary</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423300_sorted_dedup_subset.bam"></td>
+        <td><strong>15</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR5423300_sorted_dedup.bam</td>
+        <td>Pilis Mountains, Hungary</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423300_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Pilis_Mountains_Hungary</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961676_sorted_dedup_subset.bam"></td>
+        <td><strong>935</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961676_sorted_dedup.bam</td>
+        <td>Pirio/Muro, Corsica</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961676_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">PirioMuro_Corsica</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423294_sorted_dedup_subset.bam"></td>
+        <td><strong>943</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR5423294_sorted_dedup.bam</td>
+        <td>Pirio/Muro, Corsica, France</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423294_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">PirioMuro_Corsica_France</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961701_sorted_dedup_subset.bam"></td>
+        <td><strong>823</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961701_sorted_dedup.bam</td>
+        <td>Seewisen, Germany</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961701_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Seewisen_Germany</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793436_sorted_dedup_subset.bam"></td>
+        <td><strong>8204</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793436_sorted_dedup.bam</td>
+        <td>Shennongjia, Hubei</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793436_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Shennongjia_Hubei</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793437_sorted_dedup_subset.bam"></td>
+        <td><strong>8236</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793437_sorted_dedup.bam</td>
+        <td>Shennongjia, Hubei</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793437_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Shennongjia_Hubei</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793444_sorted_dedup_subset.bam"></td>
+        <td><strong>11929</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793444_sorted_dedup.bam</td>
+        <td>Sunan, Gansu</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793444_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Sunan_Gansu</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793445_sorted_dedup_subset.bam"></td>
+        <td><strong>11944</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793445_sorted_dedup.bam</td>
+        <td>Sunan, Gansu</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793445_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Sunan_Gansu</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961680_sorted_dedup_subset.bam"></td>
+        <td><strong>731</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961680_sorted_dedup.bam</td>
+        <td>Tartu, Estonia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961680_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Tartu_Estonia</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961684_sorted_dedup_subset.bam"></td>
+        <td><strong>770</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961684_sorted_dedup.bam</td>
+        <td>Tartu, Estonia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961684_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Tartu_Estonia</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793430_sorted_dedup_subset.bam"></td>
+        <td><strong>15078</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793430_sorted_dedup.bam</td>
+        <td>Teshig, Mongolia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793430_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Teshig_Mongolia</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793431_sorted_dedup_subset.bam"></td>
+        <td><strong>15081</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793431_sorted_dedup.bam</td>
+        <td>Teshig, Mongolia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793431_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Teshig_Mongolia</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961716_sorted_dedup_subset.bam"></td>
+        <td><strong>1387</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Female</span></td>
+        <td>SRR2961716_sorted_dedup.bam</td>
+        <td>Tromso, Norway</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961716_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Tromso_Norway</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793432_sorted_dedup_subset.bam"></td>
+        <td><strong>15100</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793432_sorted_dedup.bam</td>
+        <td>Tushig, Mongolia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793432_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Tushig_Mongolia</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793433_sorted_dedup_subset.bam"></td>
+        <td><strong>15110</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793433_sorted_dedup.bam</td>
+        <td>Tushig, Mongolia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793433_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Tushig_Mongolia</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793434_sorted_dedup_subset.bam"></td>
+        <td><strong>15111</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793434_sorted_dedup.bam</td>
+        <td>Tushig, Mongolia</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793434_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Tushig_Mongolia</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961678_sorted_dedup_subset.bam"></td>
+        <td><strong>52</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961678_sorted_dedup.bam</td>
+        <td>Velky Kosr, Czech Republic</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961678_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Velky_Kosr_Czech_Republic</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423296_sorted_dedup_subset.bam"></td>
+        <td><strong>61</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR5423296_sorted_dedup.bam</td>
+        <td>Velky Kosr, Czech Republic</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR5423296_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Velky_Kosr_Czech_Republic</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961328_sorted_dedup_subset.bam"></td>
+        <td><strong>1198</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Female</span></td>
+        <td>SRR2961328_sorted_dedup.bam</td>
+        <td>Vienna, Austria</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961328_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Vienna_Austria</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961750_sorted_dedup_subset.bam"></td>
+        <td><strong>TL38138</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961750_sorted_dedup.bam</td>
+        <td>Wytham Woods, Oxford, Uk</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961750_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Wytham_Woods_Oxford_Uk</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961756_sorted_dedup_subset.bam"></td>
+        <td><strong>TL38174</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Female</span></td>
+        <td>SRR2961756_sorted_dedup.bam</td>
+        <td>Wytham Woods, Oxford, Uk</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961756_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Wytham_Woods_Oxford_Uk</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961762_sorted_dedup_subset.bam"></td>
+        <td><strong>TL38187</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Female</span></td>
+        <td>SRR2961762_sorted_dedup.bam</td>
+        <td>Wytham Woods, Oxford, Uk</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961762_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Wytham_Woods_Oxford_Uk</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961753_sorted_dedup_subset.bam"></td>
+        <td><strong>TL38197</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961753_sorted_dedup.bam</td>
+        <td>Wytham Woods, Oxford, Uk</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961753_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Wytham_Woods_Oxford_Uk</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961759_sorted_dedup_subset.bam"></td>
+        <td><strong>TL38215</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961759_sorted_dedup.bam</td>
+        <td>Wytham Woods, Oxford, Uk</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961759_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Wytham_Woods_Oxford_Uk</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961746_sorted_dedup_subset.bam"></td>
+        <td><strong>TL38228</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961746_sorted_dedup.bam</td>
+        <td>Wytham Woods, Oxford, Uk</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961746_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Wytham_Woods_Oxford_Uk</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961773_sorted_dedup_subset.bam"></td>
+        <td><strong>TL39399</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961773_sorted_dedup.bam</td>
+        <td>Wytham Woods, Oxford, Uk</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961773_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Wytham_Woods_Oxford_Uk</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961775_sorted_dedup_subset.bam"></td>
+        <td><strong>TL39490</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Female</span></td>
+        <td>SRR2961775_sorted_dedup.bam</td>
+        <td>Wytham Woods, Oxford, Uk</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961775_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Wytham_Woods_Oxford_Uk</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961769_sorted_dedup_subset.bam"></td>
+        <td><strong>TL39600</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Female</span></td>
+        <td>SRR2961769_sorted_dedup.bam</td>
+        <td>Wytham Woods, Oxford, Uk</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961769_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Wytham_Woods_Oxford_Uk</td>
+    </tr>
+    
+    <tr class="group-gray">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961765_sorted_dedup_subset.bam"></td>
+        <td><strong>TL39629</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961765_sorted_dedup.bam</td>
+        <td>Wytham Woods, Oxford, Uk</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961765_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Wytham_Woods_Oxford_Uk</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793405_sorted_dedup_subset.bam"></td>
+        <td><strong>3918</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793405_sorted_dedup.bam</td>
+        <td>Yanbian, Sichuan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793405_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Yanbian_Sichuan</td>
+    </tr>
+    
+    <tr class="group-white">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793406_sorted_dedup_subset.bam"></td>
+        <td><strong>4000</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793406_sorted_dedup.bam</td>
+        <td>Yanbian, Sichuan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793406_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Yanbian_Sichuan</td>
+    </tr>
+    
+    <tr class="group-gray group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793447_sorted_dedup_subset.bam"></td>
+        <td><strong>12003</strong></td>
+        <td><em>Parus minor</em></td>
+        <td><span class="sex-badge">NA</span></td>
+        <td>SRR1793447_sorted_dedup.bam</td>
+        <td>Yongdeng, Gansu</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR1793447_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">Yongdeng_Gansu</td>
+    </tr>
+    
+    <tr class="group-white group-change">
+        <td class="checkbox-col"><input type="checkbox" class="row-checkbox" value="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961736_sorted_dedup_subset.bam"></td>
+        <td><strong>836</strong></td>
+        <td><em>Parus major</em></td>
+        <td><span class="sex-badge">Male</span></td>
+        <td>SRR2961736_sorted_dedup.bam</td>
+        <td>nan</td>
+        <td><span class="hash-code">-</span></td>
+        <td>
+            <a href="https://tu-dortmund.sciebo.de/public.php/dav/files/ELD9YWnZKNioMEe/SRR2961736_sorted_dedup_subset.bam" class="btn-download">
+                <svg class="btn-icon" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                </svg>
+                Download
+            </a>
+        </td>
+        <td class="hidden-col">nan</td>
+    </tr>
+    
+        </tbody>
+    </table>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
+    $(document).ready(function() {
+        var table = $('#samplesTable').DataTable({
+            "pageLength": 15,
+            "order": [[ 5, "asc" ]], /* تنظیم پیش‌فرض مرتب‌سازی روی لوکیشن (ستون 5) */
+            "columnDefs": [ 
+                { "orderable": false, "targets": [0, 7] } /* غیرفعال کردن سورت برای چک‌باکس و دکمه دانلود */
+            ],
+            "language": { "search": "🔍 Search records:" }
+        });
+
+        function applyMapFilter() {
+            var hashValue = window.location.hash.substring(1);
+            var urlParams = new URLSearchParams(window.location.search);
+            var paramValue = urlParams.get('search') || urlParams.get('location');
+            var finalSearch = hashValue || paramValue;
+
+            if (finalSearch) {
+                finalSearch = decodeURIComponent(finalSearch).replace(/_/g, ' ');
+                table.search(finalSearch).draw();
+            }
+        }
+        applyMapFilter();
+        $(window).on('hashchange', function() { applyMapFilter(); });
+
+        $('#selectAll').on('click', function() {
+            var rows = table.rows({ 'search': 'applied' }).nodes();
+            $('input[type="checkbox"].row-checkbox', rows).prop('checked', this.checked);
+        });
+
+        $('#downloadSelectedBtn').on('click', function() {
+            var selectedLinks = [];
+            var rows = table.rows({ 'search': 'applied' }).nodes();
+
+            $('input[type="checkbox"].row-checkbox:checked', rows).each(function() {
+                selectedLinks.push($(this).val());
+            });
+
+            if (selectedLinks.length === 0) {
+                alert('Please select at least one file to download.');
+                return;
+            }
+
+            selectedLinks.forEach(function(link, index) {
+                setTimeout(function() {
+                    var a = document.createElement('a');
+                    a.href = link;
+                    a.setAttribute('download', '');
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                }, index * 800); 
+            });
+        });
+    });
+</script>
+</body>
+</html>
