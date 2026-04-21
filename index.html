@@ -208,7 +208,7 @@
             if (!fileName) return;
 
             const sampleFolder = fileName.split('_')[0];
-            const bamUrl = `${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`;
+            const bamUrl = `https://cors-anywhere.herokuapp.com/${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`;
             const fastaUrl = `${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`;
             
             const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
