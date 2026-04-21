@@ -1,265 +1,283 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>IPARUS - Integrated Parus Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <script src="https://cdn.jsdelivr.net/npm/igv@2.15.5/dist/igv.min.js"></script>
-    
-    <style>
-        :root {
-            --primary: #2563eb;
-            --primary-hover: #1d4ed8;
-            --bg-body: #f8fafc;
-            --text-main: #0f172a;
-            --text-muted: #64748b;
-            --card-bg: #ffffff;
-            --border-light: #e2e8f0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body.dark-mode {
-            --bg-body: #0f172a;
-            --text-main: #f1f5f9;
-            --text-muted: #94a3b8;
-            --card-bg: #1e293b;
-            --border-light: #334155;
-        }
+<title>IPARUS - Integrated Parus Platform</title>
 
-        body { 
-            font-family: 'Inter', sans-serif; 
-            margin: 0; 
-            padding: 0; 
-            background-color: var(--bg-body); 
-            color: var(--text-main); 
-            line-height: 1.7;
-            -webkit-font-smoothing: antialiased; 
-            -moz-osx-font-smoothing: grayscale;
-            transition: background-color 0.3s ease, color 0.3s ease;
-        }
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .reveal-title { animation: fadeInDown 0.8s ease-out forwards; }
-        .reveal-text { opacity: 0; animation: fadeIn 1.2s ease-out 0.3s forwards; }
+<script src="https://cdn.jsdelivr.net/npm/igv@2.15.5/dist/igv.min.js"></script>
 
-        .hero {
-            background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
-            color: white;
-            padding: 50px 20px 60px 20px; 
-            text-align: center;
-            position: relative; 
-            overflow: hidden;
-            border-bottom: 4px solid #e74c3c;
-        }
-        
-        .logo-container { position: absolute; top: 0; left: 0; width: 310px; height: 310px; z-index: 10; }
-        .hero-logo { position: absolute; top: 45%; left: 35%; transform: translate(-50%, -50%); width: 360px; transition: transform 0.3s ease; }
-        .logo-container:hover .hero-logo { transform: translate(-50%, -50%) scale(1.08) rotate(3deg); }
+<style>
 
-        .container { max-width: 1300px; margin: -30px auto 40px auto; padding: 0 20px; position: relative; z-index: 20; }
-        .dashboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); padding: 30px; transition: background-color 0.3s ease; }
+:root{
+--primary:#2563eb;
+--bg-body:#f8fafc;
+--text-main:#0f172a;
+--card-bg:#ffffff;
+--border-light:#e2e8f0;
+}
 
-        .tabs-container {
-            display: flex; justify-content: center; margin-bottom: 25px; position: sticky; top: 20px; z-index: 1000; 
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 50px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08); width: fit-content; margin: 0 auto;
-        }
-        body.dark-mode .tabs-container { background: rgba(30, 41, 59, 0.85); }
+body.dark-mode{
+--bg-body:#0f172a;
+--text-main:#f1f5f9;
+--card-bg:#1e293b;
+--border-light:#334155;
+}
 
-        .tabs { display: inline-flex; background: #f1f5f9; padding: 8px; border-radius: 50px; flex-wrap: wrap; gap: 5px; }
-        body.dark-mode .tabs { background: #334155; }
+body{
+font-family:'Inter',sans-serif;
+margin:0;
+background:var(--bg-body);
+color:var(--text-main);
+}
 
-        .tab-btn { background: transparent; border: none; padding: 12px 24px; font-size: 1rem; cursor: pointer; color: var(--text-muted); font-weight: 600; border-radius: 40px; transition: all 0.3s ease; }
-        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        body.dark-mode .tab-btn.active { background: #475569; color: #60a5fa; }
+.container{
+max-width:1300px;
+margin:auto;
+padding:20px;
+}
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeInUp 0.4s ease forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+.dashboard-card{
+background:var(--card-bg);
+border-radius:20px;
+padding:30px;
+}
 
-        iframe { width: 100%; height: 750px; border: none; border-radius: 12px; background: #f8fafc; }
-        body.dark-mode iframe { background: #0f172a; }
+.tabs{
+display:flex;
+gap:10px;
+margin-bottom:20px;
+}
 
-        .info-card { padding: 30px; background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 16px; }
-        
-        /* Visualizer Controls */
-        .visualizer-controls { margin-bottom: 25px; padding: 20px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
-        body.dark-mode .visualizer-controls { background: #334155; }
-        #sampleSelect { padding: 10px; border-radius: 8px; border: 1px solid var(--border-light); flex-grow: 1; background: var(--card-bg); color: var(--text-main); }
-        #igv-div { border: 1px solid var(--border-light); border-radius: 12px; min-height: 600px; background: white; }
+.tab-btn{
+padding:10px 18px;
+border:none;
+border-radius:30px;
+cursor:pointer;
+}
 
-        .site-footer { background-color: #0f172a; color: #cbd5e1; padding: 50px 20px 20px 20px; margin-top: 60px; border-top: 4px solid var(--primary); }
-        .footer-content { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; }
-        .theme-circle-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid #334155; background: #1e293b; color: #fbbf24; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    </style>
+.tab-btn.active{
+background:#2563eb;
+color:white;
+}
+
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+
+#igv-div{
+min-height:600px;
+border:1px solid var(--border-light);
+border-radius:12px;
+background:white;
+}
+
+.visualizer-controls{
+margin-bottom:15px;
+}
+
+</style>
 </head>
+
 <body>
 
-    <header class="hero">
-        <div class="logo-container">
-            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="UPARUS Logo" class="hero-logo">
-        </div>
-        <h1 class="reveal-title">IPARUS: Genomic Resources for the Parus genus</h1>
-        <p class="reveal-text">Integrated Platform for <i>Parus</i> Alignments, Resources and Useful Sequences.</p>
-    </header>
+<div class="container">
 
-    <div class="container">
-        <div class="dashboard-card">
-            <div class="tabs-container">
-                <div class="tabs">
-                    <button class="tab-btn active" onclick="openTab('mapTab')" id="btnMap">🌍 Map View</button>
-                    <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual">🔬 Interactive Visualizer</button>
-                    <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable">🧬 Sequence Data</button>
-                    <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo">📊 Sample Information</button>
-                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline & Reference</button>
-                    <button class="tab-btn" onclick="openTab('pubTab')" id="btnPub">📚 Publications</button>
-                    <button class="tab-btn" onclick="openTab('contactTab')" id="btnContact">✉️ Contact</button>
-                </div>
-            </div>
+<div class="dashboard-card">
 
-            <div id="visualTab" class="tab-content">
-                <div class="info-card">
-                    <h3>Interactive Genome Browser</h3>
-                    <div class="visualizer-controls">
-                        <label for="sampleSelect"><strong>Select Sample:</strong></label>
-                        <select id="sampleSelect" onchange="updateIGV()">
-                            <option value="">-- Choose a Sample --</option>
-                        </select>
-                    </div>
-                    <div id="igv-div"></div>
-                </div>
-            </div>
+<div class="tabs">
+<button class="tab-btn active" id="btnMap" onclick="openTab('mapTab')">🌍 Map</button>
+<button class="tab-btn" id="btnVisual" onclick="openTab('visualTab')">🔬 Visualizer</button>
+</div>
 
-            <div id="mapTab" class="tab-content active"><iframe src="Final_Styled_Map.html"></iframe></div>
-            <div id="tableTab" class="tab-content"><iframe src="samples_table.html" id="tableIframe"></iframe></div>
-            <div id="infoTab" class="tab-content"><iframe src="sample_information.html" id="infoIframe"></iframe></div>
-            <div id="pipelineTab" class="tab-content"><div class="info-card"><h3>Pipeline & Reference</h3><p>Mapping to GCF_001522545.3...</p></div></div>
-            <div id="pubTab" class="tab-content"><div class="info-card"><h3>Publications</h3><p>Research using these samples...</p></div></div>
-            <div id="contactTab" class="tab-content"><div class="info-card"><h3>Contact</h3><p>Gossmann lab, TU Dortmund.</p></div></div>
-        </div>
-    </div>
+<div id="mapTab" class="tab-content active">
+<h3>Map Placeholder</h3>
+</div>
 
-    <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-section"><h4>Contact</h4><p>assistance.csb.bci@tu-dortmund.de</p></div>
-        </div>
-        <div class="footer-bottom">
-            &copy; 2026 IPARUS Database.
-            <button class="theme-circle-btn" onclick="toggleTheme()" style="float:right;"><span id="theme-icon">🌙</span></button>
-        </div>
-    </footer>
+<div id="visualTab" class="tab-content">
 
-    <script>
-        const SCIEBO_CONFIG = {
-            token: "o6CpwRbCfPN7d6c",
-            pass: "rKKbnToMwe",
-            baseUrl: "https://tu-dortmund.sciebo.de/public.php/dav/files/o6CpwRbCfPN7d6c/"
-        };
+<h3>Interactive Genome Browser</h3>
 
-        const GITHUB_CONFIG = {
-            user: "Gossmann-lab",
-            repo: "iparus"
-        };
+<div class="visualizer-controls">
+<select id="sampleSelect">
+<option value="">-- Choose Sample --</option>
+</select>
+</div>
 
-        const bamFiles = [
-            "SRR1793405_sorted_dedup.bam", "SRR1793406_sorted_dedup.bam", "SRR1793407_sorted_dedup.bam",
-            "SRR1793415_sorted_dedup.bam", "SRR1793417_sorted_dedup.bam", "SRR1793419_sorted_dedup.bam",
-            "SRR1793420_sorted_dedup.bam", "SRR1793421_sorted_dedup.bam", "SRR1793422_sorted_dedup.bam",
-            "SRR1793423_sorted_dedup.bam", "SRR1793424_sorted_dedup.bam", "SRR1793425_sorted_dedup.bam",
-            "SRR1793427_sorted_dedup.bam", "SRR1793428_sorted_dedup.bam", "SRR1793429_sorted_dedup.bam",
-            "SRR1793430_sorted_dedup.bam", "SRR1793431_sorted_dedup.bam", "SRR1793432_sorted_dedup.bam",
-            "SRR1793433_sorted_dedup.bam", "SRR1793434_sorted_dedup.bam", "SRR1793435_sorted_dedup.bam",
-            "SRR1793436_sorted_dedup.bam", "SRR1793437_sorted_dedup.bam", "SRR1793438_sorted_dedup.bam",
-            "SRR1793439_sorted_dedup.bam", "SRR1793440_sorted_dedup.bam", "SRR1793441_sorted_dedup.bam",
-            "SRR1793442_sorted_dedup.bam", "SRR1793443_sorted_dedup.bam", "SRR1793444_sorted_dedup.bam",
-            "SRR1793445_sorted_dedup.bam", "SRR1793447_sorted_dedup.bam", "SRR2961328_sorted_dedup.bam",
-            "SRR2961671_sorted_dedup.bam", "SRR2961674_sorted_dedup.bam", "SRR2961676_sorted_dedup.bam",
-            "SRR2961678_sorted_dedup.bam", "SRR2961680_sorted_dedup.bam", "SRR2961684_sorted_dedup.bam",
-            "SRR2961689_sorted_dedup.bam", "SRR2961695_sorted_dedup.bam", "SRR2961697_sorted_dedup.bam",
-            "SRR2961699_sorted_dedup.bam", "SRR2961701_sorted_dedup.bam", "SRR2961712_sorted_dedup.bam",
-            "SRR2961716_sorted_dedup.bam", "SRR2961718_sorted_dedup.bam", "SRR2961722_sorted_dedup.bam",
-            "SRR2961725_sorted_dedup.bam", "SRR2961728_sorted_dedup.bam", "SRR2961731_sorted_dedup.bam",
-            "SRR2961736_sorted_dedup.bam", "SRR2961746_sorted_dedup.bam", "SRR2961750_sorted_dedup.bam",
-            "SRR2961753_sorted_dedup.bam", "SRR2961756_sorted_dedup.bam", "SRR2961759_sorted_dedup.bam",
-            "SRR2961762_sorted_dedup.bam", "SRR2961765_sorted_dedup.bam", "SRR2961769_sorted_dedup.bam",
-            "SRR2961773_sorted_dedup.bam", "SRR2961775_sorted_dedup.bam", "SRR3085443_sorted_dedup.bam",
-            "SRR5423293_sorted_dedup.bam", "SRR5423294_sorted_dedup.bam", "SRR5423295_sorted_dedup.bam",
-            "SRR5423296_sorted_dedup.bam", "SRR5423297_sorted_dedup.bam", "SRR5423298_sorted_dedup.bam",
-            "SRR5423299_sorted_dedup.bam", "SRR5423300_sorted_dedup.bam", "SRR5423301_sorted_dedup.bam",
-            "SRR5423302_sorted_dedup.bam", "SRR765717_sorted_dedup.bam", "SRR9656355_sorted_dedup.bam",
-            "SRR9656356_sorted_dedup.bam", "SRR9656357_sorted_dedup.bam", "SRR9656367_sorted_dedup.bam",
-            "SRR9656368_sorted_dedup.bam", "SRR9656369_sorted_dedup.bam"
-        ];
+<div id="igv-div"></div>
 
-        const select = document.getElementById('sampleSelect');
-        bamFiles.forEach(file => {
-            let opt = document.createElement('option');
-            opt.value = file;
-            opt.innerHTML = file.split('_')[0];
-            select.appendChild(opt);
-        });
+</div>
 
-        let igvBrowser;
+</div>
+</div>
 
-        async function updateIGV() {
-            const fileName = select.value;
-            if (!fileName) return;
+<script>
 
-            const sampleFolder = fileName.split('_')[0];
-            const bamUrl = `${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`;
-            const fastaUrl = `${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`;
-            
-            const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
-            const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+/* ===============================
+CONFIG
+=============================== */
 
-            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+const SCIEBO_CONFIG={
+token:"o6CpwRbCfPN7d6c",
+pass:"rKKbnToMwe",
+baseUrl:"https://tu-dortmund.sciebo.de/public.php/dav/files/o6CpwRbCfPN7d6c/"
+};
 
-            const options = {
-                genome: {
-                    "id": "ParusMajor",
-                    "fastaURL": fastaUrl,
-                    "indexURL": faiUrl,
-                    "fetchConfig": {
-                        "headers": { "Authorization": authHeader }
-                    }
-                },
-                locus: "all",
-                tracks: [{
-                    name: fileName,
-                    url: bamUrl,
-                    indexURL: baiUrl,
-                    format: "bam",
-                    "fetchConfig": {
-                        "headers": { "Authorization": authHeader }
-                    }
-                }]
-            };
+const GITHUB_CONFIG={
+user:"Gossmann-lab",
+repo:"iparus"
+};
 
-            const container = document.getElementById("igv-div");
-            container.innerHTML = "⌛ Loading Alignment Data...";
-            
-            try {
-                if (igvBrowser) { igv.removeBrowser(container); }
-                igvBrowser = await igv.createBrowser(container, options);
-            } catch (error) {
-                console.error(error);
-                container.innerHTML = `<div style="padding:20px; color:red;">Error: ${error.message}</div>`;
-            }
-        }
+const bamFiles=[
+"SRR1793405_sorted_dedup.bam",
+"SRR1793406_sorted_dedup.bam",
+"SRR1793407_sorted_dedup.bam"
+];
 
-        function openTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            document.getElementById('btn' + tabId.replace('Tab','').charAt(0).toUpperCase() + tabId.replace('Tab','').slice(1)).classList.add('active');
-        }
 
-        function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            document.getElementById('theme-icon').innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
-        }
-    </script>
+/* ===============================
+GLOBAL STATE
+=============================== */
+
+let igvBrowser=null;
+let genomeLoaded=false;
+
+
+/* ===============================
+POPULATE SELECT
+=============================== */
+
+const select=document.getElementById("sampleSelect");
+
+bamFiles.forEach(file=>{
+let opt=document.createElement("option");
+opt.value=file;
+opt.textContent=file.split("_")[0];
+select.appendChild(opt);
+});
+
+select.addEventListener("change",updateIGV);
+
+
+/* ===============================
+TAB SYSTEM
+=============================== */
+
+function openTab(tabId){
+
+document.querySelectorAll(".tab-content")
+.forEach(t=>t.classList.remove("active"));
+
+document.querySelectorAll(".tab-btn")
+.forEach(b=>b.classList.remove("active"));
+
+document.getElementById(tabId).classList.add("active");
+
+document.getElementById(
+"btn"+tabId.replace("Tab","")
+.charAt(0).toUpperCase()+
+tabId.replace("Tab","").slice(1)
+).classList.add("active");
+
+/* ⭐ FIX IGV resize after tab visible */
+setTimeout(()=>{
+if(igvBrowser) igvBrowser.resize();
+},200);
+
+}
+
+
+/* ===============================
+IGV INITIALIZATION
+=============================== */
+
+async function updateIGV(){
+
+const fileName=select.value;
+if(!fileName) return;
+
+const container=document.getElementById("igv-div");
+
+container.innerHTML="⌛ Loading IGV...";
+
+/* dispose previous browser */
+if(igvBrowser){
+await igvBrowser.dispose();
+igvBrowser=null;
+}
+
+/* build URLs */
+
+const sampleFolder=fileName.split("_")[0];
+
+const bamUrl=
+`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`;
+
+const fastaUrl=
+`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`;
+
+const baiUrl=
+`https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
+
+const faiUrl=
+`https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+
+const authHeader=
+"Basic "+btoa(SCIEBO_CONFIG.token+":"+SCIEBO_CONFIG.pass);
+
+
+/* IGV OPTIONS */
+
+const options={
+
+genome:{
+id:"ParusMajor",
+fastaURL:fastaUrl,
+indexURL:faiUrl,
+fetchConfig:{
+headers:{Authorization:authHeader}
+}
+},
+
+locus:"chr1",
+
+tracks:[{
+name:fileName,
+url:bamUrl,
+indexURL:baiUrl,
+format:"bam",
+fetchConfig:{
+headers:{Authorization:authHeader}
+}
+}]
+};
+
+
+/* create browser */
+
+try{
+
+igvBrowser=
+await igv.createBrowser(container,options);
+
+/* resize after render */
+setTimeout(()=>igvBrowser.resize(),300);
+
+}catch(err){
+
+console.error(err);
+container.innerHTML=
+`<div style="color:red;padding:20px;">
+IGV Error: ${err.message}
+</div>`;
+
+}
+
+}
+
+</script>
+
 </body>
 </html>
