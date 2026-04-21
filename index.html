@@ -29,80 +29,60 @@
 
         body { 
             font-family: 'Inter', sans-serif; 
-            margin: 0; 
-            padding: 0; 
+            margin: 0; padding: 0; 
             background-color: var(--bg-body); 
             color: var(--text-main); 
             line-height: 1.7;
-            -webkit-font-smoothing: antialiased; 
-            -moz-osx-font-smoothing: grayscale;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
-        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        .reveal-title { animation: fadeInDown 0.8s ease-out forwards; }
-        .reveal-text { opacity: 0; animation: fadeIn 1.2s ease-out 0.3s forwards; }
-
         .hero {
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
-            color: white;
-            padding: 50px 20px 60px 20px; 
-            text-align: center;
-            position: relative; 
-            overflow: hidden;
-            border-bottom: 4px solid #e74c3c;
+            color: white; padding: 50px 20px; text-align: center;
+            border-bottom: 4px solid #e74c3c; position: relative;
         }
         
-        .logo-container { position: absolute; top: 0; left: 0; width: 310px; height: 310px; z-index: 10; }
-        .hero-logo { position: absolute; top: 45%; left: 35%; transform: translate(-50%, -50%); width: 360px; transition: transform 0.3s ease; }
-        .logo-container:hover .hero-logo { transform: translate(-50%, -50%) scale(1.08) rotate(3deg); }
+        .logo-container { position: absolute; top: 0; left: 0; width: 310px; height: 310px; }
+        .hero-logo { position: absolute; top: 45%; left: 35%; transform: translate(-50%, -50%); width: 360px; }
 
         .container { max-width: 1300px; margin: -30px auto 40px auto; padding: 0 20px; position: relative; z-index: 20; }
-        .dashboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); padding: 30px; transition: background-color 0.3s ease; }
+        .dashboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); padding: 30px; }
 
         .tabs-container {
             display: flex; justify-content: center; margin-bottom: 25px; position: sticky; top: 20px; z-index: 1000; 
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 50px; 
-            box-shadow: 0 5px 20px rgba(0,0,0,0.08); width: fit-content; margin: 0 auto;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 50px; width: fit-content; margin: 0 auto;
         }
         body.dark-mode .tabs-container { background: rgba(30, 41, 59, 0.85); }
 
-        .tabs { display: inline-flex; background: #f1f5f9; padding: 8px; border-radius: 50px; flex-wrap: wrap; gap: 5px; }
+        .tabs { display: inline-flex; background: #f1f5f9; padding: 8px; border-radius: 50px; gap: 5px; }
         body.dark-mode .tabs { background: #334155; }
 
-        .tab-btn { background: transparent; border: none; padding: 12px 24px; font-size: 1rem; cursor: pointer; color: var(--text-muted); font-weight: 600; border-radius: 40px; transition: all 0.3s ease; }
+        .tab-btn { background: transparent; border: none; padding: 12px 24px; font-weight: 600; cursor: pointer; color: var(--text-muted); border-radius: 40px; }
         .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        body.dark-mode .tab-btn.active { background: #475569; color: #60a5fa; }
 
         .tab-content { display: none; }
-        .tab-content.active { display: block; animation: fadeInUp 0.4s ease forwards; }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .tab-content.active { display: block; }
 
-        iframe { width: 100%; height: 750px; border: none; border-radius: 12px; background: #f8fafc; }
-        body.dark-mode iframe { background: #0f172a; }
+        iframe { width: 100%; height: 750px; border: none; border-radius: 12px; }
 
-        .info-card { padding: 30px; background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 16px; }
-        
         /* Visualizer Controls */
-        .visualizer-controls { margin-bottom: 25px; padding: 20px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
+        .visualizer-controls { margin-bottom: 20px; padding: 20px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
         body.dark-mode .visualizer-controls { background: #334155; }
-        #sampleSelect { padding: 10px; border-radius: 8px; border: 1px solid var(--border-light); flex-grow: 1; background: var(--card-bg); color: var(--text-main); }
+        #sampleSelect { padding: 10px; border-radius: 8px; flex-grow: 1; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-light); }
         #igv-div { border: 1px solid var(--border-light); border-radius: 12px; min-height: 600px; background: white; }
 
-        .site-footer { background-color: #0f172a; color: #cbd5e1; padding: 50px 20px 20px 20px; margin-top: 60px; border-top: 4px solid var(--primary); }
-        .footer-content { max-width: 1200px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; gap: 30px; }
-        .theme-circle-btn { width: 42px; height: 42px; border-radius: 50%; border: 1px solid #334155; background: #1e293b; color: #fbbf24; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .site-footer { background-color: #0f172a; color: #cbd5e1; padding: 30px 20px; margin-top: 60px; text-align: center; }
+        .theme-circle-btn { width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer; background: #1e293b; color: #fbbf24; }
     </style>
 </head>
 <body>
 
     <header class="hero">
         <div class="logo-container">
-            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="UPARUS Logo" class="hero-logo">
+            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="Logo" class="hero-logo">
         </div>
-        <h1 class="reveal-title">IPARUS: Genomic Resources for the Parus genus</h1>
-        <p class="reveal-text">Integrated Platform for <i>Parus</i> Alignments, Resources and Useful Sequences.</p>
+        <h1>IPARUS: Genomic Resources for the Parus genus</h1>
+        <p>Integrated Platform for <i>Parus</i> Alignments, Resources and Useful Sequences.</p>
     </header>
 
     <div class="container">
@@ -112,43 +92,34 @@
                     <button class="tab-btn active" onclick="openTab('mapTab')" id="btnMap">🌍 Map View</button>
                     <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual">🔬 Interactive Visualizer</button>
                     <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable">🧬 Sequence Data</button>
-                    <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo">📊 Sample Information</button>
-                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline & Reference</button>
-                    <button class="tab-btn" onclick="openTab('pubTab')" id="btnPub">📚 Publications</button>
+                    <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo">📊 Info</button>
+                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline</button>
                     <button class="tab-btn" onclick="openTab('contactTab')" id="btnContact">✉️ Contact</button>
                 </div>
             </div>
 
+            <div id="mapTab" class="tab-content active"><iframe src="Final_Styled_Map.html"></iframe></div>
+            
             <div id="visualTab" class="tab-content">
-                <div class="info-card">
-                    <h3>Interactive Genome Browser</h3>
-                    <div class="visualizer-controls">
-                        <label for="sampleSelect"><strong>Select Sample:</strong></label>
-                        <select id="sampleSelect" onchange="updateIGV()">
-                            <option value="">-- Choose a Sample --</option>
-                        </select>
-                    </div>
-                    <div id="igv-div"></div>
+                <div class="visualizer-controls">
+                    <label><strong>Select Sample:</strong></label>
+                    <select id="sampleSelect" onchange="updateIGV()">
+                        <option value="">-- Choose a Sample --</option>
+                    </select>
                 </div>
+                <div id="igv-div"></div>
             </div>
 
-            <div id="mapTab" class="tab-content active"><iframe src="Final_Styled_Map.html"></iframe></div>
-            <div id="tableTab" class="tab-content"><iframe src="samples_table.html" id="tableIframe"></iframe></div>
-            <div id="infoTab" class="tab-content"><iframe src="sample_information.html" id="infoIframe"></iframe></div>
-            <div id="pipelineTab" class="tab-content"><div class="info-card"><h3>Pipeline & Reference</h3><p>Mapping to GCF_001522545.3...</p></div></div>
-            <div id="pubTab" class="tab-content"><div class="info-card"><h3>Publications</h3><p>Research using these samples...</p></div></div>
-            <div id="contactTab" class="tab-content"><div class="info-card"><h3>Contact</h3><p>Gossmann lab, TU Dortmund.</p></div></div>
+            <div id="tableTab" class="tab-content"><iframe src="samples_table.html"></iframe></div>
+            <div id="infoTab" class="tab-content"><iframe src="sample_information.html"></iframe></div>
+            <div id="pipelineTab" class="tab-content"><div style="padding:20px;"><h3>Pipeline</h3><p>Mapping to GCF_001522545.3...</p></div></div>
+            <div id="contactTab" class="tab-content"><div style="padding:20px;"><h3>Contact</h3><p>Gossmann lab, TU Dortmund University.</p></div></div>
         </div>
     </div>
 
     <footer class="site-footer">
-        <div class="footer-content">
-            <div class="footer-section"><h4>Contact</h4><p>assistance.csb.bci@tu-dortmund.de</p></div>
-        </div>
-        <div class="footer-bottom">
-            &copy; 2026 IPARUS Database.
-            <button class="theme-circle-btn" onclick="toggleTheme()" style="float:right;"><span id="theme-icon">🌙</span></button>
-        </div>
+        &copy; 2026 IPARUS Database.
+        <button class="theme-circle-btn" onclick="toggleTheme()" style="float:right;"><span id="theme-icon">🌙</span></button>
     </footer>
 
     <script>
@@ -162,6 +133,9 @@
             user: "Gossmann-lab",
             repo: "iparus"
         };
+
+        // ⭐ آدرس پروکسی اختصاصی شما در کلودفلر
+        const PROXY_URL = "https://round-disk-db63.mohammadmoein-hajihoseinigazestani.workers.dev/?url=";
 
         const bamFiles = [
             "SRR1793405_sorted_dedup.bam", "SRR1793406_sorted_dedup.bam", "SRR1793407_sorted_dedup.bam",
@@ -193,6 +167,7 @@
             "SRR9656368_sorted_dedup.bam", "SRR9656369_sorted_dedup.bam"
         ];
 
+        // Populate Select Menu
         const select = document.getElementById('sampleSelect');
         bamFiles.forEach(file => {
             let opt = document.createElement('option');
@@ -207,45 +182,52 @@
             const fileName = select.value;
             if (!fileName) return;
 
+            const container = document.getElementById("igv-div");
+            container.innerHTML = "⌛ Loading Alignment Data (via Private Proxy)...";
+
+            // Cleanup previous instance
+            if (igvBrowser) {
+                igv.removeBrowser(container);
+                igvBrowser = null;
+            }
+
             const sampleFolder = fileName.split('_')[0];
-            const bamUrl = `${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`;
-            const fastaUrl = `${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`;
+            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+
+            // Construct URLs through Cloudflare Proxy
+            const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`);
+            const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
             
+            // GitHub URLs (No proxy needed)
             const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
             const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
 
-            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
-
             const options = {
                 genome: {
-                    "id": "ParusMajor",
-                    "fastaURL": fastaUrl,
-                    "indexURL": faiUrl,
-                    "fetchConfig": {
-                        "headers": { "Authorization": authHeader }
-                    }
+                    id: "ParusMajor",
+                    fastaURL: fastaUrl,
+                    indexURL: faiUrl,
+                    fetchConfig: { headers: { "Authorization": authHeader } }
                 },
-                locus: "all",
+                locus: "NC_031768.1:222,000-225,000",
                 tracks: [{
                     name: fileName,
                     url: bamUrl,
                     indexURL: baiUrl,
                     format: "bam",
-                    "fetchConfig": {
-                        "headers": { "Authorization": authHeader }
-                    }
+                    fetchConfig: { headers: { "Authorization": authHeader } }
                 }]
             };
 
-            const container = document.getElementById("igv-div");
-            container.innerHTML = "⌛ Loading Alignment Data...";
-            
             try {
-                if (igvBrowser) { igv.removeBrowser(container); }
                 igvBrowser = await igv.createBrowser(container, options);
+                console.log("IGV Loaded Successfully");
             } catch (error) {
                 console.error(error);
-                container.innerHTML = `<div style="padding:20px; color:red;">Error: ${error.message}</div>`;
+                container.innerHTML = `<div style="padding:20px; color:red;">
+                    <strong>Proxy Error:</strong> ${error.message}<br>
+                    <small>Check if Cloudflare Worker is active.</small>
+                </div>`;
             }
         }
 
@@ -254,6 +236,11 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
             document.getElementById('btn' + tabId.replace('Tab','').charAt(0).toUpperCase() + tabId.replace('Tab','').slice(1)).classList.add('active');
+            
+            // Fix IGV size if tab was hidden
+            if(tabId === 'visualTab' && igvBrowser) {
+                igvBrowser.resize();
+            }
         }
 
         function toggleTheme() {
