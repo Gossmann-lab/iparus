@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPARUS - Integrated Parus Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/igv@2.15.5/dist/igv.min.js"></script>
     
     <style>
         :root {
@@ -337,6 +338,30 @@
             font-size: 0.85rem;
             color: #94a3b8;
         }
+
+        /* --- Visualizer Specific Styles --- */
+        .visualizer-controls {
+            margin-bottom: 20px;
+            padding: 20px;
+            background: #f1f5f9;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        #sampleSelect {
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #cbd5e1;
+            flex-grow: 1;
+            font-family: inherit;
+        }
+        #igv-div {
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            min-height: 600px;
+            background: white;
+        }
     </style>
 </head>
 <body>
@@ -359,6 +384,7 @@
             <div class="tabs-container">
                 <div class="tabs">
                     <button class="tab-btn active" onclick="openTab('mapTab')" id="btnMap">🌍 Map View</button>
+                    <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual">🔬 Interactive Visualizer</button>
                     <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable">🧬 Sequence Data</button>
                     <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo">📊 Sample Information</button>
                     <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline & Reference</button>
@@ -369,6 +395,22 @@
 
             <div id="mapTab" class="tab-content active">
                 <iframe src="Final_Styled_Map.html"></iframe>
+            </div>
+
+            <div id="visualTab" class="tab-content">
+                <div class="info-card">
+                    <h3 style="color: var(--text-main); margin-bottom: 20px;">Interactive Genome Browser</h3>
+                    <p style="margin-bottom: 20px; color: var(--text-muted);">Select a sample from the list to visualize its alignment against the reference genome. Data is streamed in real-time from Sciebo via WebDAV.</p>
+                    
+                    <div class="visualizer-controls">
+                        <label for="sampleSelect"><strong>Select Sample:</strong></label>
+                        <select id="sampleSelect" onchange="updateIGV()">
+                            <option value="">-- Choose a BAM file --</option>
+                        </select>
+                    </div>
+
+                    <div id="igv-div"></div>
+                </div>
             </div>
 
             <div id="pipelineTab" class="tab-content">
@@ -430,56 +472,10 @@
                                     View Article (DOI)
                                 </a>
                             </li>
-                            
                             <li>
                                 <div class="pub-title">Comparative Genomics Reveals Evolution of a Beak Morphology Locus in a High-Altitude Songbird.</div>
                                 <div class="pub-authors">Cheng, Y., Miller, M.J., Zhang, D., Song, G., Jia, C., Qu, Y., Lei, F. (2020) | <i>Mol. Biol. Evol. 37, 2983–2988</i></div>
                                 <a href="https://doi.org/10.1093/molbev/msaa157" target="_blank" class="custom-link">
-                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
-                                    View Article (DOI)
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="pub-title">Parallel genomic responses to historical climate change and high elevation in East Asian songbirds.</div>
-                                <div class="pub-authors">Cheng, Y., Miller, M.J., Zhang, D., Xiong, Y., Hao, Y., Jia, C., Cai, T., Li, S.-H., Johansson, U.S., Liu, Y., Chang, Y., Song, G., Qu, Y., Lei, F. (2021) | <i>Proc. Natl. Acad. Sci. 118, e2023918118</i></div>
-                                <a href="https://doi.org/10.1073/pnas.2023918118" target="_blank" class="custom-link">
-                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
-                                    View Article (DOI)
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="pub-title">Determinants of the Efficacy of Natural Selection on Coding and Noncoding Variability in Two Passerine Species.</div>
-                                <div class="pub-authors">Corcoran, P., Gossmann, T.I., Barton, H.J., The Great Tit HapMap Consortium, Slate, J., Zeng, K. (2017) | <i>Genome Biol. Evol. 9, 2987–3007</i></div>
-                                <a href="https://doi.org/10.1093/gbe/evx213" target="_blank" class="custom-link">
-                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
-                                    View Article (DOI)
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="pub-title">Evolutionary signals of selection on cognition from the great tit genome and methylome.</div>
-                                <div class="pub-authors">Laine, V.N., Gossmann, T.I., Schachtschneider, K.M., Garroway, C.J., Madsen, O., Verhoeven, K.J.F., de Jager, V., Megens, H.-J., Warren, W.C., Minx, P., Crooijmans, R.P.M.A., Corcoran, P., Sheldon, B.C., Slate, J., Zeng, K., van Oers, K., Visser, M.E., Groenen, M.A.M. (2016) | <i>Nat. Commun. 7, 10474</i></div>
-                                <a href="https://doi.org/10.1038/ncomms10474" target="_blank" class="custom-link">
-                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
-                                    View Article (DOI)
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="pub-title">Genetic responses to seasonal variation in altitudinal stress: whole-genome resequencing of great tit in eastern Himalayas.</div>
-                                <div class="pub-authors">Qu, Y., Tian, S., Han, N., Zhao, H., Gao, B., Fu, J., Cheng, Y., Song, G., Ericson, P.G.P., Zhang, Y.E., Wang, D., Quan, Q., Jiang, Z., Li, R., Lei, F. (2015) | <i>Sci. Rep. 5, 14256</i></div>
-                                <a href="https://doi.org/10.1038/srep14256" target="_blank" class="custom-link">
-                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
-                                    View Article (DOI)
-                                </a>
-                            </li>
-
-                            <li>
-                                <div class="pub-title">Ground tit genome reveals avian adaptation to living at high altitudes in the Tibetan plateau.</div>
-                                <div class="pub-authors">Qu, Y., Zhao, H., Han, N., Zhou, G., Song, G., Gao, B., Tian, S., Zhang, J., Zhang, R., Meng, X., Zhang, Yuan, Zhang, Yong, Zhu, X., Wang, W., Lambert, D., Ericson, P.G.P., Subramanian, S., Yeung, C., Zhu, H., Jiang, Z., Li, R., Lei, F. (2013) | <i>Nat. Commun. 4, 2071</i></div>
-                                <a href="https://doi.org/10.1038/ncomms3071" target="_blank" class="custom-link">
                                     <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
                                     View Article (DOI)
                                 </a>
@@ -522,31 +518,121 @@
         <div class="footer-content">
             <div class="footer-section">
                 <img src="https://github.com/Gossmann-lab/iparus/blob/main/CSB_logo_white_font.png?raw=true" alt="CSB Lab Logo" class="footer-logo">
-                
                 <p><strong style="color: white;">Laboratory of Computational Systems Biology</strong></p>
-                <p>Faculty of Biochemical and Chemical Engineering<br>
-                Technical University Dortmund</p>
+                <p>Faculty of Biochemical and Chemical Engineering<br>Technical University Dortmund</p>
             </div>
-
             <div class="footer-section">
                 <h4>Address</h4>
-                <p>📍 Emil-Figge-Str. 66<br>
-                44227 Dortmund<br>
-                Germany</p>
+                <p>📍 Emil-Figge-Str. 66<br>44227 Dortmund<br>Germany</p>
             </div>
-
             <div class="footer-section">
                 <h4>Contact</h4>
                 <p>📞 <a href="tel:+492317556852" class="footer-link">+49 231 755 6852</a></p>
                 <p>✉️ <a href="mailto:assistance.csb.bci@tu-dortmund.de" class="footer-link">assistance.csb.bci@tu-dortmund.de</a></p>
             </div>
         </div>
-        
         <div class="footer-bottom">
             &copy; 2026 IPARUS Database. All rights reserved.
         </div>
     </footer>
+
     <script>
+        // Sciebo WebDAV Configuration
+        const SCIEBO_CONFIG = {
+            token: "o6CpwRbCfPN7d6c",
+            pass: "rKKbnToMwe",
+            baseUrl: "https://tu-dortmund.sciebo.de/public.php/dav/files/o6CpwRbCfPN7d6c/"
+        };
+
+        // Full List of BAM Files
+        const bamFiles = [
+            "SRR1793405_sorted_dedup.bam", "SRR1793406_sorted_dedup.bam", "SRR1793407_sorted_dedup.bam",
+            "SRR1793415_sorted_dedup.bam", "SRR1793417_sorted_dedup.bam", "SRR1793419_sorted_dedup.bam",
+            "SRR1793420_sorted_dedup.bam", "SRR1793421_sorted_dedup.bam", "SRR1793422_sorted_dedup.bam",
+            "SRR1793423_sorted_dedup.bam", "SRR1793424_sorted_dedup.bam", "SRR1793425_sorted_dedup.bam",
+            "SRR1793427_sorted_dedup.bam", "SRR1793428_sorted_dedup.bam", "SRR1793429_sorted_dedup.bam",
+            "SRR1793430_sorted_dedup.bam", "SRR1793431_sorted_dedup.bam", "SRR1793432_sorted_dedup.bam",
+            "SRR1793433_sorted_dedup.bam", "SRR1793434_sorted_dedup.bam", "SRR1793435_sorted_dedup.bam",
+            "SRR1793436_sorted_dedup.bam", "SRR1793437_sorted_dedup.bam", "SRR1793438_sorted_dedup.bam",
+            "SRR1793439_sorted_dedup.bam", "SRR1793440_sorted_dedup.bam", "SRR1793441_sorted_dedup.bam",
+            "SRR1793442_sorted_dedup.bam", "SRR1793443_sorted_dedup.bam", "SRR1793444_sorted_dedup.bam",
+            "SRR1793445_sorted_dedup.bam", "SRR1793447_sorted_dedup.bam", "SRR2961328_sorted_dedup.bam",
+            "SRR2961671_sorted_dedup.bam", "SRR2961674_sorted_dedup.bam", "SRR2961676_sorted_dedup.bam",
+            "SRR2961678_sorted_dedup.bam", "SRR2961680_sorted_dedup.bam", "SRR2961684_sorted_dedup.bam",
+            "SRR2961689_sorted_dedup.bam", "SRR2961695_sorted_dedup.bam", "SRR2961697_sorted_dedup.bam",
+            "SRR2961699_sorted_dedup.bam", "SRR2961701_sorted_dedup.bam", "SRR2961712_sorted_dedup.bam",
+            "SRR2961716_sorted_dedup.bam", "SRR2961718_sorted_dedup.bam", "SRR2961722_sorted_dedup.bam",
+            "SRR2961725_sorted_dedup.bam", "SRR2961728_sorted_dedup.bam", "SRR2961731_sorted_dedup.bam",
+            "SRR2961736_sorted_dedup.bam", "SRR2961746_sorted_dedup.bam", "SRR2961750_sorted_dedup.bam",
+            "SRR2961753_sorted_dedup.bam", "SRR2961756_sorted_dedup.bam", "SRR2961759_sorted_dedup.bam",
+            "SRR2961762_sorted_dedup.bam", "SRR2961765_sorted_dedup.bam", "SRR2961769_sorted_dedup.bam",
+            "SRR2961773_sorted_dedup.bam", "SRR2961775_sorted_dedup.bam", "SRR3085443_sorted_dedup.bam",
+            "SRR5423293_sorted_dedup.bam", "SRR5423294_sorted_dedup.bam", "SRR5423295_sorted_dedup.bam",
+            "SRR5423296_sorted_dedup.bam", "SRR5423297_sorted_dedup.bam", "SRR5423298_sorted_dedup.bam",
+            "SRR5423299_sorted_dedup.bam", "SRR5423300_sorted_dedup.bam", "SRR5423301_sorted_dedup.bam",
+            "SRR5423302_sorted_dedup.bam", "SRR765717_sorted_dedup.bam", "SRR9656355_sorted_dedup.bam",
+            "SRR9656356_sorted_dedup.bam", "SRR9656357_sorted_dedup.bam", "SRR9656367_sorted_dedup.bam",
+            "SRR9656368_sorted_dedup.bam", "SRR9656369_sorted_dedup.bam"
+        ];
+
+        // Populate the dropdown
+        const select = document.getElementById('sampleSelect');
+        bamFiles.forEach(file => {
+            let opt = document.createElement('option');
+            opt.value = file;
+            opt.innerHTML = file.split('_')[0]; 
+            select.appendChild(opt);
+        });
+
+        let igvBrowser;
+
+        async function updateIGV() {
+            const fileName = document.getElementById('sampleSelect').value;
+            if (!fileName) return;
+
+            const sampleFolder = fileName.split('_')[0];
+            const bamUrl = `${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`;
+            const baiUrl = `${bamUrl}.bai`;
+            
+            const refBaseUrl = `${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/`;
+            const fastaUrl = `${refBaseUrl}GCF_001522545.3_Parus_major1.1_genomic.fna`;
+            const faiUrl = `${fastaUrl}.fai`;
+
+            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+
+            const options = {
+                genome: {
+                    "id": "ParusMajor_v1.1",
+                    "name": "Parus major (Reference GCF_001522545.3)",
+                    "fastaURL": fastaUrl,
+                    "indexURL": faiUrl,
+                    "headers": { "Authorization": authHeader }
+                },
+                locus: "all",
+                tracks: [
+                    {
+                        name: `Alignment: ${fileName}`,
+                        url: bamUrl,
+                        indexURL: baiUrl,
+                        format: "bam",
+                        type: "alignment",
+                        height: 500,
+                        headers: { "Authorization": authHeader }
+                    }
+                ]
+            };
+
+            const container = document.getElementById("igv-div");
+            container.innerHTML = ""; 
+            
+            try {
+                igvBrowser = await igv.createBrowser(container, options);
+            } catch (error) {
+                console.error("IGV Error:", error);
+                container.innerHTML = `<div style="padding:20px; color:#e74c3c; background:#fdf2f2; border-radius:8px;">Error loading visualizer. Please check Sciebo connections.</div>`;
+            }
+        }
+
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -554,6 +640,7 @@
             document.getElementById(tabId).classList.add('active');
             
             if(tabId === 'mapTab') document.getElementById('btnMap').classList.add('active');
+            if(tabId === 'visualTab') document.getElementById('btnVisual').classList.add('active');
             if(tabId === 'pipelineTab') document.getElementById('btnPipeline').classList.add('active');
             if(tabId === 'tableTab') document.getElementById('btnTable').classList.add('active');
             if(tabId === 'infoTab') document.getElementById('btnInfo').classList.add('active');
