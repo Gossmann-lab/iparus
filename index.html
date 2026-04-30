@@ -4,16 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPARUS - Integrated Parus Platform</title>
-    
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <!-- 1. Load React First (Stable CDNs) -->
-    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
-
-    <!-- 2. Load JBrowse with Specific Version (Fixing MIME Type Error) -->
-    <script src="https://cdn.jsdelivr.net/npm/@jbrowse/react-linear-genome-view@3.1.0/dist/react-linear-genome-view.browser.js" crossorigin></script>
     
     <style>
         :root {
@@ -26,6 +17,7 @@
             --border-light: #e2e8f0;
         }
 
+        /* --- Dark Mode Colors --- */
         body.dark-mode {
             --bg-body: #0f172a;
             --text-main: #f1f5f9;
@@ -36,223 +28,617 @@
 
         body { 
             font-family: 'Inter', sans-serif; 
-            margin: 0; padding: 0; 
+            margin: 0; 
+            padding: 0; 
             background-color: var(--bg-body); 
             color: var(--text-main); 
             line-height: 1.7;
+            -webkit-font-smoothing: antialiased; 
+            -moz-osx-font-smoothing: grayscale;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
 
+        /* --- Hero Reveal Animations --- */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .reveal-title {
+            animation: fadeInDown 0.8s ease-out forwards;
+        }
+
+        .reveal-text {
+            opacity: 0;
+            animation: fadeIn 1.2s ease-out 0.3s forwards;
+        }
+        /* ------------------------------ */
+
         .hero {
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
-            color: white; padding: 50px 20px; text-align: center;
-            border-bottom: 4px solid #e74c3c; position: relative;
+            color: white;
+            padding: 50px 20px 60px 20px; 
+            text-align: center;
+            position: relative; 
+            overflow: hidden;
+            border-bottom: 4px solid #e74c3c;
         }
         
-        .logo-container { position: absolute; top: 0; left: 0; width: 310px; height: 310px; }
-        .hero-logo { position: absolute; top: 45%; left: 35%; transform: translate(-50%, -50%); width: 360px; }
+        .logo-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 310px;  
+            height: 310px;  
+            z-index: 10;
+        }
 
-        .container { max-width: 1300px; margin: -30px auto 40px auto; padding: 0 20px; position: relative; z-index: 20; }
-        .dashboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); padding: 30px; }
+        .hero-logo {
+            position: absolute;
+            top: 45%;  
+            left: 35%; 
+            transform: translate(-50%, -50%); 
+            width: 360px; 
+            height: auto;
+            filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.2)); 
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover .hero-logo {
+            transform: translate(-50%, -50%) scale(1.08) rotate(3deg); 
+        }
+
+        @media (max-width: 768px) {
+            .logo-container {
+                position: relative;
+                width: 160px;
+                height: 160px;
+                margin: 0 auto 25px auto;
+                border-radius: 50%; 
+                top: auto;
+                left: auto;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                background-color: white; 
+            }
+            
+            .hero-logo {
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%); 
+                width: 130px;
+                filter: drop-shadow(2px 5px 5px rgba(0,0,0,0.2));
+            }
+
+            .logo-container:hover .hero-logo {
+                 transform: translate(-50%, -50%) scale(1.08);
+            }
+        }
+
+        .hero h1 { 
+            font-size: 2.2rem; 
+            font-weight: 700; 
+            margin: 0 0 15px 0; 
+            letter-spacing: -0.5px;
+            position: relative;
+            z-index: 5; 
+        }
+        .hero p { 
+            max-width: 900px; 
+            margin: 0 auto 10px auto; 
+            color: #cbd5e1; 
+            font-size: 1.05rem; 
+            position: relative;
+            z-index: 5;
+        }
+        .hero p strong { color: #f8fafc; }
+
+        .container { 
+            max-width: 1300px; 
+            margin: -30px auto 40px auto; 
+            padding: 0 20px; 
+            position: relative;
+            z-index: 20;
+        }
+        
+        .dashboard-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+            padding: 30px;
+            transition: background-color 0.3s ease;
+        }
 
         .tabs-container {
-            display: flex; justify-content: center; margin-bottom: 25px; position: sticky; top: 20px; z-index: 1000; 
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 50px; width: fit-content; margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            margin-bottom: 25px;
+            position: sticky; 
+            top: 20px; 
+            z-index: 1000; 
+            background: rgba(255, 255, 255, 0.85); 
+            backdrop-filter: blur(10px); 
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08); 
+            width: fit-content; 
+            margin-left: auto; 
+            margin-right: auto;
+            transition: background-color 0.3s ease;
         }
         body.dark-mode .tabs-container { background: rgba(30, 41, 59, 0.85); }
 
-        .tabs { display: inline-flex; background: #f1f5f9; padding: 8px; border-radius: 50px; gap: 5px; }
+        .tabs { 
+            display: inline-flex; 
+            background: #f1f5f9; 
+            padding: 8px; 
+            border-radius: 50px; 
+            flex-wrap: wrap;
+            gap: 5px;
+        }
         body.dark-mode .tabs { background: #334155; }
 
-        .tab-btn { background: transparent; border: none; padding: 12px 24px; font-weight: 600; cursor: pointer; color: var(--text-muted); border-radius: 40px; }
-        .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        .tab-btn {
+            background: transparent; 
+            border: none; 
+            padding: 12px 24px; 
+            font-size: 1rem; 
+            cursor: pointer; 
+            color: var(--text-muted); 
+            font-weight: 600;
+            border-radius: 40px; 
+            transition: all 0.3s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-btn:hover { color: var(--text-main); }
+        .tab-btn.active { 
+            background: white; 
+            color: var(--primary); 
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); 
+        }
+        body.dark-mode .tab-btn.active { background: #475569; color: #60a5fa; }
 
+        /* --- محتوای تب‌ها --- */
         .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content.active { display: block; animation: fadeInUp 0.4s ease forwards; }
+        @keyframes fadeInUp { 
+            from { opacity: 0; transform: translateY(10px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
 
-        iframe { width: 100%; height: 750px; border: none; border-radius: 12px; }
+        iframe { 
+            width: 100%; 
+            height: 750px; 
+            border: none; 
+            border-radius: 12px;
+            background: #f8fafc;
+        }
+        body.dark-mode iframe { background: #0f172a; }
 
-        .visualizer-controls { margin-bottom: 20px; padding: 20px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
-        body.dark-mode .visualizer-controls { background: #334155; }
-        #sampleSelect { padding: 10px; border-radius: 8px; flex-grow: 1; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-light); }
+        .grid-layout { display: grid; gap: 20px; grid-template-columns: 1fr; }
+        .info-card { 
+            padding: 30px; 
+            background: var(--card-bg); 
+            border: 1px solid var(--border-light); 
+            border-radius: 16px; 
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
         
-        #jbrowse-root { border: 1px solid var(--border-light); border-radius: 12px; min-height: 600px; background: white; overflow: hidden; }
+        .pipeline-layout {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+        .pipeline-text {
+            flex: 1;
+            min-width: 300px;
+        }
+        .pipeline-image {
+            flex: 1;
+            min-width: 300px;
+            display: flex;
+            justify-content: center;
+        }
+        .pipeline-image img {
+            max-width: 500px;
+            width: 100%;
+            height: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .download-box {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-top: 20px;
+            border-left: 5px solid var(--primary);
+        }
+        body.dark-mode .download-box { background: #334155; }
 
-        .site-footer { background-color: #0f172a; color: #cbd5e1; padding: 30px 20px; margin-top: 60px; text-align: center; }
-        .theme-circle-btn { width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer; background: #1e293b; color: #fbbf24; }
+        .btn-download-ref {
+            display: inline-block;
+            background: #3399ff; 
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            margin-top: 10px;
+            transition: 0.2s;
+        }
+        .btn-download-ref:hover { background-color: #2563eb; transform: translateY(-2px); }
+
+        .ref-section { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-light); }
+        .ref-list { list-style: none; padding: 0; margin: 0; font-size: 0.95rem; color: var(--text-muted); }
+        .ref-list li { margin-bottom: 12px; padding-left: 20px; text-indent: -20px; line-height: 1.5; }
+
+        .pub-list { list-style: none; padding: 0; margin: 0; }
+        .pub-list li { margin-bottom: 25px; border-left: 4px solid var(--primary); padding-left: 20px; }
+        .pub-title { font-weight: 600; color: var(--text-main); font-size: 1.1rem; margin-bottom: 5px;}
+        .pub-authors { color: var(--text-muted); font-size: 0.95rem; margin-bottom: 10px; }
+        .custom-link { color: var(--primary); text-decoration: none; font-weight: 600; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 5px;}
+        .custom-link:hover { text-decoration: underline; }
+
+        .contact-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 20px;}
+        .contact-person, .contact-address { background: #f8fafc; padding: 25px; border-radius: 12px; transition: background 0.3s ease; }
+        body.dark-mode .contact-person, body.dark-mode .contact-address { background: #334155; }
+        .contact-person h4, .contact-address h4 { margin-top: 0; color: var(--text-main); font-size: 1.2rem; margin-bottom: 15px;}
+        .contact-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: var(--text-muted); }
+
+        /* --- استایل فوتر (Footer) --- */
+        .site-footer {
+            background-color: #0f172a;
+            color: #cbd5e1;
+            padding: 50px 20px 20px 20px;
+            margin-top: 60px;
+            font-family: 'Inter', sans-serif;
+            border-top: 4px solid var(--primary);
+            position: relative;
+            transition: background-color 0.3s ease;
+        }
+        body.dark-mode .site-footer { background-color: #020617; }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            gap: 30px;
+        }
+        .footer-section {
+            flex: 1;
+            min-width: 250px;
+        }
+        .footer-logo {
+            max-width: 220px; 
+            height: auto;
+            margin-bottom: 20px;
+            display: block;
+        }
+        .footer-section h4 {
+            color: #ffffff;
+            font-size: 1.1rem;
+            margin-bottom: 20px;
+            font-weight: 600;
+            position: relative;
+            padding-bottom: 8px;
+        }
+        .footer-section h4::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 40px;
+            height: 3px;
+            background-color: #3b82f6; 
+            border-radius: 2px;
+        }
+        .footer-section p {
+            margin: 0 0 10px 0;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        .footer-link {
+            color: #93c5fd;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .footer-link:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        .footer-bottom {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #1e293b;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            position: relative;
+        }
+
+        /* --- Circle Theme Button Styling --- */
+        .theme-toggle-wrapper {
+            position: absolute;
+            right: 0;
+            top: 12px;
+        }
+        .theme-circle-btn {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            border: 1px solid #334155;
+            background: #1e293b;
+            color: #fbbf24;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+        .theme-circle-btn:hover {
+            transform: scale(1.1);
+            background: #334155;
+        }
+        body.dark-mode .theme-circle-btn {
+            background: #f1f5f9;
+            color: #1e293b;
+            border-color: #cbd5e1;
+        }
+        @media (max-width: 600px) {
+            .theme-toggle-wrapper { position: relative; top: 15px; right: auto; margin: 0 auto; }
+        }
     </style>
 </head>
 <body>
 
     <header class="hero">
         <div class="logo-container">
-            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="Logo" class="hero-logo">
+            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="UPARUS Logo" class="hero-logo">
         </div>
-        <h1>IPARUS: Genomic Resources for the Parus genus</h1>
-        <p>Integrated Platform for <i>Parus</i> Alignments, Resources and Useful Sequences.</p>
+        
+        <h1 class="reveal-title">IPARUS: Genomic Resources for the Parus genus</h1>
+        
+        <p class="reveal-text">This website hosts the <strong>IPARUS</strong> (<strong>I</strong>ntegrated <strong>P</strong>latform for <em>Parus</em> <strong>A</strong>lignments, <strong>R</strong>esources and <strong>U</strong>seful <strong>S</strong>equences) project and provides public access to genomic resources of birds from the <em>Parus</em> genus. <em>Parus</em> is a genus of old-world birds in the tit family. Its most known member is the great tit (<em>Parus major</em>), which is also the species represented by the most samples on this website. However, in the future datasets from other <em>Parus</em> species and their many subspecies may be added here.</p>
+        
+        <p class="reveal-text">We provide a database of sequence data and the corresponding metadata of the samples to facilitate collaboration between researchers and provide access to this data to the public.</p>
     </header>
 
     <div class="container">
         <div class="dashboard-card">
+            
             <div class="tabs-container">
                 <div class="tabs">
                     <button class="tab-btn active" onclick="openTab('mapTab')" id="btnMap">🌍 Map View</button>
-                    <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual">🔬 Interactive Visualizer</button>
                     <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable">🧬 Sequence Data</button>
-                    <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo">📊 Info</button>
-                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline</button>
+                    <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo">📊 Sample Information</button>
+                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline & Reference</button>
+                    <button class="tab-btn" onclick="openTab('pubTab')" id="btnPub">📚 Publications</button>
                     <button class="tab-btn" onclick="openTab('contactTab')" id="btnContact">✉️ Contact</button>
                 </div>
             </div>
 
-            <div id="mapTab" class="tab-content active"><iframe src="Final_Styled_Map.html"></iframe></div>
-            
-            <div id="visualTab" class="tab-content">
-                <div class="visualizer-controls">
-                    <label><strong>Select Sample:</strong></label>
-                    <select id="sampleSelect" onchange="updateJBrowse()">
-                        <option value="">-- Choose a Sample --</option>
-                    </select>
-                </div>
-                <div id="jbrowse-root">
-                    <div style="padding: 40px; text-align: center; color: #64748b;">
-                        Please select a sample to load the genome viewer.
+            <div id="mapTab" class="tab-content active">
+                <iframe src="Final_Styled_Map.html"></iframe>
+            </div>
+
+            <div id="pipelineTab" class="tab-content">
+                <div class="info-card">
+                    <h3 style="color: var(--text-main); margin-bottom: 25px;">Bioinformatic Pipeline & Reference Genome</h3>
+                    
+                    <div class="pipeline-layout">
+                        <div class="pipeline-text">
+                            <p>The bioinformatic pipeline to map the reads to the reference was the same as described in Chen et al. (2025). Briefly, the quality of the Illumina sequencing reads was assessed using <strong>FastQC v0.12.1</strong> and trimmed using <strong>Trimmomatic v0.39</strong> (Bolger et al. 2014). Trimmed reads were then aligned to the <em>Parus major</em> reference genome (GCF_001522545.3) with the <strong>BWA-MEM2 v2.2.1</strong> algorithm (Li 2013) with default parameters. After converting SAM to BAM files and indexing with <strong>SAMtools v1.2</strong> (Li et al. 2009) duplicated reads were marked using MarkDuplicatesSpark implemented in <strong>GATK v4.5.0</strong> (Auwera and O’Connor 2020). This pipeline was developed and executed by Yu-Chi Chen during her PHD at the Gossmann lab. It is the same pipeline used in Chen et al. 2025.</p>
+                            
+                            <div class="download-box">
+                                <p style="margin-top:0;"><strong>📥 Download Reference Genome</strong></p>
+                                <p style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 10px;">
+                                    You can download the <i>Parus major</i> reference genome from our database here:
+                                </p>
+                                <a href="GCF_001522545.3.zip" class="btn-download-ref">⬇️ Download GCF_001522545.3</a>
+                            </div>
+                        </div>
+
+                        <div class="pipeline-image">
+                            <img src="https://github.com/Gossmann-lab/iparus/blob/main/pipeline.png?raw=true" alt="Bioinformatic Pipeline Diagram">
+                        </div>
+                    </div>
+
+                    <div class="ref-section">
+                        <h4 style="margin-bottom: 15px;">📜 References</h4>
+                        <ul class="ref-list">
+                            <li>Auwera, G. A. V. der, and B. D. O’Connor. 2020. <i>Genomics in the Cloud: Using Docker, GATK, and WDL in Terra.</i> 1st ed. O’Reilly Media, Inc.</li>
+                            <li>Bolger, A. M., M. Lohse, and B. Usadel. 2014. Trimmomatic: a flexible trimmer for Illumina sequence data. <i>Bioinformatics</i> 30:2114–2120.</li>
+                            <li>Chen, Y.-C., N. Vellnow, J. J. S. Wilcox, S. Javaheri Tehrani, and T. I. Gossmann. 2025. Opinion: Why Sex-Based Genomic Differentiation Should Not Be Overlooked in Population Genetics. <i>Mol. Ecol.</i> e70061.</li>
+                            <li>Li, H. 2013. Aligning sequence reads, clone sequences and assembly contigs with BWA-MEM. <i>arXiv.</i></li>
+                            <li>Li, H., B. Handsaker, A. Wysoker, T. Fennell, J. Ruan, N. Homer, G. Marth, G. Abecasis, R. Durbin, and 1000 Genome Project Data Processing Subgroup. 2009. The Sequence Alignment/Map format and SAMtools. <i>Bioinformatics</i> 25:2078–2079.</li>
+                        </ul>
                     </div>
                 </div>
             </div>
 
-            <div id="tableTab" class="tab-content"><iframe src="samples_table.html"></iframe></div>
-            <div id="infoTab" class="tab-content"><iframe src="sample_information.html"></iframe></div>
-            <div id="pipelineTab" class="tab-content"><div style="padding:20px;"><h3>Pipeline</h3><p>Mapping to GCF_001522545.3...</p></div></div>
-            <div id="contactTab" class="tab-content"><div style="padding:20px;"><h3>Contact</h3><p>Gossmann lab, TU Dortmund University.</p></div></div>
+            <div id="tableTab" class="tab-content">
+                <iframe src="samples_table.html" id="tableIframe"></iframe>
+            </div>
+
+            <div id="infoTab" class="tab-content">
+                <iframe src="sample_information.html" id="infoIframe"></iframe>
+            </div>
+
+            <div id="pubTab" class="tab-content">
+                <div class="grid-layout">
+                    <div class="info-card">
+                        <p style="color: var(--text-main); font-size: 1.05rem; margin-bottom: 25px;">
+                            List of publications in which the samples on this website were analyzed:
+                        </p>
+                        
+                        <ul class="pub-list">
+                            <li>
+                                <div class="pub-title">Opinion: Why Sex-Based Genomic Differentiation Should Not Be Overlooked in Population Genetics.</div>
+                                <div class="pub-authors">Chen, Y.-C., Vellnow, N., Wilcox, J.J.S., Javaheri Tehrani, S., Gossmann, T.I. (2025) | <i>Mol. Ecol. e70061</i></div>
+                                <a href="https://doi.org/10.1111/mec.70061" target="_blank" class="custom-link">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
+                                    View Article (DOI)
+                                </a>
+                            </li>
+                            
+                            <li>
+                                <div class="pub-title">Comparative Genomics Reveals Evolution of a Beak Morphology Locus in a High-Altitude Songbird.</div>
+                                <div class="pub-authors">Cheng, Y., Miller, M.J., Zhang, D., Song, G., Jia, C., Qu, Y., Lei, F. (2020) | <i>Mol. Biol. Evol. 37, 2983–2988</i></div>
+                                <a href="https://doi.org/10.1093/molbev/msaa157" target="_blank" class="custom-link">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
+                                    View Article (DOI)
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="pub-title">Parallel genomic responses to historical climate change and high elevation in East Asian songbirds.</div>
+                                <div class="pub-authors">Cheng, Y., Miller, M.J., Zhang, D., Xiong, Y., Hao, Y., Jia, C., Cai, T., Li, S.-H., Johansson, U.S., Liu, Y., Chang, Y., Song, G., Qu, Y., Lei, F. (2021) | <i>Proc. Natl. Acad. Sci. 118, e2023918118</i></div>
+                                <a href="https://doi.org/10.1073/pnas.2023918118" target="_blank" class="custom-link">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
+                                    View Article (DOI)
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="pub-title">Determinants of the Efficacy of Natural Selection on Coding and Noncoding Variability in Two Passerine Species.</div>
+                                <div class="pub-authors">Corcoran, P., Gossmann, T.I., Barton, H.J., The Great Tit HapMap Consortium, Slate, J., Zeng, K. (2017) | <i>Genome Biol. Evol. 9, 2987–3007</i></div>
+                                <a href="https://doi.org/10.1093/gbe/evx213" target="_blank" class="custom-link">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
+                                    View Article (DOI)
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="pub-title">Evolutionary signals of selection on cognition from the great tit genome and methylome.</div>
+                                <div class="pub-authors">Laine, V.N., Gossmann, T.I., Schachtschneider, K.M., Garroway, C.J., Madsen, O., Verhoeven, K.J.F., de Jager, V., Megens, H.-J., Warren, W.C., Minx, P., Crooijmans, R.P.M.A., Corcoran, P., Sheldon, B.C., Slate, J., Zeng, K., van Oers, K., Visser, M.E., Groenen, M.A.M. (2016) | <i>Nat. Commun. 7, 10474</i></div>
+                                <a href="https://doi.org/10.1038/ncomms10474" target="_blank" class="custom-link">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
+                                    View Article (DOI)
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="pub-title">Genetic responses to seasonal variation in altitudinal stress: whole-genome resequencing of great tit in eastern Himalayas.</div>
+                                <div class="pub-authors">Qu, Y., Tian, S., Han, N., Zhao, H., Gao, B., Fu, J., Cheng, Y., Song, G., Ericson, P.G.P., Zhang, Y.E., Wang, D., Quan, Q., Jiang, Z., Li, R., Lei, F. (2015) | <i>Sci. Rep. 5, 14256</i></div>
+                                <a href="https://doi.org/10.1038/srep14256" target="_blank" class="custom-link">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
+                                    View Article (DOI)
+                                </a>
+                            </li>
+
+                            <li>
+                                <div class="pub-title">Ground tit genome reveals avian adaptation to living at high altitudes in the Tibetan plateau.</div>
+                                <div class="pub-authors">Qu, Y., Zhao, H., Han, N., Zhou, G., Song, G., Gao, B., Tian, S., Zhang, J., Zhang, R., Meng, X., Zhang, Yuan, Zhang, Yong, Zhu, X., Wang, W., Lambert, D., Ericson, P.G.P., Subramanian, S., Yeung, C., Zhu, H., Jiang, Z., Li, R., Lei, F. (2013) | <i>Nat. Commun. 4, 2071</i></div>
+                                <a href="https://doi.org/10.1038/ncomms3071" target="_blank" class="custom-link">
+                                    <svg width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M4.715 6.542 3.343 7.914a3 3 0 1 0 4.243 4.243l1.828-1.829A3 3 0 0 0 8.586 5.5L8 6.086a1.002 1.002 0 0 0-.154.199 2 2 0 0 1 .861 3.337L6.88 11.45a2 2 0 1 1-2.83-2.83l.793-.792a4.018 4.018 0 0 1-.128-1.287z"/><path d="M6.586 4.672A3 3 0 0 0 7.414 9.5l.775-.776a2 2 0 0 1-.896-3.346L9.12 3.55a2 2 0 1 1 2.83 2.83l-.793.792c.112.42.155.855.128 1.287l1.372-1.372a3 3 0 1 0-4.243-4.243L6.586 4.672z"/></svg>
+                                    View Article (DOI)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="contactTab" class="tab-content">
+                <div class="info-card">
+                    <p style="color: var(--text-main); font-size: 1.05rem; margin-bottom: 25px;">
+                        The <strong>IPARUS</strong> database and this website are maintained by the <a href="https://csb.bci.tu-dortmund.de/" target="_blank" style="color: #10b981; font-weight: 600; text-decoration: underline;">Gossmann lab</a> at TU Dortmund University.
+                        The scientific contact person and project coordinator is Nikolas Vellnow. <br><br>
+                        The web portal and technical implementation are developed by student assistant Mohammadmoein Hajihoseinigazestani (Moein Gazestani).
+                    </p>   
+                    <div class="contact-grid">
+                        <div class="contact-person">
+                            <h4>👨‍🔬 Primary Contact</h4>
+                            <div class="contact-item"><strong>Dr. Nikolas Vellnow</strong></div>
+                            <div class="contact-item">✉️ <a href="mailto:nikolas.vellnow@tu-dortmund.de" class="custom-link">nikolas.vellnow@tu-dortmund.de</a></div>
+                            <div class="contact-item">📞 <a href="tel:+492317556863" class="custom-link">+49 231 755 6863</a></div>
+                        </div>
+                        
+                        <div class="contact-address">
+                            <h4>🏛️ Institution Address</h4>
+                            <div class="contact-item">Laboratory of Computational Systems Biology</div>
+                            <div class="contact-item">Faculty of Biochemical and Chemical Engineering</div>
+                            <div class="contact-item">Technical University Dortmund</div>
+                            <div class="contact-item">📍 Emil-Figge-Str. 66, 44227 Dortmund, Germany</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <footer class="site-footer">
-        &copy; 2026 IPARUS Database.
-        <button class="theme-circle-btn" onclick="toggleTheme()" style="float:right;"><span id="theme-icon">🌙</span></button>
+        <div class="footer-content">
+            <div class="footer-section">
+                <img src="https://github.com/Gossmann-lab/iparus/blob/main/CSB_logo_white_font.png?raw=true" alt="CSB Lab Logo" class="footer-logo">
+                
+                <p><strong style="color: white;">Laboratory of Computational Systems Biology</strong></p>
+                <p>Faculty of Biochemical and Chemical Engineering<br>
+                Technical University Dortmund</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Address</h4>
+                <p>📍 Emil-Figge-Str. 66<br>
+                44227 Dortmund<br>
+                Germany</p>
+            </div>
+
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>📞 <a href="tel:+492317556852" class="footer-link">+49 231 755 6852</a></p>
+                <p>✉️ <a href="mailto:assistance.csb.bci@tu-dortmund.de" class="footer-link">assistance.csb.bci@tu-dortmund.de</a></p>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            &copy; 2026 IPARUS Database. All rights reserved.
+            
+            <div class="theme-toggle-wrapper">
+                <button class="theme-circle-btn" onclick="toggleTheme()" id="themeBtn">
+                    <span id="theme-icon">🌙</span>
+                </button>
+            </div>
+        </div>
     </footer>
 
     <script>
-        const SCIEBO_CONFIG = {
-            token: "o6CpwRbCfPN7d6c",
-            pass: "rKKbnToMwe",
-            baseUrl: "https://tu-dortmund.sciebo.de/public.php/dav/files/o6CpwRbCfPN7d6c/"
+        function openTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            
+            document.getElementById(tabId).classList.add('active');
+            
+            if(tabId === 'mapTab') document.getElementById('btnMap').classList.add('active');
+            if(tabId === 'pipelineTab') document.getElementById('btnPipeline').classList.add('active');
+            if(tabId === 'tableTab') document.getElementById('btnTable').classList.add('active');
+            if(tabId === 'infoTab') document.getElementById('btnInfo').classList.add('active');
+            if(tabId === 'pubTab') document.getElementById('btnPub').classList.add('active');
+            if(tabId === 'contactTab') document.getElementById('btnContact').classList.add('active');
+        }
+
+        window.switchToTable = function(urlHash) {
+            document.getElementById('tableIframe').src = urlHash;
+            openTab('tableTab');
         };
 
-        const GITHUB_CONFIG = { user: "Gossmann-lab", repo: "iparus" };
-        const PROXY_URL = "https://round-disk-db63.mohammadmoein-hajihoseinigazestani.workers.dev/?url=";
-
-        const bamFiles = [
-            "SRR1793405_sorted_dedup.bam", "SRR1793406_sorted_dedup.bam", "SRR1793407_sorted_dedup.bam",
-            "SRR1793415_sorted_dedup.bam", "SRR1793417_sorted_dedup.bam", "SRR1793419_sorted_dedup.bam",
-            "SRR1793420_sorted_dedup.bam", "SRR1793421_sorted_dedup.bam", "SRR1793422_sorted_dedup.bam",
-            "SRR1793423_sorted_dedup.bam", "SRR1793424_sorted_dedup.bam", "SRR1793425_sorted_dedup.bam",
-            "SRR1793427_sorted_dedup.bam", "SRR1793428_sorted_dedup.bam", "SRR1793429_sorted_dedup.bam",
-            "SRR1793430_sorted_dedup.bam", "SRR1793431_sorted_dedup.bam", "SRR1793432_sorted_dedup.bam",
-            "SRR1793433_sorted_dedup.bam", "SRR1793434_sorted_dedup.bam", "SRR1793435_sorted_dedup.bam",
-            "SRR1793436_sorted_dedup.bam", "SRR1793437_sorted_dedup.bam", "SRR1793438_sorted_dedup.bam",
-            "SRR1793439_sorted_dedup.bam", "SRR1793440_sorted_dedup.bam", "SRR1793441_sorted_dedup.bam",
-            "SRR1793442_sorted_dedup.bam", "SRR1793443_sorted_dedup.bam", "SRR1793444_sorted_dedup.bam",
-            "SRR1793445_sorted_dedup.bam", "SRR1793447_sorted_dedup.bam", "SRR2961328_sorted_dedup.bam",
-            "SRR2961671_sorted_dedup.bam", "SRR2961674_sorted_dedup.bam", "SRR2961676_sorted_dedup.bam",
-            "SRR2961678_sorted_dedup.bam", "SRR2961680_sorted_dedup.bam", "SRR2961684_sorted_dedup.bam",
-            "SRR2961689_sorted_dedup.bam", "SRR2961695_sorted_dedup.bam", "SRR2961697_sorted_dedup.bam",
-            "SRR2961699_sorted_dedup.bam", "SRR2961701_sorted_dedup.bam", "SRR2961712_sorted_dedup.bam",
-            "SRR2961716_sorted_dedup.bam", "SRR2961718_sorted_dedup.bam", "SRR2961722_sorted_dedup.bam",
-            "SRR2961725_sorted_dedup.bam", "SRR2961728_sorted_dedup.bam", "SRR2961731_sorted_dedup.bam",
-            "SRR2961736_sorted_dedup.bam", "SRR2961746_sorted_dedup.bam", "SRR2961750_sorted_dedup.bam",
-            "SRR2961753_sorted_dedup.bam", "SRR2961756_sorted_dedup.bam", "SRR2961759_sorted_dedup.bam",
-            "SRR2961762_sorted_dedup.bam", "SRR2961765_sorted_dedup.bam", "SRR2961769_sorted_dedup.bam",
-            "SRR2961773_sorted_dedup.bam", "SRR2961775_sorted_dedup.bam", "SRR3085443_sorted_dedup.bam",
-            "SRR5423293_sorted_dedup.bam", "SRR5423294_sorted_dedup.bam", "SRR5423295_sorted_dedup.bam",
-            "SRR5423296_sorted_dedup.bam", "SRR5423297_sorted_dedup.bam", "SRR5423298_sorted_dedup.bam",
-            "SRR5423299_sorted_dedup.bam", "SRR5423300_sorted_dedup.bam", "SRR5423301_sorted_dedup.bam",
-            "SRR5423302_sorted_dedup.bam", "SRR765717_sorted_dedup.bam", "SRR9656355_sorted_dedup.bam",
-            "SRR9656356_sorted_dedup.bam", "SRR9656357_sorted_dedup.bam", "SRR9656367_sorted_dedup.bam",
-            "SRR9656368_sorted_dedup.bam", "SRR9656369_sorted_dedup.bam"
-        ];
-
-        const select = document.getElementById('sampleSelect');
-        bamFiles.forEach(file => {
-            let opt = document.createElement('option');
-            opt.value = file;
-            opt.innerHTML = file.split('_')[0];
-            select.appendChild(opt);
-        });
-
-        let reactRoot = null;
-
-        async function updateJBrowse() {
-            if (typeof JBrowseReactLinearGenomeView === 'undefined') {
-                alert("The JBrowse library could not be loaded due to network/security restrictions. Please check your console (F12).");
-                return;
-            }
-
-            const { createViewState, JBrowseLinearGenomeView } = JBrowseReactLinearGenomeView;
-            const fileName = select.value;
-            if (!fileName) return;
-
-            const sampleFolder = fileName.split('_')[0];
-            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
-            
-            const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`);
-            const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
-            const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
-            const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
-
-            const state = createViewState({
-                assembly: {
-                    name: 'ParusMajor',
-                    sequence: {
-                        type: 'ReferenceSequenceTrack',
-                        trackId: 'ref-seq-ipar',
-                        adapter: {
-                            type: 'IndexedFastaAdapter',
-                            fastaLocation: { uri: fastaUrl, locationType: 'UriLocation' },
-                            faiLocation: { uri: faiUrl, locationType: 'UriLocation' },
-                        },
-                    },
-                },
-                tracks: [
-                    {
-                        type: 'AlignmentsTrack',
-                        trackId: 'align-track-' + fileName,
-                        name: 'Sample: ' + fileName,
-                        assemblyNames: ['ParusMajor'],
-                        adapter: {
-                            type: 'BamAdapter',
-                            bamLocation: { uri: bamUrl, locationType: 'UriLocation' },
-                            index: { location: { uri: baiUrl, locationType: 'UriLocation' } },
-                        },
-                    },
-                ],
-                location: 'NC_031768.1:222000..225000',
-                makeRequest: (url, opts) => {
-                    const headers = opts.headers || {};
-                    if (url.includes('sciebo.de') || url.includes('workers.dev')) {
-                        headers['Authorization'] = authHeader;
-                    }
-                    return fetch(url, { ...opts, headers });
-                }
-            });
-
-            const container = document.getElementById('jbrowse-root');
-            if (!reactRoot) reactRoot = ReactDOM.createRoot(container);
-            reactRoot.render(React.createElement(JBrowseLinearGenomeView, { viewState: state }));
-        }
-
-        function openTab(tabId) {
-            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            const btnId = 'btn' + tabId.replace('Tab','').charAt(0).toUpperCase() + tabId.replace('Tab','').slice(1);
-            if(document.getElementById(btnId)) document.getElementById(btnId).classList.add('active');
-        }
-
+        // Theme Toggle Logic
         function toggleTheme() {
-            document.body.classList.toggle('dark-mode');
-            document.getElementById('theme-icon').innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+            const body = document.body;
+            const icon = document.getElementById('theme-icon');
+            body.classList.toggle('dark-mode');
+            icon.innerText = body.classList.contains('dark-mode') ? '☀️' : '🌙';
         }
     </script>
 </body>
