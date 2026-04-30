@@ -6,10 +6,10 @@
     <title>IPARUS - Integrated Parus Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- React and JBrowse Requirements -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-    <script src="https://unpkg.com/@jbrowse/react-linear-genome-view/dist/react-linear-genome-view.browser.js"></script>
+    <!-- React and JBrowse Requirements (Using Stable CDNs) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@jbrowse/react-linear-genome-view/dist/react-linear-genome-view.browser.js"></script>
     
     <style>
         :root {
@@ -72,8 +72,7 @@
         body.dark-mode .visualizer-controls { background: #334155; }
         #sampleSelect { padding: 10px; border-radius: 8px; flex-grow: 1; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-light); }
         
-        /* JBrowse Container Style */
-        #jbrowse-root { border: 1px solid var(--border-light); border-radius: 12px; min-height: 600px; background: white; overflow: hidden; }
+        #jbrowse-root { border: 1px solid var(--border-light); border-radius: 12px; min-height: 600px; background: white; overflow: hidden; position: relative; }
 
         .site-footer { background-color: #0f172a; color: #cbd5e1; padding: 30px 20px; margin-top: 60px; text-align: center; }
         .theme-circle-btn { width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer; background: #1e293b; color: #fbbf24; }
@@ -111,7 +110,9 @@
                         <option value="">-- Choose a Sample --</option>
                     </select>
                 </div>
-                <div id="jbrowse-root"></div>
+                <div id="jbrowse-root">
+                    <div style="padding: 40px; text-align: center; color: var(--text-muted);">Please select a sample to load the genome viewer.</div>
+                </div>
             </div>
 
             <div id="tableTab" class="tab-content"><iframe src="samples_table.html"></iframe></div>
@@ -180,16 +181,21 @@
         });
 
         // --- JBrowse Initialization Logic ---
-        const { createViewState, JBrowseLinearGenomeView } = JBrowseReactLinearGenomeView;
+        let jbRoot = null;
 
         function updateJBrowse() {
+            if (typeof JBrowseReactLinearGenomeView === 'undefined') {
+                alert("JBrowse library is still loading...");
+                return;
+            }
+
+            const { createViewState, JBrowseLinearGenomeView } = JBrowseReactLinearGenomeView;
             const fileName = select.value;
             if (!fileName) return;
 
             const sampleFolder = fileName.split('_')[0];
             const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
             
-            // URLs
             const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`);
             const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
             const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
@@ -200,7 +206,7 @@
                     name: 'ParusMajor',
                     sequence: {
                         type: 'ReferenceSequenceTrack',
-                        trackId: 'ParusMajor-ReferenceSequenceTrack',
+                        trackId: 'ref-seq',
                         adapter: {
                             type: 'IndexedFastaAdapter',
                             fastaLocation: { uri: fastaUrl, locationType: 'UriLocation' },
@@ -211,8 +217,8 @@
                 tracks: [
                     {
                         type: 'AlignmentsTrack',
-                        trackId: 'sample_alignment',
-                        name: fileName,
+                        trackId: 'align-' + fileName,
+                        name: 'Alignment: ' + fileName,
                         assemblyNames: ['ParusMajor'],
                         adapter: {
                             type: 'BamAdapter',
@@ -222,21 +228,21 @@
                     },
                 ],
                 location: 'NC_031768.1:222000..225000',
-                // Custom fetch to include Sciebo Auth headers
-                makeRequest: (url, options) => {
-                    if (url.includes('sciebo.de') || url.includes(PROXY_URL)) {
-                        return fetch(url, {
-                            ...options,
-                            headers: { ...options?.headers, 'Authorization': authHeader }
-                        });
+                // This handles headers for Sciebo via Proxy
+                makeRequest: (url, opts) => {
+                    const headers = opts.headers || {};
+                    if (url.includes('sciebo.de') || url.includes('workers.dev')) {
+                        headers['Authorization'] = authHeader;
                     }
-                    return fetch(url, options);
+                    return fetch(url, { ...opts, headers });
                 }
             });
 
-            // Render JBrowse via React
-            const root = ReactDOM.createRoot(document.getElementById('jbrowse-root'));
-            root.render(React.createElement(JBrowseLinearGenomeView, { viewState: state }));
+            const container = document.getElementById('jbrowse-root');
+            if (!jbRoot) {
+                jbRoot = ReactDOM.createRoot(container);
+            }
+            jbRoot.render(React.createElement(JBrowseLinearGenomeView, { viewState: state }));
         }
 
         function openTab(tabId) {
@@ -245,7 +251,8 @@
             document.getElementById(tabId).classList.add('active');
             
             const btnId = 'btn' + tabId.replace('Tab','').charAt(0).toUpperCase() + tabId.replace('Tab','').slice(1);
-            document.getElementById(btnId).classList.add('active');
+            const targetBtn = document.getElementById(btnId);
+            if(targetBtn) targetBtn.classList.add('active');
         }
 
         function toggleTheme() {
