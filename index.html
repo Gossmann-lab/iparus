@@ -6,8 +6,8 @@
     <title>IPARUS - Integrated Parus Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- JBrowse 2 Library - Fixed UMD Link to prevent MIME type errors -->
-    <script src="https://unpkg.com/@jbrowse/react-linear-genome-view@3.1.0/dist/jbrowse-react-linear-genome-view.browser.js"></script>
+    <!-- JBrowse 2 Library - Updated to a stable CDN to prevent MIME type mismatch -->
+    <script src="https://cdn.jsdelivr.net/npm/@jbrowse/react-linear-genome-view@3.1.0/dist/jbrowse-react-linear-genome-view.browser.js"></script>
     
     <style>
         :root {
@@ -39,48 +39,60 @@
 
         .hero {
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
-            color: white; padding: 50px 20px; text-align: center;
-            border-bottom: 4px solid #e74c3c; position: relative;
+            color: white; padding: 50px 20px 60px 20px; text-align: center;
+            border-bottom: 4px solid #e74c3c; position: relative; overflow: hidden;
         }
         
-        .logo-container { position: absolute; top: 0; left: 0; width: 310px; height: 310px; }
-        .hero-logo { position: absolute; top: 45%; left: 35%; transform: translate(-50%, -50%); width: 360px; }
+        .logo-container { position: absolute; top: 0; left: 0; width: 310px; height: 310px; z-index: 10; }
+        .hero-logo { position: absolute; top: 45%; left: 35%; transform: translate(-50%, -50%); width: 360px; height: auto; filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.2)); transition: transform 0.3s ease; }
+        .logo-container:hover .hero-logo { transform: translate(-50%, -50%) scale(1.08) rotate(3deg); }
 
         .container { max-width: 1300px; margin: -30px auto 40px auto; padding: 0 20px; position: relative; z-index: 20; }
         .dashboard-card { background: var(--card-bg); border-radius: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.08); padding: 30px; }
 
         .tabs-container {
             display: flex; justify-content: center; margin-bottom: 25px; position: sticky; top: 20px; z-index: 1000; 
-            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 50px; width: fit-content; margin: 0 auto;
+            background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(10px); padding: 10px 20px; border-radius: 50px; 
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08); width: fit-content; margin-left: auto; margin-right: auto;
         }
         body.dark-mode .tabs-container { background: rgba(30, 41, 59, 0.85); }
 
-        .tabs { display: inline-flex; background: #f1f5f9; padding: 8px; border-radius: 50px; gap: 5px; }
+        .tabs { display: inline-flex; background: #f1f5f9; padding: 8px; border-radius: 50px; flex-wrap: wrap; gap: 5px; }
         body.dark-mode .tabs { background: #334155; }
 
-        .tab-btn { background: transparent; border: none; padding: 12px 24px; font-weight: 600; cursor: pointer; color: var(--text-muted); border-radius: 40px; transition: 0.3s; }
+        .tab-btn { background: transparent; border: none; padding: 12px 24px; font-size: 1rem; cursor: pointer; color: var(--text-muted); font-weight: 600; border-radius: 40px; transition: all 0.3s ease; }
         .tab-btn.active { background: white; color: var(--primary); box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+        body.dark-mode .tab-btn.active { background: #475569; color: #60a5fa; }
 
         .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content.active { display: block; animation: fadeInUp 0.4s ease forwards; }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         iframe { width: 100%; height: 750px; border: none; border-radius: 12px; background: #f8fafc; }
+        body.dark-mode iframe { background: #0f172a; }
 
-        .visualizer-controls { margin-bottom: 20px; padding: 20px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
+        .visualizer-controls { margin-bottom: 25px; padding: 20px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
         body.dark-mode .visualizer-controls { background: #334155; }
+        #sampleSelect { padding: 10px; border-radius: 8px; border: 1px solid var(--border-light); flex-grow: 1; background: var(--card-bg); color: var(--text-main); }
         
-        #sampleSelect { padding: 10px; border-radius: 8px; flex-grow: 1; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-light); }
         #jbrowse-view { border: 1px solid var(--border-light); border-radius: 12px; min-height: 600px; background: white; overflow: hidden; }
 
-        .site-footer { background-color: #0f172a; color: #cbd5e1; padding: 30px 20px; margin-top: 60px; text-align: center; border-top: 4px solid var(--primary); }
-        .theme-circle-btn { width: 42px; height: 42px; border-radius: 50%; border: none; cursor: pointer; background: #1e293b; color: #fbbf24; display: flex; align-items: center; justify-content: center; }
+        /* Publication & Info Styles */
+        .info-card { padding: 30px; background: var(--card-bg); border: 1px solid var(--border-light); border-radius: 16px; margin-bottom: 20px; }
+        .pub-list { list-style: none; padding: 0; }
+        .pub-list li { margin-bottom: 25px; border-left: 4px solid var(--primary); padding-left: 20px; }
+        .pub-title { font-weight: 600; color: var(--text-main); font-size: 1.1rem; }
+        .custom-link { color: var(--primary); text-decoration: none; font-weight: 600; font-size: 0.95rem; }
+
+        .site-footer { background-color: #0f172a; color: #cbd5e1; padding: 50px 20px 20px; margin-top: 60px; border-top: 4px solid var(--primary); text-align: center; }
+        .theme-circle-btn { width: 42px; height: 42px; border-radius: 50%; border: none; background: #1e293b; color: #fbbf24; cursor: pointer; }
     </style>
 </head>
 <body>
 
     <header class="hero">
         <div class="logo-container">
-            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="Logo" class="hero-logo">
+            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="IPARUS Logo" class="hero-logo">
         </div>
         <h1>IPARUS: Genomic Resources for the Parus genus</h1>
         <p>Integrated Platform for <i>Parus</i> Alignments, Resources and Useful Sequences.</p>
@@ -90,12 +102,13 @@
         <div class="dashboard-card">
             <div class="tabs-container">
                 <div class="tabs">
-                    <button class="tab-btn active" onclick="openTab('mapTab', this)">🌍 Map View</button>
-                    <button class="tab-btn" onclick="openTab('visualTab', this)">🔬 JBrowse Visualizer</button>
-                    <button class="tab-btn" onclick="openTab('tableTab', this)">🧬 Sequence Data</button>
-                    <button class="tab-btn" onclick="openTab('infoTab', this)">📊 Info</button>
-                    <button class="tab-btn" onclick="openTab('pipelineTab', this)">💻 Pipeline</button>
-                    <button class="tab-btn" onclick="openTab('contactTab', this)">✉️ Contact</button>
+                    <button class="tab-btn active" onclick="openTab('mapTab')" id="btnMap">🌍 Map View</button>
+                    <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual">🔬 JBrowse 2 View</button>
+                    <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable">🧬 Sequence Data</button>
+                    <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo">📊 Sample Info</button>
+                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline</button>
+                    <button class="tab-btn" onclick="openTab('pubTab')" id="btnPub">📚 Publications</button>
+                    <button class="tab-btn" onclick="openTab('contactTab')" id="btnContact">✉️ Contact</button>
                 </div>
             </div>
 
@@ -103,19 +116,45 @@
             <div id="mapTab" class="tab-content active"><iframe src="Final_Styled_Map.html"></iframe></div>
             
             <div id="visualTab" class="tab-content">
-                <div class="visualizer-controls">
-                    <label><strong>Select Sample:</strong></label>
-                    <select id="sampleSelect" onchange="updateJBrowse()">
-                        <option value="">-- Choose a Sample --</option>
-                    </select>
+                <div class="info-card">
+                    <h3>Interactive Genome Browser (JBrowse 2)</h3>
+                    <div class="visualizer-controls">
+                        <label><strong>Select Sample:</strong></label>
+                        <select id="sampleSelect" onchange="updateJBrowse()">
+                            <option value="">-- Choose a Sample --</option>
+                        </select>
+                    </div>
+                    <div id="jbrowse-view"></div>
                 </div>
-                <div id="jbrowse-view"></div>
             </div>
 
             <div id="tableTab" class="tab-content"><iframe src="samples_table.html"></iframe></div>
             <div id="infoTab" class="tab-content"><iframe src="sample_information.html"></iframe></div>
-            <div id="pipelineTab" class="tab-content"><div style="padding:20px;"><h3>Pipeline</h3><p>Mapping to GCF_001522545.3...</p></div></div>
-            <div id="contactTab" class="tab-content"><div style="padding:20px;"><h3>Contact</h3><p>Gossmann lab, TU Dortmund University.</p></div></div>
+            
+            <div id="pipelineTab" class="tab-content">
+                <div class="info-card">
+                    <h3>Bioinformatic Pipeline</h3>
+                    <p>Reads were mapped to the <i>Parus major</i> reference genome (GCF_001522545.3) using <strong>BWA-MEM2</strong>. Quality control was performed via <strong>FastQC</strong> and trimming with <strong>Trimmomatic</strong>. Duplicates were marked with <strong>GATK MarkDuplicatesSpark</strong>.</p>
+                </div>
+            </div>
+
+            <div id="pubTab" class="tab-content">
+                <div class="info-card">
+                    <ul class="pub-list">
+                        <li>
+                            <div class="pub-title">Opinion: Why Sex-Based Genomic Differentiation Should Not Be Overlooked.</div>
+                            <div class="pub-authors">Chen et al. (2025) | <i>Mol. Ecol.</i></div>
+                            <a href="https://doi.org/10.1111/mec.70061" target="_blank" class="custom-link">View Article</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div id="contactTab" class="tab-content">
+                <div class="info-card">
+                    <p>The <strong>IPARUS</strong> database is maintained by the <strong>Gossmann lab</strong> at TU Dortmund University.</p>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -125,9 +164,9 @@
     </footer>
 
     <script>
-        const SCIEBO_CONFIG = { baseUrl: "https://tu-dortmund.sciebo.de/public.php/dav/files/o6CpwRbCfPN7d6c/" };
-        const GITHUB_CONFIG = { user: "Gossmann-lab", repo: "iparus" };
+        const SCIEBO_BASE = "https://tu-dortmund.sciebo.de/public.php/dav/files/o6CpwRbCfPN7d6c/";
         const PROXY_URL = "https://round-disk-db63.mohammadmoein-hajihoseinigazestani.workers.dev/?url=";
+        const GITHUB_RAW = "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/";
 
         const bamFiles = [
             "SRR1793405_sorted_dedup.bam", "SRR1793406_sorted_dedup.bam", "SRR1793407_sorted_dedup.bam",
@@ -159,18 +198,15 @@
             "SRR9656368_sorted_dedup.bam", "SRR9656369_sorted_dedup.bam"
         ];
 
-        // Populate Sample Menu
         const select = document.getElementById('sampleSelect');
-        bamFiles.forEach(file => {
+        bamFiles.forEach(f => {
             const opt = document.createElement('option');
-            opt.value = file;
-            opt.innerHTML = file.split('_')[0];
-            select.appendChild(opt);
+            opt.value = f; opt.text = f.split('_')[0]; select.appendChild(opt);
         });
 
         async function updateJBrowse() {
             if (typeof JBrowseReactLinearGenomeView === 'undefined') {
-                alert("JBrowse library not loaded yet. Please wait a second and try again.");
+                alert("JBrowse library not loaded. Check your internet or browser console.");
                 return;
             }
 
@@ -178,13 +214,13 @@
             if (!fileName) return;
 
             const container = document.getElementById("jbrowse-view");
-            container.innerHTML = "⌛ Loading JBrowse View...";
+            container.innerHTML = "⌛ Initializing JBrowse 2 View...";
 
             const folder = fileName.split('_')[0];
-            const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${folder}/${fileName}`);
-            const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
-            const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
-            const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+            const bamUrl = PROXY_URL + encodeURIComponent(SCIEBO_BASE + folder + "/" + fileName);
+            const fastaUrl = PROXY_URL + encodeURIComponent(SCIEBO_BASE + "GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna");
+            const baiUrl = GITHUB_RAW + "Bai/" + fileName + ".bai";
+            const faiUrl = GITHUB_RAW + "GCF_001522545.3_Parus_major1.1_genomic.fna.fai";
 
             try {
                 const state = JBrowseReactLinearGenomeView.createViewState({
@@ -217,16 +253,15 @@
                 container.innerHTML = ""; 
                 JBrowseReactLinearGenomeView.renderView(state, container);
             } catch (e) {
-                console.error(e);
-                container.innerHTML = `<div style="color:red;padding:20px;">Error initializing JBrowse: ${e.message}</div>`;
+                container.innerHTML = `<div style="color:red;padding:20px;">Error: ${e.message}</div>`;
             }
         }
 
-        function openTab(tabId, btn) {
+        function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            btn.classList.add('active');
+            event.currentTarget.classList.add('active');
         }
 
         function toggleTheme() {
