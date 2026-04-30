@@ -8,16 +8,17 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- 1. Load React First (Stable Versions) -->
-    <script src="https://unpkg.com/react@18/umd/react.production.min.js" crossorigin></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
+    <!-- 1. Load React First (Stable CDNs) -->
+    <script src="https://cdn.jsdelivr.net/npm/react@18/umd/react.production.min.js" crossorigin></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18/umd/react-dom.production.min.js" crossorigin></script>
 
-    <!-- 2. Load JBrowse Linear Genome View (Specific Version to avoid MIME errors) -->
-    <script src="https://unpkg.com/@jbrowse/react-linear-genome-view@3.1.0/dist/react-linear-genome-view.browser.js" crossorigin></script>
+    <!-- 2. Load JBrowse with Specific Version (Fixing MIME Type Error) -->
+    <script src="https://cdn.jsdelivr.net/npm/@jbrowse/react-linear-genome-view@3.1.0/dist/react-linear-genome-view.browser.js" crossorigin></script>
     
     <style>
         :root {
             --primary: #2563eb;
+            --primary-hover: #1d4ed8;
             --bg-body: #f8fafc;
             --text-main: #0f172a;
             --text-muted: #64748b;
@@ -38,7 +39,8 @@
             margin: 0; padding: 0; 
             background-color: var(--bg-body); 
             color: var(--text-main); 
-            transition: all 0.3s ease;
+            line-height: 1.7;
+            transition: background-color 0.3s ease, color 0.3s ease;
         }
 
         .hero {
@@ -113,7 +115,9 @@
                     </select>
                 </div>
                 <div id="jbrowse-root">
-                    <div style="padding: 50px; text-align: center; color: #666;">Please select a sample to load the genome view.</div>
+                    <div style="padding: 40px; text-align: center; color: #64748b;">
+                        Please select a sample to load the genome viewer.
+                    </div>
                 </div>
             </div>
 
@@ -179,17 +183,16 @@
 
         let reactRoot = null;
 
-        function updateJBrowse() {
-            const fileName = select.value;
-            if (!fileName) return;
-
-            // Check if library is loaded
+        async function updateJBrowse() {
             if (typeof JBrowseReactLinearGenomeView === 'undefined') {
-                console.error("JBrowse Library not found!");
+                alert("The JBrowse library could not be loaded due to network/security restrictions. Please check your console (F12).");
                 return;
             }
 
             const { createViewState, JBrowseLinearGenomeView } = JBrowseReactLinearGenomeView;
+            const fileName = select.value;
+            if (!fileName) return;
+
             const sampleFolder = fileName.split('_')[0];
             const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
             
@@ -203,7 +206,7 @@
                     name: 'ParusMajor',
                     sequence: {
                         type: 'ReferenceSequenceTrack',
-                        trackId: 'ref-track',
+                        trackId: 'ref-seq-ipar',
                         adapter: {
                             type: 'IndexedFastaAdapter',
                             fastaLocation: { uri: fastaUrl, locationType: 'UriLocation' },
@@ -214,7 +217,7 @@
                 tracks: [
                     {
                         type: 'AlignmentsTrack',
-                        trackId: 'align-' + fileName,
+                        trackId: 'align-track-' + fileName,
                         name: 'Sample: ' + fileName,
                         assemblyNames: ['ParusMajor'],
                         adapter: {
