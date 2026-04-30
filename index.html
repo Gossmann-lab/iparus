@@ -6,8 +6,8 @@
     <title>IPARUS - Integrated Parus Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- JBrowse 2 Library - Updated to a stable CDN to fix MIME type errors -->
-    <script src="https://cdn.jsdelivr.net/npm/@jbrowse/react-linear-genome-view@3.1.0/dist/jbrowse-react-linear-genome-view.browser.js"></script>
+    <!-- JBrowse 2 Library - Fixed UMD Link to prevent MIME type errors -->
+    <script src="https://unpkg.com/@jbrowse/react-linear-genome-view@3.1.0/dist/jbrowse-react-linear-genome-view.browser.js"></script>
     
     <style>
         :root {
@@ -68,8 +68,8 @@
 
         .visualizer-controls { margin-bottom: 20px; padding: 20px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
         body.dark-mode .visualizer-controls { background: #334155; }
-        #sampleSelect { padding: 10px; border-radius: 8px; flex-grow: 1; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-light); }
         
+        #sampleSelect { padding: 10px; border-radius: 8px; flex-grow: 1; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-light); }
         #jbrowse-view { border: 1px solid var(--border-light); border-radius: 12px; min-height: 600px; background: white; overflow: hidden; }
 
         .site-footer { background-color: #0f172a; color: #cbd5e1; padding: 30px 20px; margin-top: 60px; text-align: center; }
@@ -160,7 +160,7 @@
 
         const select = document.getElementById('sampleSelect');
         bamFiles.forEach(file => {
-            let opt = document.createElement('option');
+            const opt = document.createElement('option');
             opt.value = file;
             opt.innerHTML = file.split('_')[0];
             select.appendChild(opt);
@@ -168,7 +168,7 @@
 
         async function updateJBrowse() {
             if (typeof JBrowseReactLinearGenomeView === 'undefined') {
-                alert("JBrowse library is still loading. Please wait a few seconds and try again.");
+                alert("JBrowse library not loaded. Check browser console for errors.");
                 return;
             }
 
@@ -176,10 +176,10 @@
             if (!fileName) return;
 
             const container = document.getElementById("jbrowse-view");
-            container.innerHTML = "⌛ Loading JBrowse View...";
+            container.innerHTML = "⌛ Initializing JBrowse 2 View...";
 
-            const sampleFolder = fileName.split('_')[0];
-            const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`);
+            const folder = fileName.split('_')[0];
+            const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${folder}/${fileName}`);
             const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
             const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
             const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
@@ -198,27 +198,24 @@
                             },
                         },
                     },
-                    tracks: [
-                        {
-                            type: 'AlignmentsTrack',
-                            trackId: 'bam_track_' + fileName,
-                            name: fileName,
-                            assemblyNames: ['ParusMajor'],
-                            adapter: {
-                                type: 'BamAdapter',
-                                bamLocation: { uri: bamUrl },
-                                index: { location: { uri: baiUrl } },
-                            },
+                    tracks: [{
+                        type: 'AlignmentsTrack',
+                        trackId: 'bam_track_' + fileName,
+                        name: fileName,
+                        assemblyNames: ['ParusMajor'],
+                        adapter: {
+                            type: 'BamAdapter',
+                            bamLocation: { uri: bamUrl },
+                            index: { location: { uri: baiUrl } },
                         },
-                    ],
+                    }],
                     location: 'NC_031768.1:216538-230461',
                 });
 
-                container.innerHTML = ""; // Clear loading message
+                container.innerHTML = ""; 
                 JBrowseReactLinearGenomeView.renderView(state, container);
-            } catch (error) {
-                console.error(error);
-                container.innerHTML = `<div style="color:red;padding:20px;">Error: ${error.message}</div>`;
+            } catch (e) {
+                container.innerHTML = `<div style="color:red;padding:20px;">Error: ${e.message}</div>`;
             }
         }
 
