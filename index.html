@@ -6,8 +6,7 @@
     <title>IPARUS - Integrated Parus Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- JBrowse 2 Library -->
-    <!-- استفاده از نسخه CDN معتبر و مستقیم -->
+    <!-- JBrowse 2 Library - Updated to a stable CDN to fix MIME type errors -->
     <script src="https://cdn.jsdelivr.net/npm/@jbrowse/react-linear-genome-view@3.1.0/dist/jbrowse-react-linear-genome-view.browser.js"></script>
     
     <style>
@@ -69,10 +68,8 @@
 
         .visualizer-controls { margin-bottom: 20px; padding: 20px; background: #f1f5f9; border-radius: 12px; display: flex; align-items: center; gap: 15px; }
         body.dark-mode .visualizer-controls { background: #334155; }
-        
         #sampleSelect { padding: 10px; border-radius: 8px; flex-grow: 1; background: var(--card-bg); color: var(--text-main); border: 1px solid var(--border-light); }
         
-        /* JBrowse Container */
         #jbrowse-view { border: 1px solid var(--border-light); border-radius: 12px; min-height: 600px; background: white; overflow: hidden; }
 
         .site-footer { background-color: #0f172a; color: #cbd5e1; padding: 30px 20px; margin-top: 60px; text-align: center; }
@@ -111,7 +108,6 @@
                         <option value="">-- Choose a Sample --</option>
                     </select>
                 </div>
-                <!-- JBrowse محفظه -->
                 <div id="jbrowse-view"></div>
             </div>
 
@@ -128,15 +124,8 @@
     </footer>
 
     <script>
-        const SCIEBO_CONFIG = {
-            baseUrl: "https://tu-dortmund.sciebo.de/public.php/dav/files/o6CpwRbCfPN7d6c/"
-        };
-
-        const GITHUB_CONFIG = {
-            user: "Gossmann-lab",
-            repo: "iparus"
-        };
-
+        const SCIEBO_CONFIG = { baseUrl: "https://tu-dortmund.sciebo.de/public.php/dav/files/o6CpwRbCfPN7d6c/" };
+        const GITHUB_CONFIG = { user: "Gossmann-lab", repo: "iparus" };
         const PROXY_URL = "https://round-disk-db63.mohammadmoein-hajihoseinigazestani.workers.dev/?url=";
 
         const bamFiles = [
@@ -178,60 +167,67 @@
         });
 
         async function updateJBrowse() {
+            if (typeof JBrowseReactLinearGenomeView === 'undefined') {
+                alert("JBrowse library is still loading. Please wait a few seconds and try again.");
+                return;
+            }
+
             const fileName = select.value;
             if (!fileName) return;
 
             const container = document.getElementById("jbrowse-view");
-            container.innerHTML = "⌛ Initializing JBrowse 2 View...";
+            container.innerHTML = "⌛ Loading JBrowse View...";
 
             const sampleFolder = fileName.split('_')[0];
-            
-            // آدرس‌های پروکسی شده
             const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`);
             const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
-            
             const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
             const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
 
-            // ساختن ViewState برای JBrowse
-            const state = JBrowseReactLinearGenomeView.createViewState({
-                assembly: {
-                    name: 'ParusMajor',
-                    sequence: {
-                        type: 'ReferenceSequenceTrack',
-                        trackId: 'ref-seq',
-                        adapter: {
-                            type: 'IndexedFastaAdapter',
-                            fastaLocation: { uri: fastaUrl },
-                            faiLocation: { uri: faiUrl },
+            try {
+                const state = JBrowseReactLinearGenomeView.createViewState({
+                    assembly: {
+                        name: 'ParusMajor',
+                        sequence: {
+                            type: 'ReferenceSequenceTrack',
+                            trackId: 'ref-seq',
+                            adapter: {
+                                type: 'IndexedFastaAdapter',
+                                fastaLocation: { uri: fastaUrl },
+                                faiLocation: { uri: faiUrl },
+                            },
                         },
                     },
-                },
-                tracks: [
-                    {
-                        type: 'AlignmentsTrack',
-                        trackId: 'bam_sample_' + fileName,
-                        name: fileName + ' (BAM)',
-                        assemblyNames: ['ParusMajor'],
-                        adapter: {
-                            type: 'BamAdapter',
-                            bamLocation: { uri: bamUrl },
-                            index: { location: { uri: baiUrl } },
+                    tracks: [
+                        {
+                            type: 'AlignmentsTrack',
+                            trackId: 'bam_track_' + fileName,
+                            name: fileName,
+                            assemblyNames: ['ParusMajor'],
+                            adapter: {
+                                type: 'BamAdapter',
+                                bamLocation: { uri: bamUrl },
+                                index: { location: { uri: baiUrl } },
+                            },
                         },
-                    },
-                ],
-                location: 'NC_031768.1:216,538-230,461', // همان مختصات عکس قبلی
-            });
+                    ],
+                    location: 'NC_031768.1:216538-230461',
+                });
 
-            // رندر کردن در المان div
-            JBrowseReactLinearGenomeView.renderView(state, container);
+                container.innerHTML = ""; // Clear loading message
+                JBrowseReactLinearGenomeView.renderView(state, container);
+            } catch (error) {
+                console.error(error);
+                container.innerHTML = `<div style="color:red;padding:20px;">Error: ${error.message}</div>`;
+            }
         }
 
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(tabId).classList.add('active');
-            document.getElementById('btn' + tabId.replace('Tab','').charAt(0).toUpperCase() + tabId.replace('Tab','').slice(1)).classList.add('active');
+            const btnId = 'btn' + tabId.replace('Tab','').charAt(0).toUpperCase() + tabId.replace('Tab','').slice(1);
+            if(document.getElementById(btnId)) document.getElementById(btnId).classList.add('active');
         }
 
         function toggleTheme() {
