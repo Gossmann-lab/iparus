@@ -713,12 +713,15 @@
             if (!fileName) return;
 
             const container = document.getElementById("igv-div");
-            container.innerHTML = "⌛ Loading Alignment Data (via Private Proxy)...";
-
+            
+            // ۱. پاکسازی کامل نمونه قبلی قبل از هر کاری
             if (igvBrowser) {
                 igv.removeBrowser(container);
                 igvBrowser = null;
             }
+
+            // ۲. خالی کردن محتوای ظرف و نمایش پیام لودینگ
+            container.innerHTML = "<div style='padding:20px; font-weight:bold;'>⌛ در حال بارگذاری داده‌های جدید (لطفاً کمی صبر کنید)...</div>";
 
             const sampleFolder = fileName.split('_')[0];
             const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
@@ -745,9 +748,15 @@
             };
 
             try {
+                // ۳. ایجاد نمونه جدید
                 igvBrowser = await igv.createBrowser(container, options);
+                console.log("IGV Loaded: " + fileName);
             } catch (error) {
-                container.innerHTML = `<div style="padding:20px; color:red;"><strong>Proxy Error:</strong> ${error.message}</div>`;
+                console.error(error);
+                container.innerHTML = `<div style="padding:20px; color:red;">
+                    <strong>خطا در لود داده:</strong> ${error.message}<br>
+                    <small>مطمئن شوید پروکسی کلودفلر شما فعال است.</small>
+                </div>`;
             }
         }
         function openTab(tabId) {
