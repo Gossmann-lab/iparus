@@ -447,8 +447,8 @@
                     <button class="tab-btn active" onclick="openTab('mapTab')" id="btnMap">🌍 Map View</button>
                     <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable">🧬 Sequence Data</button>
                     <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo">📊 Sample Information</button>
-                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline & Reference</button>
                     <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual">🔬 Interactive Visualizer</button>
+                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline & Reference</button>
                     <button class="tab-btn" onclick="openTab('pubTab')" id="btnPub">📚 Publications</button>
                     <button class="tab-btn" onclick="openTab('contactTab')" id="btnContact">✉️ Contact</button>
                 </div>
@@ -710,29 +710,34 @@
         async function updateIGV() {
             const select = document.getElementById('sampleSelect');
             const fileName = select.value;
-            if (!fileName) return;
+            
+            // If no file is selected, just clear the container and return
+            if (!fileName) {
+                const container = document.getElementById("igv-div");
+                if (igvBrowser) {
+                    igv.removeBrowser(container);
+                    igvBrowser = null;
+                }
+                container.innerHTML = "";
+                return;
+            }
 
             const container = document.getElementById("igv-div");
 
-            // 1. Clear previous browser instance definitively
+            // 1. Immediately show loading message when a new file is picked
             if (igvBrowser) {
-                try {
-                    igv.removeBrowser(container);
-                } catch (e) {
-                    console.warn("Clean-up warning:", e);
-                }
+                igv.removeBrowser(container);
                 igvBrowser = null;
             }
-
             
-            container.innerHTML = ""; 
-            const loadingMsg = document.createElement("div");
-            loadingMsg.style.padding = "20px";
-            loadingMsg.style.fontWeight = "600";
-            loadingMsg.innerText = "⌛ Loading Alignment Data... Please wait.";
-            container.appendChild(loadingMsg);
+            // Clear container and show the loading message immediately
+            container.innerHTML = `<div id="igv-loading-msg" style="padding:40px; text-align:center; color:var(--text-muted);">
+                <div style="margin-bottom:10px; font-size:1.5rem;">⌛</div>
+                <strong>Loading Alignment Data...</strong><br>
+                <small>Fetching from Sciebo via Proxy</small>
+            </div>`;
 
-            // 3. Small delay to ensure DOM is ready for a fresh start
+            // 2. Start the loading process
             setTimeout(async () => {
                 const sampleFolder = fileName.split('_')[0];
                 const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
@@ -749,8 +754,9 @@
                         indexURL: faiUrl,
                         fetchConfig: { headers: { "Authorization": authHeader } }
                     },
-                    locus: "NC_031768.1:1-10,000",
+                    locus: "NC_031768.1:1-10,000", 
                     tracks: [{
+                        name: "", // Keeps the UI clean
                         url: bamUrl,
                         indexURL: baiUrl,
                         format: "bam",
@@ -759,16 +765,20 @@
                 };
 
                 try {
+                    // When igv.createBrowser is called, it will eventually replace the loading innerHTML
                     igvBrowser = await igv.createBrowser(container, options);
-                    console.log("Success: " + fileName);
+                    
+                    // Cleanup: Ensure the loading message is gone (though IGV usually handles this)
+                    const msg = document.getElementById("igv-loading-msg");
+                    if (msg) msg.remove();
+                    
                 } catch (error) {
                     console.error("IGV Error:", error);
-                    container.innerHTML = `<div style="padding:20px; color:red;">
-                        <strong>Loading Error:</strong> ${error.message}<br>
-                        <small>Check Cloudflare Worker status or internet connection.</small>
+                    container.innerHTML = `<div style="padding:20px; color:red; text-align:center;">
+                        <strong>Loading Error</strong><br>${error.message}
                     </div>`;
                 }
-            }, 100); // 100ms delay to prevent race conditions
+            }, 50); // Small delay for smooth UI transition
         }
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
