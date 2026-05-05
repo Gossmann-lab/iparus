@@ -713,51 +713,63 @@
             if (!fileName) return;
 
             const container = document.getElementById("igv-div");
-            
-            // ۱. پاکسازی کامل نمونه قبلی قبل از هر کاری
+
+            // 1. Clear previous browser instance definitively
             if (igvBrowser) {
-                igv.removeBrowser(container);
+                try {
+                    igv.removeBrowser(container);
+                } catch (e) {
+                    console.warn("Clean-up warning:", e);
+                }
                 igvBrowser = null;
             }
 
-            // ۲. خالی کردن محتوای ظرف و نمایش پیام لودینگ
-            container.innerHTML = "<div style='padding:20px; font-weight:bold;'>⌛ در حال بارگذاری داده‌های جدید (لطفاً کمی صبر کنید)...</div>";
+            // 2. Clear the DOM and show loading status in English
+            container.innerHTML = ""; 
+            const loadingMsg = document.createElement("div");
+            loadingMsg.style.padding = "20px";
+            loadingMsg.style.fontWeight = "600";
+            loadingMsg.innerText = "⌛ Loading Alignment Data (via Private Proxy)... Please wait.";
+            container.appendChild(loadingMsg);
 
-            const sampleFolder = fileName.split('_')[0];
-            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
-            const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`);
-            const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
-            const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
-            const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+            // 3. Small delay to ensure DOM is ready for a fresh start
+            setTimeout(async () => {
+                const sampleFolder = fileName.split('_')[0];
+                const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+                
+                const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`);
+                const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
+                const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
+                const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
 
-            const options = {
-                genome: {
-                    id: "ParusMajor",
-                    fastaURL: fastaUrl,
-                    indexURL: faiUrl,
-                    fetchConfig: { headers: { "Authorization": authHeader } }
-                },
-                locus: "NC_031768.1:222,000-225,000",
-                tracks: [{
-                    name: fileName,
-                    url: bamUrl,
-                    indexURL: baiUrl,
-                    format: "bam",
-                    fetchConfig: { headers: { "Authorization": authHeader } }
-                }]
-            };
+                const options = {
+                    genome: {
+                        id: "ParusMajor",
+                        fastaURL: fastaUrl,
+                        indexURL: faiUrl,
+                        fetchConfig: { headers: { "Authorization": authHeader } }
+                    },
+                    locus: "NC_031768.1:222,000-225,000",
+                    tracks: [{
+                        name: fileName,
+                        url: bamUrl,
+                        indexURL: baiUrl,
+                        format: "bam",
+                        fetchConfig: { headers: { "Authorization": authHeader } }
+                    }]
+                };
 
-            try {
-                // ۳. ایجاد نمونه جدید
-                igvBrowser = await igv.createBrowser(container, options);
-                console.log("IGV Loaded: " + fileName);
-            } catch (error) {
-                console.error(error);
-                container.innerHTML = `<div style="padding:20px; color:red;">
-                    <strong>خطا در لود داده:</strong> ${error.message}<br>
-                    <small>مطمئن شوید پروکسی کلودفلر شما فعال است.</small>
-                </div>`;
-            }
+                try {
+                    igvBrowser = await igv.createBrowser(container, options);
+                    console.log("Success: " + fileName);
+                } catch (error) {
+                    console.error("IGV Error:", error);
+                    container.innerHTML = `<div style="padding:20px; color:red;">
+                        <strong>Loading Error:</strong> ${error.message}<br>
+                        <small>Check Cloudflare Worker status or internet connection.</small>
+                    </div>`;
+                }
+            }, 100); // 100ms delay to prevent race conditions
         }
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
