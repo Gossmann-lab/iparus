@@ -163,7 +163,7 @@
             z-index: 1000; 
             background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(10px); 
-            padding: 10px 20px;
+            padding: 6px 12px;
             border-radius: 50px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.08); 
             width: fit-content; 
@@ -186,8 +186,8 @@
         .tab-btn {
             background: transparent; 
             border: none; 
-            padding: 12px 24px; 
-            font-size: 1rem; 
+            padding: 8px 16px; 
+            font-size: 0.85rem; 
             cursor: pointer; 
             color: var(--text-muted); 
             font-weight: 600;
@@ -724,12 +724,12 @@
                 igvBrowser = null;
             }
 
-            // 2. Clear the DOM and show loading status in English
+            
             container.innerHTML = ""; 
             const loadingMsg = document.createElement("div");
             loadingMsg.style.padding = "20px";
             loadingMsg.style.fontWeight = "600";
-            loadingMsg.innerText = "⌛ Loading Alignment Data (via Private Proxy)... Please wait.";
+            loadingMsg.innerText = "⌛ Loading Alignment Data... Please wait.";
             container.appendChild(loadingMsg);
 
             // 3. Small delay to ensure DOM is ready for a fresh start
