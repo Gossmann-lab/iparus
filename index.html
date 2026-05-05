@@ -710,34 +710,30 @@
         async function updateIGV() {
             const select = document.getElementById('sampleSelect');
             const fileName = select.value;
+            if (!fileName) return;
+
             const container = document.getElementById("igv-div");
 
-            // 1. If no file selected, just clear and stop
-            if (!fileName) {
-                if (igvBrowser) {
-                    igv.removeBrowser(container);
-                    igvBrowser = null;
-                }
-                container.innerHTML = "";
-                return;
-            }
-
-            // 2. Clear old browser and SHOW loading message
             if (igvBrowser) {
-                igv.removeBrowser(container);
+                try {
+                    igv.removeBrowser(container);
+                } catch (e) {
+                    console.warn("Clean-up warning:", e);
+                }
                 igvBrowser = null;
             }
-            
-            // This message will only be visible while the next one is loading
-            container.innerHTML = `<div id="temp-loader" style="padding:50px; text-align:center; color:var(--text-muted); font-family:sans-serif;">
-                <span style="font-size:2rem; display:block; margin-bottom:10px;">⌛</span>
-                <strong>Loading ${fileName.split('_')[0]}...</strong>
-            </div>`;
 
-            // 3. Start loading the new data
+            container.innerHTML = ""; 
+            const loadingMsg = document.createElement("div");
+            loadingMsg.style.padding = "20px";
+            loadingMsg.style.fontWeight = "600";
+            loadingMsg.innerText = "⌛ Loading Alignment Data... Please wait.";
+            container.appendChild(loadingMsg);
+
             setTimeout(async () => {
                 const sampleFolder = fileName.split('_')[0];
                 const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+                
                 const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`);
                 const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
                 const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
@@ -750,9 +746,11 @@
                         indexURL: faiUrl,
                         fetchConfig: { headers: { "Authorization": authHeader } }
                     },
-                    locus: "NC_031768.1:1-10,000",
+                    // CHANGE 1: Start from the beginning of the first chromosome
+                    locus: "NC_031768.1:1-10,000", 
                     tracks: [{
-                        name: "", 
+                        // CHANGE 2: Removed 'name: fileName' to hide the filename label
+                        name: "",
                         url: bamUrl,
                         indexURL: baiUrl,
                         format: "bam",
@@ -761,12 +759,12 @@
                 };
 
                 try {
-                    // This will replace the "container.innerHTML" content entirely
                     igvBrowser = await igv.createBrowser(container, options);
                 } catch (error) {
-                    container.innerHTML = `<div style="padding:20px; color:red; text-align:center;">Loading Error: ${error.message}</div>`;
+                    console.error("IGV Error:", error);
+                    container.innerHTML = `<div style="padding:20px; color:red;">Loading Error: ${error.message}</div>`;
                 }
-            }, 50);
+            }, 100);
         }
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
