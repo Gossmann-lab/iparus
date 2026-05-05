@@ -747,10 +747,16 @@
                         fetchConfig: { headers: { "Authorization": authHeader } }
                     },
                     // CHANGE 1: Start from the beginning of the first chromosome
-                    locus: "NC_031768.1:1-10,000", 
+                    locus: "NC_031768.1:1-10,000",
+                    showTrackLabels: false,       // Hides labels on the tracks
+                    showNavigation: true,         // Keep zoom/search (optional)
+                    showTrackButton: false,       // Hides the "Tracks" button
+                    showLocusLabel: false,        // Hides the locus text top-left
+                    showAttributeDisplay: false,
+                    showCursorTrackingGuide: true,
                     tracks: [{
                         // CHANGE 2: Removed 'name: fileName' to hide the filename label
-                        name: "\u00A0",
+                        name: fileName,
                         url: bamUrl,
                         indexURL: baiUrl,
                         format: "bam",
