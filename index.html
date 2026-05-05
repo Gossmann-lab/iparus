@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>IPARUS - Integrated Parus Platform</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/igv@2.15.5/dist/igv.min.js"></script>
     
     <style>
         :root {
@@ -397,6 +398,31 @@
         @media (max-width: 600px) {
             .theme-toggle-wrapper { position: relative; top: 15px; right: auto; margin: 0 auto; }
         }
+        /* Visualizer Styles */
+        .visualizer-controls { 
+            margin-bottom: 20px; 
+            padding: 20px; 
+            background: #f1f5f9; 
+            border-radius: 12px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        body.dark-mode .visualizer-controls { background: #334155; }
+        #sampleSelect { 
+            padding: 10px; 
+            border-radius: 8px; 
+            flex-grow: 1; 
+            background: var(--card-bg); 
+            color: var(--text-main); 
+            border: 1px solid var(--border-light); 
+        }
+        #igv-div { 
+            border: 1px solid var(--border-light); 
+            border-radius: 12px; 
+            min-height: 600px; 
+            background: white; 
+        }
     </style>
 </head>
 <body>
@@ -422,6 +448,7 @@
                     <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable">🧬 Sequence Data</button>
                     <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo">📊 Sample Information</button>
                     <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline & Reference</button>
+                    <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual">🔬 Interactive Visualizer</button>
                     <button class="tab-btn" onclick="openTab('pubTab')" id="btnPub">📚 Publications</button>
                     <button class="tab-btn" onclick="openTab('contactTab')" id="btnContact">✉️ Contact</button>
                 </div>
@@ -429,6 +456,16 @@
 
             <div id="mapTab" class="tab-content active">
                 <iframe src="Final_Styled_Map.html"></iframe>
+            </div>
+
+            <div id="visualTab" class="tab-content">
+                <div class="visualizer-controls">
+                    <label><strong>Select Sample:</strong></label>
+                    <select id="sampleSelect" onchange="updateIGV()">
+                        <option value="">-- Choose a Sample --</option>
+                    </select>
+                </div>
+                <div id="igv-div"></div>
             </div>
 
             <div id="pipelineTab" class="tab-content">
@@ -614,6 +651,105 @@
     </footer>
 
     <script>
+        const SCIEBO_CONFIG = {
+            token: "o6CpwRbCfPN7d6c",
+            pass: "rKKbnToMwe",
+            baseUrl: "https://tu-dortmund.sciebo.de/public.php/dav/files/o6CpwRbCfPN7d6c/"
+        };
+
+        const GITHUB_CONFIG = {
+            user: "Gossmann-lab",
+            repo: "iparus"
+        };
+
+        const PROXY_URL = "https://round-disk-db63.mohammadmoein-hajihoseinigazestani.workers.dev/?url=";
+
+        const bamFiles = [
+            "SRR1793405_sorted_dedup.bam", "SRR1793406_sorted_dedup.bam", "SRR1793407_sorted_dedup.bam",
+            "SRR1793415_sorted_dedup.bam", "SRR1793417_sorted_dedup.bam", "SRR1793419_sorted_dedup.bam",
+            "SRR1793420_sorted_dedup.bam", "SRR1793421_sorted_dedup.bam", "SRR1793422_sorted_dedup.bam",
+            "SRR1793423_sorted_dedup.bam", "SRR1793424_sorted_dedup.bam", "SRR1793425_sorted_dedup.bam",
+            "SRR1793427_sorted_dedup.bam", "SRR1793428_sorted_dedup.bam", "SRR1793429_sorted_dedup.bam",
+            "SRR1793430_sorted_dedup.bam", "SRR1793431_sorted_dedup.bam", "SRR1793432_sorted_dedup.bam",
+            "SRR1793433_sorted_dedup.bam", "SRR1793434_sorted_dedup.bam", "SRR1793435_sorted_dedup.bam",
+            "SRR1793436_sorted_dedup.bam", "SRR1793437_sorted_dedup.bam", "SRR1793438_sorted_dedup.bam",
+            "SRR1793439_sorted_dedup.bam", "SRR1793440_sorted_dedup.bam", "SRR1793441_sorted_dedup.bam",
+            "SRR1793442_sorted_dedup.bam", "SRR1793443_sorted_dedup.bam", "SRR1793444_sorted_dedup.bam",
+            "SRR1793445_sorted_dedup.bam", "SRR1793447_sorted_dedup.bam", "SRR2961328_sorted_dedup.bam",
+            "SRR2961671_sorted_dedup.bam", "SRR2961674_sorted_dedup.bam", "SRR2961676_sorted_dedup.bam",
+            "SRR2961678_sorted_dedup.bam", "SRR2961680_sorted_dedup.bam", "SRR2961684_sorted_dedup.bam",
+            "SRR2961689_sorted_dedup.bam", "SRR2961695_sorted_dedup.bam", "SRR2961697_sorted_dedup.bam",
+            "SRR2961699_sorted_dedup.bam", "SRR2961701_sorted_dedup.bam", "SRR2961712_sorted_dedup.bam",
+            "SRR2961716_sorted_dedup.bam", "SRR2961718_sorted_dedup.bam", "SRR2961722_sorted_dedup.bam",
+            "SRR2961725_sorted_dedup.bam", "SRR2961728_sorted_dedup.bam", "SRR2961731_sorted_dedup.bam",
+            "SRR2961736_sorted_dedup.bam", "SRR2961746_sorted_dedup.bam", "SRR2961750_sorted_dedup.bam",
+            "SRR2961753_sorted_dedup.bam", "SRR2961756_sorted_dedup.bam", "SRR2961759_sorted_dedup.bam",
+            "SRR2961762_sorted_dedup.bam", "SRR2961765_sorted_dedup.bam", "SRR2961769_sorted_dedup.bam",
+            "SRR2961773_sorted_dedup.bam", "SRR2961775_sorted_dedup.bam", "SRR3085443_sorted_dedup.bam",
+            "SRR5423293_sorted_dedup.bam", "SRR5423294_sorted_dedup.bam", "SRR5423295_sorted_dedup.bam",
+            "SRR5423296_sorted_dedup.bam", "SRR5423297_sorted_dedup.bam", "SRR5423298_sorted_dedup.bam",
+            "SRR5423299_sorted_dedup.bam", "SRR5423300_sorted_dedup.bam", "SRR5423301_sorted_dedup.bam",
+            "SRR5423302_sorted_dedup.bam", "SRR765717_sorted_dedup.bam", "SRR9656355_sorted_dedup.bam",
+            "SRR9656356_sorted_dedup.bam", "SRR9656357_sorted_dedup.bam", "SRR9656367_sorted_dedup.bam",
+            "SRR9656368_sorted_dedup.bam", "SRR9656369_sorted_dedup.bam"
+        ];
+
+        let igvBrowser;
+
+// Fill Select Menu on Load
+        window.addEventListener('DOMContentLoaded', () => {
+            const select = document.getElementById('sampleSelect');
+            bamFiles.forEach(file => {
+                let opt = document.createElement('option');
+                opt.value = file;
+                opt.innerHTML = file.split('_')[0];
+                select.appendChild(opt);
+            });
+        });
+
+        async function updateIGV() {
+            const select = document.getElementById('sampleSelect');
+            const fileName = select.value;
+            if (!fileName) return;
+
+            const container = document.getElementById("igv-div");
+            container.innerHTML = "⌛ Loading Alignment Data (via Private Proxy)...";
+
+            if (igvBrowser) {
+                igv.removeBrowser(container);
+                igvBrowser = null;
+            }
+
+            const sampleFolder = fileName.split('_')[0];
+            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+            const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`);
+            const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
+            const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
+            const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+
+            const options = {
+                genome: {
+                    id: "ParusMajor",
+                    fastaURL: fastaUrl,
+                    indexURL: faiUrl,
+                    fetchConfig: { headers: { "Authorization": authHeader } }
+                },
+                locus: "NC_031768.1:222,000-225,000",
+                tracks: [{
+                    name: fileName,
+                    url: bamUrl,
+                    indexURL: baiUrl,
+                    format: "bam",
+                    fetchConfig: { headers: { "Authorization": authHeader } }
+                }]
+            };
+
+            try {
+                igvBrowser = await igv.createBrowser(container, options);
+            } catch (error) {
+                container.innerHTML = `<div style="padding:20px; color:red;"><strong>Proxy Error:</strong> ${error.message}</div>`;
+            }
+        }
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -626,7 +762,14 @@
             if(tabId === 'infoTab') document.getElementById('btnInfo').classList.add('active');
             if(tabId === 'pubTab') document.getElementById('btnPub').classList.add('active');
             if(tabId === 'contactTab') document.getElementById('btnContact').classList.add('active');
+            if(tabId === 'visualTab') {
+                document.getElementById('btnVisual').classList.add('active');
+        // این خط باعث می‌شود اگر قبلاً ویژوالایزر لود شده بود، اندازه‌اش فیکس شود
+                if(igvBrowser) igvBrowser.resize();
+            }
         }
+            
+        
 
         window.switchToTable = function(urlHash) {
             document.getElementById('tableIframe').src = urlHash;
