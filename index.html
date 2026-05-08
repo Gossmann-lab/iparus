@@ -496,8 +496,12 @@
             <div id="visualTab" class="tab-content">
                 <div class="visualizer-controls">
                     <label><strong>Select Sample:</strong></label>
-                    <select id="sampleSelect" onchange="updateIGV()">
-                        <option value="">-- Choose a Sample --</option>
+                    <select id="sampleSelect1" onchange="updateIGV()">
+                        <option value="">-- Choose Sample 1 --</option>
+                    </select>
+
+                    <select id="sampleSelect2" onchange="updateIGV()">
+                        <option value="">-- Choose Sample 2 --</option>
                     </select>
                 </div>
                 <div id="igv-div"></div>
@@ -733,19 +737,27 @@
 
 // Fill Select Menu on Load
         window.addEventListener('DOMContentLoaded', () => {
-            const select = document.getElementById('sampleSelect');
+            const select1 = document.getElementById('sampleSelect1');
+            const select2 = document.getElementById('sampleSelect2');
             bamFiles.forEach(file => {
-                let opt = document.createElement('option');
-                opt.value = file;
-                opt.innerHTML = file.split('_')[0];
-                select.appendChild(opt);
+                let opt1 = document.createElement('option');
+                opt1.value = file;
+                opt1.innerHTML = file.split('_')[0];
+                select1.appendChild(opt1);
+
+                let opt2 = document.createElement('option');
+                opt2.value = file;
+                opt2.innerHTML = file.split('_')[0];
+                select2.appendChild(opt2);
             });
         });
 
         async function updateIGV() {
-            const select = document.getElementById('sampleSelect');
-            const fileName = select.value;
-            if (!fileName) return;
+
+            const file1 = document.getElementById('sampleSelect1').value;
+            const file2 = document.getElementById('sampleSelect2').value;
+
+            if (!file1 && !file2) return;
 
             const container = document.getElementById("igv-div");
 
@@ -758,53 +770,121 @@
                 igvBrowser = null;
             }
 
-            container.innerHTML = ""; 
+            container.innerHTML = "";
+
             const loadingMsg = document.createElement("div");
             loadingMsg.style.padding = "20px";
             loadingMsg.style.fontWeight = "600";
-            loadingMsg.innerText = "⌛ Loading Alignment Data... Please wait.";
+            loadingMsg.innerText = "⌛ Loading Alignment Data...";
             container.appendChild(loadingMsg);
 
             setTimeout(async () => {
-                const sampleFolder = fileName.split('_')[0];
-                const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
-                
-                const bamUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${fileName}`);
-                const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
-                const baiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${fileName}.bai`;
-                const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+
+                const authHeader = "Basic " + btoa(
+                    SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass
+                );
+
+                const fastaUrl =
+                    PROXY_URL +
+                    encodeURIComponent(
+                        `${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`
+                    );
+
+                const faiUrl =
+                    `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+
+                let tracks = [];
+
+        // SAMPLE 1
+                if (file1) {
+
+                    const sampleFolder1 = file1.split('_')[0];
+
+                    const bamUrl1 =
+                        PROXY_URL +
+                        encodeURIComponent(
+                            `${SCIEBO_CONFIG.baseUrl}${sampleFolder1}/${file1}`
+                        );
+
+                    const baiUrl1 =
+                        `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file1}.bai`;
+
+                    tracks.push({
+                        name: "Sample 1 - " + file1.split('_')[0],
+                        url: bamUrl1,
+                        indexURL: baiUrl1,
+                        format: "bam",
+                        height: 250,
+                        fetchConfig: {
+                            headers: {
+                                "Authorization": authHeader
+                            }
+                        }
+                    });
+                }
+
+        // SAMPLE 2
+                if (file2) {
+
+                    const sampleFolder2 = file2.split('_')[0];
+
+                    const bamUrl2 =
+                        PROXY_URL +
+                        encodeURIComponent(
+                            `${SCIEBO_CONFIG.baseUrl}${sampleFolder2}/${file2}`
+                        );
+
+                    const baiUrl2 =
+                        `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file2}.bai`;
+
+                    tracks.push({
+                        name: "Sample 2 - " + file2.split('_')[0],
+                        url: bamUrl2,
+                        indexURL: baiUrl2,
+                        format: "bam",
+                        height: 250,
+                        fetchConfig: {
+                            headers: {
+                                "Authorization": authHeader
+                            }
+                        }
+                    });
+                }
 
                 const options = {
+
                     genome: {
                         id: "ParusMajor",
                         fastaURL: fastaUrl,
                         indexURL: faiUrl,
-                        fetchConfig: { headers: { "Authorization": authHeader } }
+                        fetchConfig: {
+                            headers: {
+                                "Authorization": authHeader
+                            }
+                        }
                     },
-                    // CHANGE 1: Start from the beginning of the first chromosome
-                    locus: "NC_031768.1:1-10,000",
-                    showTrackLabels: false,       // Hides labels on the tracks
-                    showNavigation: true,         // Keep zoom/search (optional)
-                    showTrackButton: false,       // Hides the "Tracks" button
-                    showLocusLabel: false,        // Hides the locus text top-left
-                    showAttributeDisplay: false,
-                    showCursorTrackingGuide: false,
-                    tracks: [{
-                        
-                        name: fileName,
-                        url: bamUrl,
-                        indexURL: baiUrl,
-                        format: "bam",
-                        fetchConfig: { headers: { "Authorization": authHeader } }
-                    }]
+
+                    locus: "NC_031768.1:1-10000",
+
+                    showTrackLabels: true,
+
+                    tracks: tracks
                 };
 
                 try {
+
                     igvBrowser = await igv.createBrowser(container, options);
+
                 } catch (error) {
+
                     console.error("IGV Error:", error);
-                    container.innerHTML = `<div style="padding:20px; color:red;">Loading Error: ${error.message}</div>`;
+
+                    container.innerHTML =
+                        `<div style="padding:20px; color:red;">
+                            Loading Error: ${error.message}
+                        </div>`;
                 }
+
             }, 100);
         }
         function openTab(tabId) {
