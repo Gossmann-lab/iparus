@@ -33,11 +33,15 @@ For inquiries and collaborations, please refer to the **Contact** tab within the
 
 ## 📚 References & Publications
 
-This platform supports and incorporates findings from several key research initiatives. If you use this resource, please consider citing the relevant works:
+The following publications analyze the genomic samples hosted on this platform:
 
-* **SwarmGenomics:** Kylmänen, A., Chen, Y.-C., Javaheri Tehrani, S., Vellnow, N., Wilcox, J. J. S., & Gossmann, T. I. (2026). *SwarmGenomics: A unified pipeline for individual-based whole-genome analyses*. Molecular Ecology Resources.
-* **Genomic Differentiation:** Chen, Y.-C., Vellnow, N., Wilcox, J., Javaheri Tehrani, S., & Gossmann, T. I. (2025). *Opinion: Why sex‐based genomic differentiation should not be overlooked in population genetics*. Molecular Ecology.
-* **Avian Biodiversity:** Javaheri Tehrani, S., et al. (2025). *DNA barcoding of passerine birds in Iran*. ZooKeys.
+* **Chen, Y.-C. et al. (2025)**. Opinion: Why Sex-Based Genomic Differentiation Should Not Be Overlooked in Population Genetics. *Mol. Ecol.* e70061.
+* **Cheng, Y. et al. (2021)**. Parallel genomic responses to historical climate change and high elevation in East Asian songbirds. *Proc. Natl. Acad. Sci.* 118, e2023918118.
+* **Cheng, Y. et al. (2020)**. Comparative Genomics Reveals Evolution of a Beak Morphology Locus in a High-Altitude Songbird. *Mol. Biol. Evol.* 37, 2983–2988.
+* **Corcoran, P. et al. (2017)**. Determinants of the Efficacy of Natural Selection on Coding and Noncoding Variability in Two Passerine Species. *Genome Biol. Evol.* 9, 2987–3007.
+* **Laine, V.N. et al. (2016)**. Evolutionary signals of selection on cognition from the great tit genome and methylome. *Nat. Commun.* 7, 10474.
+* **Qu, Y. et al. (2015)**. Genetic responses to seasonal variation in altitudinal stress: whole-genome resequencing of great tit in eastern Himalayas. *Sci. Rep.* 5, 14256.
+* **Qu, Y. et al. (2013)**. Ground tit genome reveals avian adaptation to living at high altitudes in the Tibetan plateau. *Nat. Commun.* 4, 2071.
 
 ---
 © 2026 IPARUS Project - TU Dortmund University.
