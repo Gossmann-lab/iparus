@@ -8,9 +8,10 @@ This platform provides public access to genomic data and resources for birds of 
 
 ## 🌟 Main Features
 
-* **Interactive Genome Visualization:** Using the integrated **IGV Browser**, users can select and compare two different genomic samples side-by-side against the reference genome.
+
 * **Geospatial Sample Map:** An interactive map showing the geographical distribution of the samples hosted on this platform.
 * **Sequence Data & Metadata:** Comprehensive tables providing access to sample-specific information, metadata, and sequencing details.
+* **Interactive Genome Visualization:** Using the integrated **IGV Browser**, users can select and compare two different genomic samples side-by-side against the reference genome.
 * **Methodology & References:** Access to the processing steps used for the datasets and a curated list of related scientific publications.
 
 ## 🚀 Access the Platform
