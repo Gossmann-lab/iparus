@@ -1,4 +1,6 @@
 # IPARUS: Integrated Parus Platform
+[![Website Status](https://img.shields.io/badge/Website-Live-brightgreen.svg)](https://gossmann-lab.github.io/iparus/) 
+[![Maintained by](https://img.shields.io/badge/Maintained%20by-Gossmann%20Lab-blue.svg)](https://csb.bci.tu-dortmund.de/)
 
 **IPARUS** (**I**ntegrated **P**latform for ***Parus*** **A**lignments, **R**esources and **U**seful **S**equences) is a web-based genomic resource platform developed at the **Gossmann Lab** (TU Dortmund University). 
 
