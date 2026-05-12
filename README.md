@@ -25,8 +25,8 @@ The data provided through this portal follows the research conducted at the Goss
 
 ## 👥 Contributors & Contact
 
-* **Project Coordinator:** Dr. Nikolas Vellnow
-* **Lead Developer:** Mohammadmoein Hajihoseinigazestani (Moein Gazestani)
+* **Project Coordinator:** Dr. Nikolas Vellnow ([nikolas.vellnow@tu-dortmund.de](mailto:nikolas.vellnow@tu-dortmund.de))
+* **Lead Developer:** Mohammadmoein Hajihoseinigazestani ([moeinm2h@gmail.com](mailto:moeinm2h@gmail.com))
 * **Institution:** Laboratory of Computational Systems Biology (CSB), TU Dortmund University.
 
 For inquiries and collaborations, please refer to the **Contact** tab within the web portal or visit the [Gossmann Lab website](https://csb.bci.tu-dortmund.de/).
