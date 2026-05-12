@@ -31,5 +31,13 @@ The data provided through this portal follows the research conducted at the Goss
 
 For inquiries and collaborations, please refer to the **Contact** tab within the web portal or visit the [Gossmann Lab website](https://csb.bci.tu-dortmund.de/).
 
+## 📚 References & Publications
+
+This platform supports and incorporates findings from several key research initiatives. If you use this resource, please consider citing the relevant works:
+
+* **SwarmGenomics:** Kylmänen, A., Chen, Y.-C., Javaheri Tehrani, S., Vellnow, N., Wilcox, J. J. S., & Gossmann, T. I. (2026). *SwarmGenomics: A unified pipeline for individual-based whole-genome analyses*. Molecular Ecology Resources.
+* **Genomic Differentiation:** Chen, Y.-C., Vellnow, N., Wilcox, J., Javaheri Tehrani, S., & Gossmann, T. I. (2025). *Opinion: Why sex‐based genomic differentiation should not be overlooked in population genetics*. Molecular Ecology.
+* **Avian Biodiversity:** Javaheri Tehrani, S., et al. (2025). *DNA barcoding of passerine birds in Iran*. ZooKeys.
+
 ---
 © 2026 IPARUS Project - TU Dortmund University.
