@@ -814,13 +814,15 @@
 
                 let tracks = [];
 
+                // SAMPLE 1
                 if (file1) {
                     const sampleFolder1 = file1.split('_')[0];
                     const bamUrl1 =
                         PROXY_URL +
                         encodeURIComponent(
-                            `${SCIEBO_CONFIG.baseUrl}dav/files/ELD9YWnZKNioMEe/${file1}`
+                            `${SCIEBO_CONFIG.baseUrl}${sampleFolder1}/${file1}`
                         );
+
                     const baiUrl1 =
                         `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file1}.bai`;
 
@@ -838,13 +840,15 @@
                     });
                 }
 
+        // SAMPLE 2
                 if (file2) {
                     const sampleFolder2 = file2.split('_')[0];
                     const bamUrl2 =
                         PROXY_URL +
                         encodeURIComponent(
-                            `${SCIEBO_CONFIG.baseUrl}dav/files/ELD9YWnZKNioMEe/${file2}`
+                            `${SCIEBO_CONFIG.baseUrl}${sampleFolder2}/${file2}`
                         );
+
                     const baiUrl2 =
                         `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file2}.bai`;
 
