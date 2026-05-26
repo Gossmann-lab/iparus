@@ -10,6 +10,7 @@
     <meta name="author" content="Mohammadmoein Hajihoseinigazestani">
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/igv@2.15.5/dist/igv.min.js"></script>
     
     <style>
@@ -178,21 +179,19 @@
         }
         body.dark-mode .tabs-container { background: rgba(30, 41, 59, 0.85); }
 
-        /* ظرف اصلی تب‌ها */
         .tabs {
             display: inline-flex;
             background: #f1f5f9;
             padding: 6px;
             border-radius: 50px;
             gap: 4px;
-            position: relative; /
+            position: relative; 
         }
 
         body.dark-mode .tabs {
             background: #1e293b;
         }
 
-/* استایل عمومی دکمه‌ها */
         .tab-btn {
             position: relative;
             background: transparent;
@@ -205,9 +204,11 @@
             border-radius: 40px;
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px; /* ایجاد فاصله مناسب بین آیکون و متن */
         }
 
-/* افکت هاور برای دکمه‌های غیرفعال */
         .tab-btn:hover:not(.active) {
             color: var(--text-main);
             background: rgba(255, 255, 255, 0.5);
@@ -217,20 +218,18 @@
             background: rgba(255, 255, 255, 0.05);
         }
 
-/* استایل دکمه فعال (Active) */
         .tab-btn.active {
-            background: white; /* در حالت لایت */
+            background: white; 
             color: var(--primary);
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         body.dark-mode .tab-btn.active {
-            background: #334155; /* در حالت دارک */
+            background: #334155; 
             color: #60a5fa;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
         }
 
-/* اضافه کردن یک خط متحرک کوچک زیر دکمه فعال (اختیاری) */
         .tab-btn.active::after {
             content: '';
             position: absolute;
@@ -332,7 +331,6 @@
         .contact-person h4, .contact-address h4 { margin-top: 0; color: var(--text-main); font-size: 1.2rem; margin-bottom: 15px;}
         .contact-item { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; color: var(--text-muted); }
 
-        
         .site-footer {
             background-color: #0f172a;
             color: #cbd5e1;
@@ -484,13 +482,13 @@
             
             <div class="tabs-container">
                 <div class="tabs">
-                    <button class="tab-btn active" onclick="openTab('mapTab')" id="btnMap">🌍 Map View</button>
-                    <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable">🧬 Sequence Data</button>
-                    <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo">📊 Sample Information</button>
-                    <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual">🔬 IGV Browser</button>
-                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline">💻 Pipeline & Reference</button>
-                    <button class="tab-btn" onclick="openTab('pubTab')" id="btnPub">📚 Publications</button>
-                    <button class="tab-btn" onclick="openTab('contactTab')" id="btnContact">✉️ Contact</button>
+                    <button class="tab-btn active" onclick="openTab('mapTab')" id="btnMap"><i class="fas fa-map-marked-alt"></i> Map View</button>
+                    <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable"><i class="fas fa-dna"></i> Sequence Data</button>
+                    <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo"><i class="fas fa-table"></i> Sample Information</button>
+                    <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual"><i class="fas fa-microscope"></i> IGV Browser</button>
+                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline"><i class="fas fa-terminal"></i> Pipeline & Reference</button>
+                    <button class="tab-btn" onclick="openTab('pubTab')" id="btnPub"><i class="fas fa-book"></i> Publications</button>
+                    <button class="tab-btn" onclick="openTab('contactTab')" id="btnContact"><i class="fas fa-envelope"></i> Contact</button>
                 </div>
             </div>
 
@@ -759,7 +757,6 @@
 
         let igvBrowser;
 
-// Fill Select Menu on Load
         window.addEventListener('DOMContentLoaded', () => {
             const select1 = document.getElementById('sampleSelect1');
             const select2 = document.getElementById('sampleSelect2');
@@ -777,7 +774,6 @@
         });
 
         async function updateIGV() {
-
             const file1 = document.getElementById('sampleSelect1').value;
             const file2 = document.getElementById('sampleSelect2').value;
 
@@ -803,7 +799,6 @@
             container.appendChild(loadingMsg);
 
             setTimeout(async () => {
-
                 const authHeader = "Basic " + btoa(
                     SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass
                 );
@@ -819,17 +814,13 @@
 
                 let tracks = [];
 
-        // SAMPLE 1
                 if (file1) {
-
                     const sampleFolder1 = file1.split('_')[0];
-
                     const bamUrl1 =
                         PROXY_URL +
                         encodeURIComponent(
-                            `${SCIEBO_CONFIG.baseUrl}${sampleFolder1}/${file1}`
+                            `${SCIEBO_CONFIG.baseUrl}dav/files/ELD9YWnZKNioMEe/${file1}`
                         );
-
                     const baiUrl1 =
                         `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file1}.bai`;
 
@@ -847,17 +838,13 @@
                     });
                 }
 
-        // SAMPLE 2
                 if (file2) {
-
                     const sampleFolder2 = file2.split('_')[0];
-
                     const bamUrl2 =
                         PROXY_URL +
                         encodeURIComponent(
-                            `${SCIEBO_CONFIG.baseUrl}${sampleFolder2}/${file2}`
+                            `${SCIEBO_CONFIG.baseUrl}dav/files/ELD9YWnZKNioMEe/${file2}`
                         );
-
                     const baiUrl2 =
                         `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file2}.bai`;
 
@@ -876,7 +863,6 @@
                 }
 
                 const options = {
-
                     genome: {
                         id: "ParusMajor",
                         fastaURL: fastaUrl,
@@ -887,30 +873,23 @@
                             }
                         }
                     },
-
                     locus: "NC_031768.1:1-10000",
-
                     showTrackLabels: true,
-
                     tracks: tracks
                 };
 
                 try {
-
                     igvBrowser = await igv.createBrowser(container, options);
-
                 } catch (error) {
-
                     console.error("IGV Error:", error);
-
                     container.innerHTML =
                         `<div style="padding:20px; color:red;">
                             Loading Error: ${error.message}
                         </div>`;
                 }
-
             }, 100);
         }
+
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
@@ -925,19 +904,15 @@
             if(tabId === 'contactTab') document.getElementById('btnContact').classList.add('active');
             if(tabId === 'visualTab') {
                 document.getElementById('btnVisual').classList.add('active');
-        // این خط باعث می‌شود اگر قبلاً ویژوالایزر لود شده بود، اندازه‌اش فیکس شود
                 if(igvBrowser) igvBrowser.resize();
             }
         }
-            
-        
 
         window.switchToTable = function(urlHash) {
             document.getElementById('tableIframe').src = urlHash;
             openTab('tableTab');
         };
 
-        // Theme Toggle Logic
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
