@@ -943,13 +943,20 @@
             if (type === 'bam') {
                 bamIframe.style.display = 'block';
                 snpIframe.style.display = 'none';
+
                 bamBtn.classList.add('active');
                 snpBtn.classList.remove('active');
+
             } else {
                 bamIframe.style.display = 'none';
                 snpIframe.style.display = 'block';
+
                 bamBtn.classList.remove('active');
                 snpBtn.classList.add('active');
+
+                setTimeout(() => {
+                    snpIframe.contentWindow.location.reload();
+                }, 100);
             }
         }
     </script>
