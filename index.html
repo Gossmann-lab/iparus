@@ -946,7 +946,6 @@
 
                 bamBtn.classList.add('active');
                 snpBtn.classList.remove('active');
-
             } else {
                 bamIframe.style.display = 'none';
                 snpIframe.style.display = 'block';
@@ -955,8 +954,10 @@
                 snpBtn.classList.add('active');
 
                 setTimeout(() => {
-                    snpIframe.contentWindow.location.reload();
-                }, 100);
+                    snpIframe.contentWindow.dispatchEvent(
+                        new Event('resize')
+                    );
+                }, 200);
             }
         }
     </script>
