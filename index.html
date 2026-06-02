@@ -493,7 +493,17 @@
             </div>
 
             <div id="mapTab" class="tab-content active">
-                <iframe src="Final_Styled_Map.html"></iframe>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button id="btnMapBAM" class="tab-btn active" onclick="switchMap('bam')" style="box-shadow: none;">
+                        <i class="fas fa-stream"></i> Sequencing Data (BAM)
+                    </button>
+                    <button id="btnMapSNP" class="tab-btn" onclick="switchMap('snp')" style="box-shadow: none;">
+                        <i class="fas fa-microchip"></i> Genotyping Data (SNP Chip)
+                    </button>
+                </div>
+
+                <iframe id="iframeMapBAM" src="Final_Styled_Map.html"></iframe>
+                <iframe id="iframeMapSNP" src="Final_SNP_Map.html" style="display: none;"></iframe>
             </div>
 
             <div id="visualTab" class="tab-content">
@@ -923,6 +933,24 @@
             const icon = document.getElementById('theme-icon');
             body.classList.toggle('dark-mode');
             icon.innerText = body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        }
+        function switchMap(type) {
+            const bamIframe = document.getElementById('iframeMapBAM');
+            const snpIframe = document.getElementById('iframeMapSNP');
+            const bamBtn = document.getElementById('btnMapBAM');
+            const snpBtn = document.getElementById('btnMapSNP');
+
+            if (type === 'bam') {
+                bamIframe.style.display = 'block';
+                snpIframe.style.display = 'none';
+                bamBtn.classList.add('active');
+                snpBtn.classList.remove('active');
+            } else {
+                bamIframe.style.display = 'none';
+                snpIframe.style.display = 'block';
+                bamBtn.classList.remove('active');
+                snpBtn.classList.add('active');
+            }
         }
     </script>
 </body>
