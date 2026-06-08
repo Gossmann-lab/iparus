@@ -233,6 +233,11 @@
             background: #1e293b !important; 
             border-color: #334155 !important; 
         }
+        /* تنظیم فاصله خط آبی زیر دکمه‌های ساب‌کتگوری */
+        #mapTab .tab-btn.active::after, 
+        #tableTab .tab-btn.active::after {
+            bottom: -2px !important; /* این مقدار منفی خط را کاملاً به زیر متن هدایت می‌کند */
+        }
 
         .tab-btn.active::after {
             content: '';
@@ -587,7 +592,7 @@
                 <div style="display: flex; justify-content: center; margin-bottom: 25px;">
                     <div style="background: #e2e8f0; padding: 5px; border-radius: 30px; display: inline-flex; gap: 4px; border: 1px solid #cbd5e1;">
                         <button id="btnTableBAM" class="tab-btn active" onclick="switchTableContent('bam')" style="box-shadow: none; font-size: 0.8rem; font-weight: 700; padding: 6px 16px; border-radius: 25px;">
-                            <i class="fas fa-list"></i> Sequencing Dataset (BAM)
+                            <i class="fas fa-list"></i> Whole Genome Sequencing (BAM)
                         </button>
                         <button id="btnTableSNP" class="tab-btn" onclick="switchTableContent('snp')" style="box-shadow: none; font-size: 0.8rem; font-weight: 700; padding: 6px 16px; border-radius: 25px;">
                             <i class="fas fa-table"></i> Genotyping Dataset (SNP Chip)
