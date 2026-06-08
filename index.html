@@ -950,7 +950,39 @@
         }
 
         window.switchToTable = function(urlHash) {
-            document.getElementById('tableIframe').src = urlHash;
+    // urlHash شامل مقداری مثل "vcf_samples_table.html#Wytham_UK" است
+            const [tableName, hash] = urlHash.split('#');
+    
+            const bamIframe = document.getElementById('tableIframe');
+            const snpIframe = document.getElementById('tableSnpIframe');
+            const bamBtn = document.getElementById('btnTableBAM');
+            const snpBtn = document.getElementById('btnTableSNP');
+    
+            if (tableName === 'vcf_samples_table.html') {
+        // ۱. سوییچ ظاهری دکمه‌های ساب‌کتگوری جدول به حالت SNP
+                bamBtn.classList.remove('active');
+                snpBtn.classList.add('active');
+        
+        // ۲. جابه‌جایی آنی آی‌فریم‌ها (نمایش جدول دوم و پنهان کردن جدول اول)
+                bamIframe.style.display = 'none';
+                snpIframe.style.display = 'block';
+        
+        // ۳. ارسال آیدی مکان به جدول دوم برای فیلتر شدن
+                snpIframe.src = 'vcf_samples_table.html#' + hash;
+            } else {
+        // ۱. سوییچ ظاهری دکمه‌های ساب‌کتگوری جدول به حالت BAM
+                snpBtn.classList.remove('active');
+                bamBtn.classList.add('active');
+        
+        // ۲. جابه‌جایی آنی آی‌فریم‌ها (نمایش جدول اول و پنهان کردن جدول دوم)
+                snpIframe.style.display = 'none';
+                bamIframe.style.display = 'block';
+        
+        // ۳. ارسال آیدی مکان به جدول اول برای فیلتر شدن
+                bamIframe.src = 'samples_table.html#' + hash;
+            }
+    
+    // در نهایت کاربر را به تب اصلی جدول‌ها هدایت کن
             openTab('tableTab');
         };
 
