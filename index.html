@@ -600,6 +600,21 @@
                     </div>
                 </div>
 
+                <div style="background: rgba(37, 99, 235, 0.08); border-left: 4px solid var(--primary); padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; display: flex; align-items: center; gap: 12px; font-size: 0.92rem; color: var(--text-main);">
+                    <i class="fas fa-info-circle" style="color: var(--primary); font-size: 1.1rem;"></i>
+                    <span>
+                        <strong>💡 Quick Tip:</strong> You can directly visualize and inspect these alignment files online. Click here to open the 
+                        <a href="javascript:void(0);" onclick="openTab('visualTab')" style="color: var(--primary); font-weight: 700; text-decoration: underline; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.8'" onmouseout="this.style.opacity='1'">
+                            IGV Browser
+                        </a> 
+                        and select your sample to explore mutations instantly.
+                    </span>
+                </div>
+
+                <iframe src="samples_table.html" id="tableIframe" width="100%"></iframe>
+                <iframe src="vcf_samples_table.html" id="tableSnpIframe" style="display: none;" width="100%"></iframe>
+            </div>
+
                 <iframe src="samples_table.html" id="tableIframe" width="100%"></iframe>
                 <iframe src="vcf_samples_table.html" id="tableSnpIframe" style="display: none;" width="100%"></iframe>
             </div>
