@@ -575,7 +575,17 @@
             </div>
 
             <div id="tableTab" class="tab-content">
-                <iframe src="samples_table.html" id="tableIframe"></iframe>
+                <div style="text-align: center; margin-bottom: 20px;">
+                    <button id="btnTableBAM" class="tab-btn active" onclick="switchTableContent('bam')" style="box-shadow: none;">
+                        <i class="fas fa-list"></i> Sequencing Dataset (BAM)
+                    </button>
+                    <button id="btnTableSNP" class="tab-btn" onclick="switchTableContent('snp')" style="box-shadow: none;">
+                        <i class="fas fa-table"></i> Genotyping Dataset (SNP Chip)
+                    </button>
+                </div>
+
+                <iframe src="samples_table.html" id="tableIframe" width="100%"></iframe>
+                <iframe src="vcf_samples_table.html" id="tableSnpIframe" style="display: none;" width="100%"></iframe>
             </div>
 
             <div id="infoTab" class="tab-content">
@@ -957,6 +967,24 @@
                 setTimeout(() => {
                     snpIframe.contentWindow.location.reload();
                 }, 100);
+            }
+        }
+        function switchTableContent(type) {
+            const bamIframe = document.getElementById('tableIframe');
+            const snpIframe = document.getElementById('tableSnpIframe');
+            const bamBtn = document.getElementById('btnTableBAM');
+            const snpBtn = document.getElementById('btnTableSNP');
+
+            if (type === 'bam') {
+                bamIframe.style.display = 'block';
+                snpIframe.style.display = 'none';
+                bamBtn.classList.add('active');
+                snpBtn.classList.remove('active');
+            } else {
+                bamIframe.style.display = 'none';
+                snpIframe.style.display = 'block';
+                bamBtn.classList.remove('active');
+                snpBtn.classList.add('active');
             }
         }
     </script>
