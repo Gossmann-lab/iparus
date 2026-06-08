@@ -233,10 +233,10 @@
             background: #1e293b !important; 
             border-color: #334155 !important; 
         }
-        /* تنظیم فاصله خط آبی زیر دکمه‌های ساب‌کتگوری */
+        
         #mapTab .tab-btn.active::after, 
         #tableTab .tab-btn.active::after {
-            bottom: -2px !important; /* این مقدار منفی خط را کاملاً به زیر متن هدایت می‌کند */
+            bottom: -2px !important; 
         }
 
         .tab-btn.active::after {
@@ -600,14 +600,14 @@
                     </div>
                 </div>
 
-                <!-- دو آی‌فریم جداگانه برای جدول‌ها (جدول دوم به صورت پیش‌فرض مخفی شد تا به هم‌ریختگی رفع شود) -->
+                
                 <iframe src="samples_table.html" id="tableIframe" width="100%"></iframe>
                 <iframe src="vcf_samples_table.html" id="tableSnpIframe" style="display: none;" width="100%"></iframe>
 
                 
-                <p style="font-size: 0.97rem; color: var(--text-muted); margin-top: 15px; text-align: left;">
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 15px; text-align: left;">
                     🔬 You can directly visualize and inspect these alignment files here in our 
-                    <a href="javascript:void(0);" onclick="openTab('visualTab')" style="color: var(--primary); font-weight: 600; text-decoration: underline;">
+                    <a href="javascript:void(0);" onclick="openTab('visualTab'); window.scrollTo({ top: 0, behavior: 'smooth' });" style="color: var(--primary); font-weight: 600; text-decoration: underline;">
                         IGV Browser
                     </a> tab.
                 </p>
@@ -860,7 +860,7 @@
 
                 let tracks = [];
 
-                // SAMPLE 1
+                
                 if (file1) {
                     const sampleFolder1 = file1.split('_')[0];
                     const bamUrl1 =
@@ -886,7 +886,7 @@
                     });
                 }
 
-        // SAMPLE 2
+        
                 if (file2) {
                     const sampleFolder2 = file2.split('_')[0];
                     const bamUrl2 =
@@ -956,11 +956,10 @@
                 document.getElementById('btnVisual').classList.add('active');
                 if(igvBrowser) igvBrowser.resize();
             }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         window.switchToTable = function(urlHash) {
-    // urlHash شامل مقداری مثل "vcf_samples_table.html#Wytham_UK" است
+   
             const [tableName, hash] = urlHash.split('#');
     
             const bamIframe = document.getElementById('tableIframe');
@@ -969,30 +968,23 @@
             const snpBtn = document.getElementById('btnTableSNP');
     
             if (tableName === 'vcf_samples_table.html') {
-        // ۱. سوییچ ظاهری دکمه‌های ساب‌کتگوری جدول به حالت SNP
                 bamBtn.classList.remove('active');
                 snpBtn.classList.add('active');
         
-        // ۲. جابه‌جایی آنی آی‌فریم‌ها (نمایش جدول دوم و پنهان کردن جدول اول)
                 bamIframe.style.display = 'none';
                 snpIframe.style.display = 'block';
         
-        // ۳. ارسال آیدی مکان به جدول دوم برای فیلتر شدن
                 snpIframe.src = 'vcf_samples_table.html#' + hash;
             } else {
-        // ۱. سوییچ ظاهری دکمه‌های ساب‌کتگوری جدول به حالت BAM
                 snpBtn.classList.remove('active');
                 bamBtn.classList.add('active');
         
-        // ۲. جابه‌جایی آنی آی‌فریم‌ها (نمایش جدول اول و پنهان کردن جدول دوم)
                 snpIframe.style.display = 'none';
                 bamIframe.style.display = 'block';
         
-        // ۳. ارسال آیدی مکان به جدول اول برای فیلتر شدن
                 bamIframe.src = 'samples_table.html#' + hash;
             }
     
-    // در نهایت کاربر را به تب اصلی جدول‌ها هدایت کن
             openTab('tableTab');
         };
 
@@ -1009,7 +1001,6 @@
             const snpBtn = document.getElementById('btnMapSNP');
 
             if (type === 'bam') {
-        // فعال کردن آنی نقشه اول
                 bamIframe.style.zIndex = '2';
                 bamIframe.style.opacity = '1';
                 snpIframe.style.zIndex = '1';
@@ -1018,7 +1009,6 @@
                 bamBtn.classList.add('active');
                 snpBtn.classList.remove('active');
             } else {
-        // فعال کردن آنی نقشه دوم (بدون لود مجدد چون از قبل تو بک‌گراند لود شده)
                 bamIframe.style.zIndex = '1';
                 bamIframe.style.opacity = '0';
                 snpIframe.style.zIndex = '2';
