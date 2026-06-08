@@ -956,6 +956,7 @@
                 document.getElementById('btnVisual').classList.add('active');
                 if(igvBrowser) igvBrowser.resize();
             }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         window.switchToTable = function(urlHash) {
