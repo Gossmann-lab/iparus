@@ -502,8 +502,10 @@
                     </button>
                 </div>
 
-                <iframe id="iframeMapBAM" src="Final_Styled_Map.html"></iframe>
-                <iframe id="iframeMapSNP" src="Final_SNP_Map.html" style="display: none;" width="100%"></iframe>
+                <div style="position: relative; width: 100%; height: 750px;">
+                    <iframe id="iframeMapBAM" src="Final_Styled_Map.html" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; transition: opacity 0.2s ease, z-index 0.2s; z-index: 2; opacity: 1;"></iframe>
+                    <iframe id="iframeMapSNP" src="Final_SNP_Map.html" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; transition: opacity 0.2s ease, z-index 0.2s; z-index: 1; opacity: 0;"></iframe>
+                </div>
             </div>
 
             <div id="visualTab" class="tab-content">
@@ -951,22 +953,23 @@
             const snpBtn = document.getElementById('btnMapSNP');
 
             if (type === 'bam') {
-                bamIframe.style.display = 'block';
-                snpIframe.style.display = 'none';
-
+        // فعال کردن آنی نقشه اول
+                bamIframe.style.zIndex = '2';
+                bamIframe.style.opacity = '1';
+                snpIframe.style.zIndex = '1';
+                snpIframe.style.opacity = '0';
+        
                 bamBtn.classList.add('active');
                 snpBtn.classList.remove('active');
-
             } else {
-                bamIframe.style.display = 'none';
-                snpIframe.style.display = 'block';
-
+        // فعال کردن آنی نقشه دوم (بدون لود مجدد چون از قبل تو بک‌گراند لود شده)
+                bamIframe.style.zIndex = '1';
+                bamIframe.style.opacity = '0';
+                snpIframe.style.zIndex = '2';
+                snpIframe.style.opacity = '1';
+        
                 bamBtn.classList.remove('active');
                 snpBtn.classList.add('active');
-
-                setTimeout(() => {
-                    snpIframe.contentWindow.location.reload();
-                }, 100);
             }
         }
         function switchTableContent(type) {
