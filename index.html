@@ -914,6 +914,15 @@
                         id: "ParusMajor",
                         fastaURL: fastaUrl,
                         indexURL: faiUrl,
+                        annotations: [
+                            {
+                                name: "Gene Annotations (NCBI)",
+                                url: "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/522/545/GCF_001522545.3_Parus_major1.1/GCF_001522545.3_Parus_major1.1_genomic.gff.gz",
+                                indexURL: "https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/001/522/545/GCF_001522545.3_Parus_major1.1/GCF_001522545.3_Parus_major1.1_genomic.gff.gz.tbi",
+                                format: "gff3",
+                                displayMode: "EXPANDED"
+                            }
+                        ],
                         fetchConfig: {
                             headers: {
                                 "Authorization": authHeader
@@ -924,7 +933,6 @@
                     showTrackLabels: true,
                     tracks: tracks
                 };
-
                 try {
                     igvBrowser = await igv.createBrowser(container, options);
                 } catch (error) {
