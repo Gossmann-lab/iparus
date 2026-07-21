@@ -816,7 +816,6 @@
                 select2.appendChild(opt2);
             });
         });
-
         async function updateIGV() {
             const file1 = document.getElementById('sampleSelect1').value;
             const file2 = document.getElementById('sampleSelect2').value;
@@ -826,7 +825,6 @@
             const container = document.getElementById("igv-div");
 
             if (igvBrowser) {
-    // پاک‌سازی مستقیم المنت بدون فراخوانی igv.removeBrowser برای جلوگیری از خطای dispose
                 container.innerHTML = "";
                 igvBrowser = null;
             }
@@ -836,7 +834,7 @@
             const loadingMsg = document.createElement("div");
             loadingMsg.style.padding = "20px";
             loadingMsg.style.fontWeight = "600";
-            loadingMsg.innerText = "⌛ Loading Alignment Data...";
+            loadingMsg.innerText = "⌛ Loading IGV Browser & Annotations...";
             container.appendChild(loadingMsg);
 
             setTimeout(async () => {
@@ -844,111 +842,91 @@
                     SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass
                 );
 
-                const fastaUrl =
-                    PROXY_URL +
-                    encodeURIComponent(
-                        `${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`
-                    );
+                const fastaUrl = PROXY_URL + encodeURIComponent(
+                    `${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`
+                );
 
-                const faiUrl =
-                    `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+                const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
 
                 let tracks = [];
 
-                
+        // ۱. اضافه کردن ترک انوتیشن‌ها به‌صورت یک Track مستقل (نه داخل genome)
+                tracks.push({
+                    name: "Gene Annotations (NCBI)",
+                    url: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz",
+                    indexURL: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz.tbi",
+                    format: "gff3",
+                    type: "annotation",
+                    indexed: true,
+                    displayMode: "EXPANDED",
+                    visibilityWindow: 0, // یعنی در هر میزان زومی حتماً نشون بده
+                    order: 0,            // همیشه بالاترین ترک باشه
+                    fetchConfig: {
+                        headers: {}     // هدر خالی جهت جلوگیری از ارسال Auth Header به گیت‌هاب
+                    }
+                });
+
+        // ۲. اضافه کردن BAM اول در صورت انتخاب
                 if (file1) {
                     const sampleFolder1 = file1.split('_')[0];
-                    const bamUrl1 =
-                        PROXY_URL +
-                        encodeURIComponent(
-                            `${SCIEBO_CONFIG.baseUrl}${sampleFolder1}/${file1}`
-                        );
-
-                    const baiUrl1 =
-                        `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file1}.bai`;
-
                     tracks.push({
-                        name: "Sample 1 - " + file1.split('_')[0],
-                        url: bamUrl1,
-                        indexURL: baiUrl1,
+                        name: "Sample 1 - " + sampleFolder1,
+                        url: PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder1}/${file1}`),
+                        indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file1}.bai`,
                         format: "bam",
-                        height: 250,
+                        height: 200,
                         fetchConfig: {
-                            headers: {
-                                "Authorization": authHeader
-                            }
+                            headers: { "Authorization": authHeader }
                         }
                     });
                 }
 
+        // ۳. اضافه کردن BAM دوم در صورت انتخاب
                 if (file2) {
                     const sampleFolder2 = file2.split('_')[0];
-                    const bamUrl2 =
-                        PROXY_URL +
-                        encodeURIComponent(
-                            `${SCIEBO_CONFIG.baseUrl}${sampleFolder2}/${file2}`
-                        );
-
-                    const baiUrl2 =
-                        `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file2}.bai`;
-
                     tracks.push({
-                        name: "Sample 2 - " + file2.split('_')[0],
-                        url: bamUrl2,
-                        indexURL: baiUrl2,
+                        name: "Sample 2 - " + sampleFolder2,
+                        url: PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder2}/${file2}`),
+                        indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file2}.bai`,
                         format: "bam",
-                        height: 250,
+                        height: 200,
                         fetchConfig: {
-                            headers: {
-                                "Authorization": authHeader
-                            }
+                            headers: { "Authorization": authHeader }
                         }
                     });
                 }
 
                 const options = {
-                    genome: {
-                        id: "ParusMajor",
-                        fastaURL: fastaUrl,
-                        indexURL: faiUrl,
-        // اگر Sciebo نیاز به auth دارد، fetchConfig را فقط روی فایل‌های Sciebo بگذار یا اینجا نگه دار
-                        fetchConfig: {
-                            headers: {
-                                "Authorization": authHeader
-                            }
-                        },
-                        annotations: [
-                            {
-                                name: "Gene Annotations (NCBI)",
-                                url: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz",
-                                format: "gff3",
-                                type: "annotation",
-                                indexed: false,
-                                displayMode: "EXPANDED",
-                               
-                // برای اینکه گیت‌هاب بخاطر authHeader ارور CORS نده،
-                // هدر گیت‌هاب رو خالی می‌کنیم:
-                                fetchConfig: {
-                                    headers: {}
-                                }
-                            }
-                        ]
-                    },
-                    locus: "NC_031768.1:15000-35000",
-                    showTrackLabels: true,
-                    tracks: tracks
-                };
-                try {
-                    igvBrowser = await igv.createBrowser(container, options);
-                } catch (error) {
-                    console.error("IGV Error:", error);
-                    container.innerHTML =
-                        `<div style="padding:20px; color:red;">
-                            Loading Error: ${error.message}
-                        </div>`;
-                }
-            }, 100);
-        }
+                    genome: {
+                        id: "ParusMajor",
+                        fastaURL: fastaUrl,
+                        indexURL: faiUrl,
+                        fetchConfig: {
+                            headers: { "Authorization": authHeader }
+                        }
+                    },
+                    locus: "NC_031768.1:15000-35000", // دقیقا روی ژن RRM1
+                    showTrackLabels: true,
+                    tracks: tracks
+                };
+
+                try {
+                    container.innerHTML = "";
+                    igvBrowser = await igv.createBrowser(container, options);
+            
+            // اصلاح ابعاد برای تب‌های هماهنگ با CSS
+                    setTimeout(() => {
+                        if (igvBrowser) igvBrowser.resize();
+                    }, 300);
+
+                } catch (error) {
+                    console.error("IGV Error:", error);
+                    container.innerHTML = `<div style="padding:20px; color:red;">Loading Error: ${error.message}</div>`;
+                }
+            }, 100);
+        }
+
+
 
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
