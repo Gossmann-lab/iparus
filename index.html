@@ -914,16 +914,15 @@
                         annotations: [
                             {
                                 name: "Gene Annotations (NCBI)",
-        // با اضافه کردن &file=genes.gff3.gz در انتهای آدرس، به IGV می‌فهمانیم فرمت فایل چیست
-                                url: PROXY_URL + encodeURIComponent("https://tu-dortmund.sciebo.de/s/tMwBRoLZA3WtEEP/download") + "&file=genes.gff3.gz",
-                                indexURL: PROXY_URL + encodeURIComponent("https://tu-dortmund.sciebo.de/s/raEfy2dzPyEZ5YD/download") + "&file=genes.gff3.gz.tbi",
+        
+                                url: "https://github.com/Gossmann-lab/iparus/raw/main/sorted_genomic.gff.gz",
+                                indexURL: "https://github.com/Gossmann-lab/iparus/raw/main/sorted_genomic.gff.gz.tbi",
                                 format: "gff3",
+                                type: "annotation",
                                 indexed: true,
                                 displayMode: "EXPANDED",
                                 visibilityWindow: 5000000,
-                                fetchConfig: {
-                                    headers: {}
-                                }
+                                
                             }
                         ],
                         fetchConfig: {
