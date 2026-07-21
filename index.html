@@ -907,48 +907,49 @@
                 }
 
                 const options = {
-                    genome: {
-                        id: "ParusMajor",
-                        fastaURL: fastaUrl,
-                        indexURL: faiUrl,
-        // این fetchConfig فقط روی فایل‌های FASTA/FAI (مثل Sciebo) اعمال می‌شود:
-                        fetchConfig: {
-                            headers: {
-                                "Authorization": authHeader
-                            }
-                        }
-                    },
-                    locus: "NC_031768.1:1-10000",
-                    showTrackLabels: true,
-                    tracks: [
-                        {
-                            name: "Gene Annotations (NCBI)",
-                            url: "https://github.com/Gossmann-lab/iparus/raw/main/sorted_genomic.gff.gz",
-                            indexURL: "https://github.com/Gossmann-lab/iparus/raw/main/sorted_genomic.gff.gz.tbi",
-                            format: "gff3",
-                            type: "annotation",
-                            indexed: true,
-                            displayMode: "EXPANDED",
-                            visibilityWindow: 5000000,
-            // خالی کردن هدر برای گیت‌هاب جهت جلوگیری از تداخل CORS:
-                            fetchConfig: {
-                                 headers: {}
-                            }
-                        },
-        // اگر ترک‌های دیگری در متغیر tracks داشتی، آن‌ها را اینجا پخش کن:
-        
-                    ]
-                };
-
-                try {
-                    igvBrowser = await igv.createBrowser(container, options);
-                } catch (error) {
-                    console.error("IGV Error:", error);
-                    container.innerHTML =
-                        `<div style="padding:20px; color:red;">
-                            Loading Error: ${error.message}
-                        </div>`;
-                }
+                    genome: {
+                        id: "ParusMajor",
+                        fastaURL: fastaUrl,
+                        indexURL: faiUrl,
+        // اگر Sciebo نیاز به auth دارد، fetchConfig را فقط روی فایل‌های Sciebo بگذار یا اینجا نگه دار
+                        fetchConfig: {
+                            headers: {
+                                "Authorization": authHeader
+                            }
+                        },
+                        annotations: [
+                            {
+                                name: "Gene Annotations (NCBI)",
+                                url: "https://github.com/Gossmann-lab/iparus/raw/main/sorted_genomic.gff.gz",
+                                indexURL: "https://github.com/Gossmann-lab/iparus/raw/main/sorted_genomic.gff.gz.tbi",
+                                format: "gff3",
+                                type: "annotation",
+                                indexed: true,
+                                displayMode: "EXPANDED",
+                                visibilityWindow: 5000000,
+                // برای اینکه گیت‌هاب بخاطر authHeader ارور CORS نده،
+                // هدر گیت‌هاب رو خالی می‌کنیم:
+                                fetchConfig: {
+                                    headers: {}
+                                }
+                            }
+                        ]
+                    },
+                    locus: "NC_031768.1:1-10000",
+                    showTrackLabels: true,
+                    tracks: tracks
+                };
+                try {
+                    igvBrowser = await igv.createBrowser(container, options);
+                } catch (error) {
+                    console.error("IGV Error:", error);
+                    container.innerHTML =
+                        `<div style="padding:20px; color:red;">
+                            Loading Error: ${error.message}
+                        </div>`;
+                }
+            }, 100);
+        }
 
         function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
