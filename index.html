@@ -914,21 +914,18 @@
                         annotations: [
                             {
                                 name: "Gene Annotations (NCBI)",
-                // لینک مستقیم فایل اصلی از Sciebo
-                                url: "https://tu-dortmund.sciebo.de/s/tMwBRoLZA3WtEEP/download",
-                
-                // لینک مستقیم فایل ایندکس از Sciebo
-                                indexURL: "https://tu-dortmund.sciebo.de/s/raEfy2dzPyEZ5YD/download",
-                
+        // اضافه کردن پارامتر ساختگی به لینک تا IGV پسوند پس‌زمینه را تشخیص دهد
+                                url: "https://tu-dortmund.sciebo.de/s/tMwBRoLZA3WtEEP/download?file=genes.gff3.gz",
+                                indexURL: "https://tu-dortmund.sciebo.de/s/raEfy2dzPyEZ5YD/download?file=genes.gff3.gz.tbi",
                                 format: "gff3",
                                 displayMode: "EXPANDED",
-                
-                // غیرفعال کردن Authorization header فقط برای Sciebo جهت جلوگیری از خطای CORS
+                                visibilityWindow: 5000000, // نشان دادن تا بازه ۵ مگابازی
+                                indexed: true,             // مشخص کردن اینکه فایل دارای ایندکس tbi است
                                 fetchConfig: {
-                                    headers: {}
+                                    headers: {}            // حذف Headerهای غیرضروری جهت جلوگیری از خطای CORS با سایبو
                                 }
                             }
-                        ],
+                        ]
                         fetchConfig: {
                             headers: {
                                 "Authorization": authHeader
