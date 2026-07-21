@@ -11,7 +11,7 @@
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/igv@2.15.5/dist/igv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/igv@2.15.7/dist/igv.min.js"></script>
     
     <style>
         :root {
@@ -826,11 +826,8 @@
             const container = document.getElementById("igv-div");
 
             if (igvBrowser) {
-                try {
-                    igv.removeBrowser(container);
-                } catch (e) {
-                    console.warn("Clean-up warning:", e);
-                }
+    // پاک‌سازی مستقیم المنت بدون فراخوانی igv.removeBrowser برای جلوگیری از خطای dispose
+                container.innerHTML = "";
                 igvBrowser = null;
             }
 
