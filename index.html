@@ -850,7 +850,7 @@
 
                 let tracks = [];
 
-        // ۱. اضافه کردن ترک انوتیشن‌ها به‌صورت یک Track مستقل (نه داخل genome)
+        
                 tracks.push({
                     name: "Gene Annotations (NCBI)",
                     url: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz",
@@ -859,14 +859,14 @@
                     type: "annotation",
                     indexed: true,
                     displayMode: "EXPANDED",
-                    visibilityWindow: 0, // یعنی در هر میزان زومی حتماً نشون بده
-                    order: 0,            // همیشه بالاترین ترک باشه
+                    visibilityWindow: 0, 
+                    order: 0,          
                     fetchConfig: {
-                        headers: {}     // هدر خالی جهت جلوگیری از ارسال Auth Header به گیت‌هاب
+                        headers: {}     
                     }
                 });
 
-        // ۲. اضافه کردن BAM اول در صورت انتخاب
+        
                 if (file1) {
                     const sampleFolder1 = file1.split('_')[0];
                     tracks.push({
@@ -881,7 +881,7 @@
                     });
                 }
 
-        // ۳. اضافه کردن BAM دوم در صورت انتخاب
+        
                 if (file2) {
                     const sampleFolder2 = file2.split('_')[0];
                     tracks.push({
@@ -905,7 +905,7 @@
                             headers: { "Authorization": authHeader }
                         }
                     },
-                    locus: "NC_031768.1:15000-35000", // دقیقا روی ژن RRM1
+                    locus: "NC_031768.1:15000-35000", 
                     showTrackLabels: true,
                     tracks: tracks
                 };
@@ -914,7 +914,7 @@
                     container.innerHTML = "";
                     igvBrowser = await igv.createBrowser(container, options);
             
-            // اصلاح ابعاد برای تب‌های هماهنگ با CSS
+            
                     setTimeout(() => {
                         if (igvBrowser) igvBrowser.resize();
                     }, 300);
