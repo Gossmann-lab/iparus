@@ -817,45 +817,44 @@
             });
         });
 
-        // تابع به‌روزرسانی IGV Browser
+
+        let igvSlotToggle = 0;
+
         async function updateIGV() {
             const file1 = document.getElementById('sampleSelect1').value;
             const file2 = document.getElementById('sampleSelect2').value;
-
+        
             if (!file1 && !file2) return;
-
-            const container = document.getElementById("igv-div");
-
-    // اگر نمونه قبلی وجود دارد آن را کامل ریست کنیم
-            if (igvBrowser) {
-                try {
+        
+            // ۱. حذف کامل اینستنس‌های قبلی IGV
+            try {
+                if (typeof igv !== 'undefined' && igv.removeAllBrowsers) {
                     igv.removeAllBrowsers();
-                } catch(e) {}
-                igvBrowser = null;
-            }
-
-            container.innerHTML = "";
-
-            const loadingMsg = document.createElement("div");
-            loadingMsg.style.padding = "20px";
-            loadingMsg.style.fontWeight = "600";
-            loadingMsg.style.color = "#2563eb";
-            loadingMsg.innerText = "⌛ Loading IGV Tracks & Alignments...";
-            container.appendChild(loadingMsg);
-
-            const authHeader = "Basic " + btoa(
-                SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass
-            );
-
-            const fastaUrl = PROXY_URL + encodeURIComponent(
-                `${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`
-            );
-
+                }
+            } catch(e) {}
+            igvBrowser = null;
+        
+            // ۲. برای جلوگیری از گیر کردن IGV، المنت را حذف و یک div تازه با همان ID می‌سازیم
+            const oldContainer = document.getElementById("igv-div");
+            const parentNode = oldContainer.parentNode;
+            const newContainer = document.createElement("div");
+            newContainer.id = "igv-div";
+            newContainer.style.border = "1px solid var(--border-light)";
+            newContainer.style.borderRadius = "12px";
+            newContainer.style.minHeight = "600px";
+            newContainer.style.background = "white";
+            parentNode.replaceChild(newContainer, oldContainer);
+        
+            // ۳. پیام لودینگ
+            newContainer.innerHTML = '<div style="padding:20px; font-weight:600; color:#2563eb;">⌛ Loading IGV Browser & Alignments...</div>';
+        
+            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+            const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
             const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
-
+        
             let tracks = [];
-
-    // ترک حاشیه‌نویسی ژنوم (NCBI)
+        
+            // ترک رفرنس NCBI
             tracks.push({
                 name: "Gene Annotations (NCBI)",
                 url: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz",
@@ -868,8 +867,8 @@
                 order: 0,
                 fetchConfig: { headers: {} }
             });
-
-    // ترک نمونه ۱
+        
+            // ترک نمونه ۱
             if (file1) {
                 const sampleFolder1 = file1.split('_')[0];
                 tracks.push({
@@ -878,13 +877,11 @@
                     indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file1}.bai`,
                     format: "bam",
                     height: 200,
-                    fetchConfig: {
-                        headers: { "Authorization": authHeader }
-                    }
+                    fetchConfig: { headers: { "Authorization": authHeader } }
                 });
             }
-
-    // ترک نمونه ۲
+        
+            // ترک نمونه ۲
             if (file2) {
                 const sampleFolder2 = file2.split('_')[0];
                 tracks.push({
@@ -893,56 +890,41 @@
                     indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file2}.bai`,
                     format: "bam",
                     height: 200,
-                    fetchConfig: {
-                        headers: { "Authorization": authHeader }
-                    }
+                    fetchConfig: { headers: { "Authorization": authHeader } }
                 });
             }
-
+        
             const options = {
                 genome: {
                     id: "ParusMajor",
                     fastaURL: fastaUrl,
                     indexURL: faiUrl,
-                    fetchConfig: {
-                        headers: { "Authorization": authHeader }
-                    }
+                    fetchConfig: { headers: { "Authorization": authHeader } }
                 },
                 locus: "NC_031768.1:15000-35000",
                 showTrackLabels: true,
                 tracks: tracks
             };
-
-            try {
-                container.innerHTML = "";
-                igvBrowser = await igv.createBrowser(container, options);
         
-        // اطمینان از تنظیم دقیق ابعاد IGV
-                setTimeout(() => {
-                    if (igvBrowser) igvBrowser.resize();
-                }, 200);
-
+            try {
+                newContainer.innerHTML = "";
+                igvBrowser = await igv.createBrowser(newContainer, options);
+                setTimeout(() => { if (igvBrowser) igvBrowser.resize(); }, 300);
             } catch (error) {
                 console.error("IGV Error:", error);
-                container.innerHTML = `<div style="padding:20px; color:red;">Loading Error: ${error.message}</div>`;
+                newContainer.innerHTML = `<div style="padding:20px; color:red;">Loading Error: ${error.message}</div>`;
             }
         }
-
-
-// متغیر نوبت چرخش اسلات‌ها
-        let igvSlotToggle = 0;
-
-// تابع فراخوانی از داخل جدول برای ست کردن نمونه و اجرای فوری
+        
         window.loadSampleInIGV = function(sampleFileName) {
             const select1 = document.getElementById('sampleSelect1');
             const select2 = document.getElementById('sampleSelect2');
-    
             if (!select1 || !select2) return;
-
+        
             const cleanInput = String(sampleFileName).trim();
             const cleanId = cleanInput.split('.')[0].split('_')[0];
-
-    // پر کردن لیست دراپ‌داون‌ها در صورت خالی بودن
+        
+            // اطمینان از پر بودن لیست‌ها
             [select1, select2].forEach(sel => {
                 if (sel.options.length <= 1 && typeof bamFiles !== 'undefined') {
                     bamFiles.forEach(file => {
@@ -953,27 +935,22 @@
                     });
                 }
             });
-
+        
             let targetValue = "";
             if (typeof bamFiles !== 'undefined') {
-                targetValue = bamFiles.find(f => 
-                    f === cleanInput || 
-                    f.startsWith(cleanId) || 
-                    cleanInput.startsWith(f.split('.')[0])
-                );
+                targetValue = bamFiles.find(f => f === cleanInput || f.startsWith(cleanId) || cleanInput.startsWith(f.split('.')[0]));
             }
-
             if (!targetValue) {
                 for (let opt of select1.options) {
-                    if (opt.value && (opt.value === cleanInput || opt.value.includes(cleanId) || cleanInput.includes(opt.value.split('_')[0]))) {
+                    if (opt.value && (opt.value === cleanInput || opt.value.includes(cleanId))) {
                         targetValue = opt.value;
                         break;
                     }
                 }
             }
-
+        
             if (targetValue) {
-        // منطق چرخشی انتخاب اسلات ۱ یا ۲
+                // منطق چرخشی اسلات ۱ و ۲
                 if (!select1.value) {
                     select1.value = targetValue;
                     igvSlotToggle = 1;
@@ -989,22 +966,18 @@
                         igvSlotToggle = 0;
                     }
                 }
-
-        // ۱. ابتدا تغییر تب به IGV تا DOM نمایان شود
+        
+                // رفتن به تب و اسکرول
                 openTab('visualTab');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
-
-        // ۲. اجرای با تاخیر بسیار کوتاه (برای اطمینان از پایان انیمیشن تب و رندر شدن کانتینر)
-                setTimeout(() => {
-                    updateIGV();
-                }, 150);
-
+        
+                // اجرای قطعی IGV
+                updateIGV();
             } else {
-                alert("Sample file not found in IGV database list: " + sampleFileName);
+                alert("Sample file not found: " + sampleFileName);
             }
         };
-
-        
+ 
 
 
         function openTab(tabId) {
