@@ -820,103 +820,104 @@
 
         let igvSlotToggle = 0;
 
-        function createTrackConfig(file, slotNumber) {
-            if (!file) return null;
-            const sampleFolder = file.split('_')[0];
-            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
-            
-            return {
-                name: `Sample ${slotNumber} - ${sampleFolder}`,
-                url: PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${file}`),
-                indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file}.bai`,
-                format: "bam",
-                height: 200,
-                fetchConfig: {
-                    headers: { "Authorization": authHeader }
-                }
-            };
-        }
-        
+// تابع رندر مرورگر IGV
         async function updateIGV() {
-            const file1 = document.getElementById('sampleSelect1').value;
-            const file2 = document.getElementById('sampleSelect2').value;
+            const select1 = document.getElementById('sampleSelect1');
+            const select2 = document.getElementById('sampleSelect2');
+            if (!select1 || !select2) return;
+        
+            const file1 = select1.value;
+            const file2 = select2.value;
         
             if (!file1 && !file2) return;
         
             const container = document.getElementById("igv-div");
         
-            // سناریوی ۱: اگر مرورگر IGV هنوز وجود ندارد، آن را از ابتدا بساز
-            if (!igvBrowser) {
-                container.innerHTML = '<div style="padding:20px; font-weight:600; color:#2563eb;">⌛ Loading IGV Browser...</div>';
-                
-                const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
-                const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
-                const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+            // ۱. آزادسازی رسمی تمام اینستنس‌های فعال IGV
+            if (typeof igv !== 'undefined' && igv.removeAllBrowsers) {
+                igv.removeAllBrowsers();
+            }
+            igvBrowser = null;
+            container.innerHTML = "";
         
-                let tracks = [
-                    {
-                        name: "Gene Annotations (NCBI)",
-                        url: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz",
-                        indexURL: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz.tbi",
-                        format: "gff3",
-                        type: "annotation",
-                        indexed: true,
-                        displayMode: "EXPANDED",
-                        visibilityWindow: 0,
-                        order: 0,
-                        fetchConfig: { headers: {} }
-                    }
-                ];
+            // ۲. نمایش پیام بارگذاری
+            const loadingMsg = document.createElement("div");
+            loadingMsg.style.cssText = "padding: 25px; font-weight: 600; color: #2563eb; text-align: center;";
+            loadingMsg.innerHTML = "⌛ Initializing IGV Browser & Loading Alignments...";
+            container.appendChild(loadingMsg);
         
-                const t1 = createTrackConfig(file1, 1);
-                const t2 = createTrackConfig(file2, 2);
-                if (t1) tracks.push(t1);
-                if (t2) tracks.push(t2);
+            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+            const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
+            const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
         
-                const options = {
-                    genome: {
-                        id: "ParusMajor",
-                        fastaURL: fastaUrl,
-                        indexURL: faiUrl,
-                        fetchConfig: { headers: { "Authorization": authHeader } }
-                    },
-                    locus: "NC_031768.1:15000-35000",
-                    showTrackLabels: true,
-                    tracks: tracks
-                };
-        
-                try {
-                    container.innerHTML = "";
-                    igvBrowser = await igv.createBrowser(container, options);
-                    setTimeout(() => { if (igvBrowser) igvBrowser.resize(); }, 200);
-                } catch (error) {
-                    console.error("IGV Error:", error);
-                    container.innerHTML = `<div style="padding:20px; color:red;">Loading Error: ${error.message}</div>`;
+            // ترک حاشیه‌نویسی ژنوم (NCBI)
+            let tracks = [
+                {
+                    name: "Gene Annotations (NCBI)",
+                    url: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz",
+                    indexURL: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz.tbi",
+                    format: "gff3",
+                    type: "annotation",
+                    indexed: true,
+                    displayMode: "EXPANDED",
+                    visibilityWindow: 0,
+                    order: 0,
+                    fetchConfig: { headers: {} }
                 }
-                return;
+            ];
+        
+            // افزودن ترک اول در صورت انتخاب
+            if (file1) {
+                const folder1 = file1.split('_')[0];
+                tracks.push({
+                    name: "Sample 1 - " + folder1,
+                    url: PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${folder1}/${file1}`),
+                    indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file1}.bai`,
+                    format: "bam",
+                    height: 200,
+                    fetchConfig: { headers: { "Authorization": authHeader } }
+                });
             }
         
-            // سناریوی ۲: اگر مرورگر از قبل باز است، فقط ترک‌های Sample را سریع پاک و جدیدها را اضافه کن
+            // افزودن ترک دوم در صورت انتخاب
+            if (file2) {
+                const folder2 = file2.split('_')[0];
+                tracks.push({
+                    name: "Sample 2 - " + folder2,
+                    url: PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${folder2}/${file2}`),
+                    indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file2}.bai`,
+                    format: "bam",
+                    height: 200,
+                    fetchConfig: { headers: { "Authorization": authHeader } }
+                });
+            }
+        
+            const options = {
+                genome: {
+                    id: "ParusMajor",
+                    fastaURL: fastaUrl,
+                    indexURL: faiUrl,
+                    fetchConfig: { headers: { "Authorization": authHeader } }
+                },
+                locus: "NC_031768.1:15000-35000",
+                showTrackLabels: true,
+                tracks: tracks
+            };
+        
             try {
-                const currentTracks = igvBrowser.trackViews.map(tv => tv.track.name);
-                for (let name of currentTracks) {
-                    if (name && (name.startsWith("Sample 1 -") || name.startsWith("Sample 2 -"))) {
-                        igvBrowser.removeTrackByName(name);
-                    }
-                }
-        
-                const t1 = createTrackConfig(file1, 1);
-                const t2 = createTrackConfig(file2, 2);
-        
-                if (t1) await igvBrowser.loadTrack(t1);
-                if (t2) await igvBrowser.loadTrack(t2);
-                
-                igvBrowser.resize();
+                container.innerHTML = "";
+                igvBrowser = await igv.createBrowser(container, options);
+                setTimeout(() => {
+                    if (igvBrowser) igvBrowser.resize();
+                }, 200);
             } catch (err) {
-                console.error("Error updating tracks:", err);
+                console.error("IGV Creation Error:", err);
+                container.innerHTML = `<div style="padding:20px; color:red;">Loading Error: ${err.message}</div>`;
             }
         }
         
+        
+        // تابع دریافت کلیک از داخل آی‌فریم جدول
         window.loadSampleInIGV = function(sampleFileName) {
             const select1 = document.getElementById('sampleSelect1');
             const select2 = document.getElementById('sampleSelect2');
@@ -925,7 +926,7 @@
             const cleanInput = String(sampleFileName).trim();
             const cleanId = cleanInput.split('.')[0].split('_')[0];
         
-            // پر کردن دراپ‌داون‌ها در صورت لزوم
+            // پر کردن خودکار گزینه‌ها اگر هنوز خالی هستند
             [select1, select2].forEach(sel => {
                 if (sel.options.length <= 1 && typeof bamFiles !== 'undefined') {
                     bamFiles.forEach(file => {
@@ -951,29 +952,37 @@
             }
         
             if (targetValue) {
-                // مدیریت نوبتی اسلات ۱ و ۲
+                let activeSelect;
+        
+                // منطق چرخشی پر کردن اسلات‌ها
                 if (!select1.value) {
                     select1.value = targetValue;
+                    activeSelect = select1;
                     igvSlotToggle = 1;
                 } else if (!select2.value) {
                     select2.value = targetValue;
+                    activeSelect = select2;
                     igvSlotToggle = 0;
                 } else {
                     if (igvSlotToggle === 0) {
                         select1.value = targetValue;
+                        activeSelect = select1;
                         igvSlotToggle = 1;
                     } else {
                         select2.value = targetValue;
+                        activeSelect = select2;
                         igvSlotToggle = 0;
                     }
                 }
         
-                // تغییر فوری تب و اسکرول به بالا
+                // ۱. انتقال به تب IGV و اسکرول بالا
                 openTab('visualTab');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
         
-                // اجرای آنی آپدیت ترک‌ها
-                updateIGV();
+                // ۲. ارسال رویداد change به صورت رسمی به المنت Select
+                // این کار دقیقاً شبیه کلیک فیزیکی کاربر روی منو عمل کرده و updateIGV را فراخوانی می‌کند
+                activeSelect.dispatchEvent(new Event('change', { bubbles: true }));
+        
             } else {
                 alert("Sample file not found: " + sampleFileName);
             }
