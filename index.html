@@ -820,99 +820,100 @@
 
         let igvSlotToggle = 0;
 
+        function createTrackConfig(file, slotNumber) {
+            if (!file) return null;
+            const sampleFolder = file.split('_')[0];
+            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+            
+            return {
+                name: `Sample ${slotNumber} - ${sampleFolder}`,
+                url: PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder}/${file}`),
+                indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file}.bai`,
+                format: "bam",
+                height: 200,
+                fetchConfig: {
+                    headers: { "Authorization": authHeader }
+                }
+            };
+        }
+        
         async function updateIGV() {
             const file1 = document.getElementById('sampleSelect1').value;
             const file2 = document.getElementById('sampleSelect2').value;
         
             if (!file1 && !file2) return;
         
-            // ۱. حذف کامل اینستنس‌های قبلی IGV
-            try {
-                if (typeof igv !== 'undefined' && igv.removeAllBrowsers) {
-                    igv.removeAllBrowsers();
+            const container = document.getElementById("igv-div");
+        
+            // سناریوی ۱: اگر مرورگر IGV هنوز وجود ندارد، آن را از ابتدا بساز
+            if (!igvBrowser) {
+                container.innerHTML = '<div style="padding:20px; font-weight:600; color:#2563eb;">⌛ Loading IGV Browser...</div>';
+                
+                const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+                const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
+                const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+        
+                let tracks = [
+                    {
+                        name: "Gene Annotations (NCBI)",
+                        url: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz",
+                        indexURL: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz.tbi",
+                        format: "gff3",
+                        type: "annotation",
+                        indexed: true,
+                        displayMode: "EXPANDED",
+                        visibilityWindow: 0,
+                        order: 0,
+                        fetchConfig: { headers: {} }
+                    }
+                ];
+        
+                const t1 = createTrackConfig(file1, 1);
+                const t2 = createTrackConfig(file2, 2);
+                if (t1) tracks.push(t1);
+                if (t2) tracks.push(t2);
+        
+                const options = {
+                    genome: {
+                        id: "ParusMajor",
+                        fastaURL: fastaUrl,
+                        indexURL: faiUrl,
+                        fetchConfig: { headers: { "Authorization": authHeader } }
+                    },
+                    locus: "NC_031768.1:15000-35000",
+                    showTrackLabels: true,
+                    tracks: tracks
+                };
+        
+                try {
+                    container.innerHTML = "";
+                    igvBrowser = await igv.createBrowser(container, options);
+                    setTimeout(() => { if (igvBrowser) igvBrowser.resize(); }, 200);
+                } catch (error) {
+                    console.error("IGV Error:", error);
+                    container.innerHTML = `<div style="padding:20px; color:red;">Loading Error: ${error.message}</div>`;
                 }
-            } catch(e) {}
-            igvBrowser = null;
-        
-            // ۲. برای جلوگیری از گیر کردن IGV، المنت را حذف و یک div تازه با همان ID می‌سازیم
-            const oldContainer = document.getElementById("igv-div");
-            const parentNode = oldContainer.parentNode;
-            const newContainer = document.createElement("div");
-            newContainer.id = "igv-div";
-            newContainer.style.border = "1px solid var(--border-light)";
-            newContainer.style.borderRadius = "12px";
-            newContainer.style.minHeight = "600px";
-            newContainer.style.background = "white";
-            parentNode.replaceChild(newContainer, oldContainer);
-        
-            // ۳. پیام لودینگ
-            newContainer.innerHTML = '<div style="padding:20px; font-weight:600; color:#2563eb;">⌛ Loading IGV Browser & Alignments...</div>';
-        
-            const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
-            const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
-            const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
-        
-            let tracks = [];
-        
-            // ترک رفرنس NCBI
-            tracks.push({
-                name: "Gene Annotations (NCBI)",
-                url: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz",
-                indexURL: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz.tbi",
-                format: "gff3",
-                type: "annotation",
-                indexed: true,
-                displayMode: "EXPANDED",
-                visibilityWindow: 0,
-                order: 0,
-                fetchConfig: { headers: {} }
-            });
-        
-            // ترک نمونه ۱
-            if (file1) {
-                const sampleFolder1 = file1.split('_')[0];
-                tracks.push({
-                    name: "Sample 1 - " + sampleFolder1,
-                    url: PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder1}/${file1}`),
-                    indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file1}.bai`,
-                    format: "bam",
-                    height: 200,
-                    fetchConfig: { headers: { "Authorization": authHeader } }
-                });
+                return;
             }
         
-            // ترک نمونه ۲
-            if (file2) {
-                const sampleFolder2 = file2.split('_')[0];
-                tracks.push({
-                    name: "Sample 2 - " + sampleFolder2,
-                    url: PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${sampleFolder2}/${file2}`),
-                    indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file2}.bai`,
-                    format: "bam",
-                    height: 200,
-                    fetchConfig: { headers: { "Authorization": authHeader } }
-                });
-            }
-        
-            const options = {
-                genome: {
-                    id: "ParusMajor",
-                    fastaURL: fastaUrl,
-                    indexURL: faiUrl,
-                    fetchConfig: { headers: { "Authorization": authHeader } }
-                },
-                locus: "NC_031768.1:15000-35000",
-                showTrackLabels: true,
-                tracks: tracks
-            };
-        
+            // سناریوی ۲: اگر مرورگر از قبل باز است، فقط ترک‌های Sample را سریع پاک و جدیدها را اضافه کن
             try {
-                newContainer.innerHTML = "";
-                igvBrowser = await igv.createBrowser(newContainer, options);
-                setTimeout(() => { if (igvBrowser) igvBrowser.resize(); }, 300);
-            } catch (error) {
-                console.error("IGV Error:", error);
-                newContainer.innerHTML = `<div style="padding:20px; color:red;">Loading Error: ${error.message}</div>`;
+                const currentTracks = igvBrowser.trackViews.map(tv => tv.track.name);
+                for (let name of currentTracks) {
+                    if (name && (name.startsWith("Sample 1 -") || name.startsWith("Sample 2 -"))) {
+                        igvBrowser.removeTrackByName(name);
+                    }
+                }
+        
+                const t1 = createTrackConfig(file1, 1);
+                const t2 = createTrackConfig(file2, 2);
+        
+                if (t1) await igvBrowser.loadTrack(t1);
+                if (t2) await igvBrowser.loadTrack(t2);
+                
+                igvBrowser.resize();
+            } catch (err) {
+                console.error("Error updating tracks:", err);
             }
         }
         
@@ -924,7 +925,7 @@
             const cleanInput = String(sampleFileName).trim();
             const cleanId = cleanInput.split('.')[0].split('_')[0];
         
-            // اطمینان از پر بودن لیست‌ها
+            // پر کردن دراپ‌داون‌ها در صورت لزوم
             [select1, select2].forEach(sel => {
                 if (sel.options.length <= 1 && typeof bamFiles !== 'undefined') {
                     bamFiles.forEach(file => {
@@ -950,7 +951,7 @@
             }
         
             if (targetValue) {
-                // منطق چرخشی اسلات ۱ و ۲
+                // مدیریت نوبتی اسلات ۱ و ۲
                 if (!select1.value) {
                     select1.value = targetValue;
                     igvSlotToggle = 1;
@@ -967,11 +968,11 @@
                     }
                 }
         
-                // رفتن به تب و اسکرول
+                // تغییر فوری تب و اسکرول به بالا
                 openTab('visualTab');
                 window.scrollTo({ top: 0, behavior: 'smooth' });
         
-                // اجرای قطعی IGV
+                // اجرای آنی آپدیت ترک‌ها
                 updateIGV();
             } else {
                 alert("Sample file not found: " + sampleFileName);
