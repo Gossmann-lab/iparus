@@ -975,6 +975,40 @@
             openTab('tableTab');
         };
 
+        window.loadSampleInIGV = function(sampleFileName) {
+            const select1 = document.getElementById('sampleSelect1');
+            const select2 = document.getElementById('sampleSelect2');
+    
+            if (!select1) return;
+
+    // پاک کردن انتخاب نمونه دوم برای نمایش تک‌نمونه
+            if (select2) select2.value = "";
+
+    // پیدا کردن مقدار نمونه در Dropdown
+            let matchedValue = "";
+            for (let option of select1.options) {
+                if (option.value === sampleFileName || option.value.startsWith(sampleFileName) || sampleFileName.startsWith(option.value.split('_')[0])) {
+                    matchedValue = option.value;
+                    break;
+                }
+            }
+
+            if (matchedValue) {
+                select1.value = matchedValue;
+        
+        // باز کردن تب ویژوالایزر IGV
+                openTab('visualTab');
+        
+        // اسکرول نرم صفحه به بالا
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // اجرای تابع رندر IGV
+                updateIGV();
+            } else {
+                alert("Sample file not found in IGV database list: " + sampleFileName);
+            }
+        };
+
         function toggleTheme() {
             const body = document.body;
             const icon = document.getElementById('theme-icon');
