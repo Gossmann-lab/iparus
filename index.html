@@ -945,30 +945,33 @@
             }
         }
 
+        // متغیر برای ردیابی نوبت پر کردن اسلات‌ها (0 = اسلات 1، 1 = اسلات 2)
+        let igvSlotToggle = 0;
+
         window.loadSampleInIGV = function(sampleFileName) {
             const select1 = document.getElementById('sampleSelect1');
             const select2 = document.getElementById('sampleSelect2');
     
-            if (!select1) return;
+            if (!select1 || !select2) return;
 
-    // تمیز کردن ورودی و استخراج شناسه اصلی (مثلاً SRR3085443)
+    // استخراج و تمیز کردن شناسه نمونه
             const cleanInput = String(sampleFileName).trim();
-            const cleanId = cleanInput.split('.')[0].split('_')[0]; // خروجی: SRR3085443
+            const cleanId = cleanInput.split('.')[0].split('_')[0];
 
-    // اطمینان از اینکه اگر دراپ‌داون هنوز پر نشده، با آرایه bamFiles پر شود
-            if (select1.options.length <= 1 && typeof bamFiles !== 'undefined') {
-                bamFiles.forEach(file => {
-                    let opt = document.createElement('option');
-                    opt.value = file;
-                    opt.innerHTML = file.split('_')[0];
-                    select1.appendChild(opt);
-                });
-            }
+    // اطمینان از پر بودن گزینه‌های هر دو منو
+            [select1, select2].forEach(sel => {
+                if (sel.options.length <= 1 && typeof bamFiles !== 'undefined') {
+                    bamFiles.forEach(file => {
+                        let opt = document.createElement('option');
+                        opt.value = file;
+                        opt.innerHTML = file.split('_')[0];
+                        sel.appendChild(opt);
+                    });
+                }
+            });
 
-    // جستجو در بین مقادیر موجود در bamFiles یا گزینه‌های Select
+    // پیدا کردن مقدار فایل در لیست bamFiles
             let targetValue = "";
-
-    // ۱. بررسی مستقیم از روی آرایه bamFiles در صورت وجود
             if (typeof bamFiles !== 'undefined') {
                 targetValue = bamFiles.find(f => 
                     f === cleanInput || 
@@ -977,7 +980,6 @@
                 );
             }
 
-    // ۲. اگر از آرایه پیدا نشد، بررسی گزینه‌های select1
             if (!targetValue) {
                 for (let opt of select1.options) {
                     if (opt.value && (opt.value === cleanInput || opt.value.includes(cleanId) || cleanInput.includes(opt.value.split('_')[0]))) {
@@ -988,22 +990,39 @@
             }
 
             if (targetValue) {
-        // انتخاب در منوی کشویی اول و ریست منوی دوم
-                select1.value = targetValue;
-                if (select2) select2.value = "";
+        // منطق چرخشی هوشمند:
+        // اگر هنوز اسلات ۱ خالی است، در اسلات ۱ بگذار
+                if (!select1.value) {
+                    select1.value = targetValue;
+                    igvSlotToggle = 1; // نوبت بعدی اسلات ۲ خواهد بود
+                }
+        // اگر اسلات ۱ پر بود ولی اسلات ۲ خالی بود، در اسلات ۲ بگذار
+                else if (!select2.value) {
+                    select2.value = targetValue;
+                    igvSlotToggle = 0; // نوبت بعدی اسلات ۱ خواهد بود
+                }
+        // اگر هر دو پر بودند، طبق نوبت چرخشی جایگزین کن
+                else {
+                    if (igvSlotToggle === 0) {
+                        select1.value = targetValue;
+                        igvSlotToggle = 1;
+                    } else {
+                        select2.value = targetValue;
+                        igvSlotToggle = 0;
+                    }
+                }
 
-        // ۱. باز کردن تب IGV Browser
+        // رفتن به تب IGV و اسکرول به بالا
                 openTab('visualTab');
-
-        // ۲. اسکرول نرم به بالای صفحه
                 window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        // ۳. اجرای رندر IGV با مقدار جدید
+        // به‌روزرسانی مرورگر IGV با نمونه‌های انتخاب‌شده
                 updateIGV();
             } else {
                 alert("Sample file not found in IGV database list: " + sampleFileName);
             }
         };
+        
 
         function toggleTheme() {
             const body = document.body;
