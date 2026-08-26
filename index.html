@@ -986,16 +986,14 @@
     
             igvBrowser = null;
     
-        } finally {
-        igvLoading = false;
-    
-        // If the user changed a sample while IGV was loading,
-        // reload IGV using the latest selections.
-        if (igvUpdatePending) {
-            igvUpdatePending = false;
-            setTimeout(() => {
-                updateIGV();
-            }, 100);
+            } finally {
+            igvLoading = false;
+            if (igvUpdatePending) {
+                igvUpdatePending = false;
+                setTimeout(() => {
+                    updateIGV();
+                }, 100);
+            }
         }
     }
     
