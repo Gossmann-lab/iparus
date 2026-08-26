@@ -62,7 +62,6 @@
             opacity: 0;
             animation: fadeIn 1.2s ease-out 0.3s forwards;
         }
-        
 
         .hero {
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
@@ -120,7 +119,7 @@
             }
 
             .logo-container:hover .hero-logo {
-                 transform: translate(-50%, -50%) scale(1.08);
+                transform: translate(-50%, -50%) scale(1.08);
             }
         }
 
@@ -261,7 +260,7 @@
             width: 100%; 
             height: 750px; 
             border: none; 
-            border-radius: 12px;
+            border-radius: 12px; 
             background: #f8fafc;
         }
         body.dark-mode iframe { background: #0f172a; }
@@ -410,8 +409,6 @@
             position: relative;
         }
 
-
-        
         .theme-toggle-wrapper {
             position: absolute;
             right: 0;
@@ -455,7 +452,7 @@
             gap: 15px; 
         }
         body.dark-mode .visualizer-controls { background: #334155; }
-        #sampleSelect { 
+        #sampleSelect1, #sampleSelect2 { 
             padding: 10px; 
             border-radius: 8px; 
             flex-grow: 1; 
@@ -475,7 +472,7 @@
 
     <header class="hero">
         <div class="logo-container">
-            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="UPARUS Logo" class="hero-logo">
+            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="IPARUS Logo" class="hero-logo">
         </div>
         
         <h1 class="reveal-title">IPARUS: Genomic Resources for the Parus genus</h1>
@@ -490,13 +487,13 @@
             
             <div class="tabs-container">
                 <div class="tabs">
-                    <button class="tab-btn active" onclick="openTab('mapTab')" id="btnMap"><i class="fas fa-map-marked-alt"></i> Map View</button>
-                    <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable"><i class="fas fa-dna"></i> Sequence Data</button>
-                    <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo"><i class="fas fa-table"></i> Sample Information</button>
-                    <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual"><i class="fas fa-microscope"></i> IGV Browser</button>
-                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline"><i class="fas fa-terminal"></i> Pipeline & Reference</button>
-                    <button class="tab-btn" onclick="openTab('pubTab')" id="btnPub"><i class="fas fa-book"></i> Publications</button>
-                    <button class="tab-btn" onclick="openTab('contactTab')" id="btnContact"><i class="fas fa-envelope"></i> Contact</button>
+                    <button class="tab-btn active" onclick="openTab('mapTab', this)" id="btnMap"><i class="fas fa-map-marked-alt"></i> Map View</button>
+                    <button class="tab-btn" onclick="openTab('tableTab', this)" id="btnTable"><i class="fas fa-dna"></i> Sequence Data</button>
+                    <button class="tab-btn" onclick="openTab('infoTab', this)" id="btnInfo"><i class="fas fa-table"></i> Sample Information</button>
+                    <button class="tab-btn" onclick="openTab('visualTab', this)" id="btnVisual"><i class="fas fa-microscope"></i> IGV Browser</button>
+                    <button class="tab-btn" onclick="openTab('pipelineTab', this)" id="btnPipeline"><i class="fas fa-terminal"></i> Pipeline & Reference</button>
+                    <button class="tab-btn" onclick="openTab('pubTab', this)" id="btnPub"><i class="fas fa-book"></i> Publications</button>
+                    <button class="tab-btn" onclick="openTab('contactTab', this)" id="btnContact"><i class="fas fa-envelope"></i> Contact</button>
                 </div>
             </div>
 
@@ -539,10 +536,10 @@
                             Thorvaldsdóttir, H., and Mesirov, J. P. 2023. 
                             <i>igv.js: an embeddable JavaScript implementation 
                             of the Integrative Genomics Viewer (IGV).</i> 
-                            <i>Bioinformatics</i> 39(1): btac830.
+                            <i>Bioinformatics</i> 39(1): btac830. 
                             <a href="https://doi.org/10.1093/bioinformatics/btac830" 
                                target="_blank" 
-                               class="custom-link"
+                               class="custom-link" 
                                style="margin-left: 15px;">
                                View Article (DOI)
                             </a>
@@ -598,14 +595,12 @@
                     </div>
                 </div>
 
-                
                 <iframe src="samples_table.html" id="tableIframe" width="100%"></iframe>
                 <iframe src="vcf_samples_table.html" id="tableSnpIframe" style="display: none;" width="100%"></iframe>
 
-                
                 <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 15px; text-align: left;">
                     🔬 You can directly visualize and inspect these alignment files here in our 
-                    <a href="javascript:void(0);" onclick="openTab('visualTab'); window.scrollTo({ top: 0, behavior: 'smooth' });" style="color: var(--primary); font-weight: 600; text-decoration: underline;">
+                    <a href="javascript:void(0);" onclick="openTab('visualTab', document.getElementById('btnVisual')); window.scrollTo({ top: 0, behavior: 'smooth' });" style="color: var(--primary); font-weight: 600; text-decoration: underline;">
                         IGV Browser
                     </a> tab.
                 </p>
@@ -745,7 +740,6 @@
         
         <div class="footer-bottom">
             &copy; 2026 IPARUS Database – Gossmann Lab, TU Dortmund University. All rights reserved. External datasets and software are subject to their respective licenses.
-
             
             <div class="theme-toggle-wrapper">
                 <button class="theme-circle-btn" onclick="toggleTheme()" id="themeBtn">
@@ -799,8 +793,6 @@
             "SRR9656368_sorted_dedup.bam", "SRR9656369_sorted_dedup.bam"
         ];
 
-        
-
         window.addEventListener('DOMContentLoaded', () => {
             const select1 = document.getElementById('sampleSelect1');
             const select2 = document.getElementById('sampleSelect2');
@@ -817,14 +809,12 @@
             });
         });
 
-
         let igvBrowser = null;
         let igvLoading = false;
         let igvUpdatePending = false;
         let igvSlotToggle = 1;
         
         async function updateIGV() {
-
             const select1 = document.getElementById('sampleSelect1');
             const select2 = document.getElementById('sampleSelect2');
             const container = document.getElementById('igv-div');
@@ -836,7 +826,6 @@
         
             if (!file1 && !file2) return;
         
-            // If IGV is already loading, remember that another update is needed
             if (igvLoading) {
                 igvUpdatePending = true;
                 return;
@@ -846,7 +835,6 @@
             igvUpdatePending = false;
         
             try {
-                // Dispose previous IGV browser
                 if (igvBrowser) {
                     try {
                         await igvBrowser.dispose();
@@ -857,28 +845,14 @@
                 }
         
                 container.innerHTML = `
-                    <div style="
-                        padding: 25px;
-                        font-weight: 600;
-                        color: #2563eb;
-                        text-align: center;
-                    ">
+                    <div style="padding: 25px; font-weight: 600; color: #2563eb; text-align: center;">
                         ⌛ Initializing IGV Browser & Loading Alignments...
                     </div>
                 `;
         
-                const authHeader =
-                    "Basic " +
-                    btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
-        
-                const fastaUrl =
-                    PROXY_URL +
-                    encodeURIComponent(
-                        `${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`
-                    );
-        
-                const faiUrl =
-                    `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
+                const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+                const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
+                const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
         
                 const tracks = [
                     {
@@ -894,48 +868,30 @@
                     }
                 ];
         
-                // Sample 1
                 if (file1) {
                     const folder1 = file1.split('_')[0];
-        
                     tracks.push({
                         name: "Sample 1 - " + folder1,
-                        url:
-                            PROXY_URL +
-                            encodeURIComponent(
-                                `${SCIEBO_CONFIG.baseUrl}${folder1}/${file1}`
-                            ),
-                        indexURL:
-                            `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file1}.bai`,
+                        url: PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${folder1}/${file1}`),
+                        indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file1}.bai`,
                         format: "bam",
                         height: 200,
                         fetchConfig: {
-                            headers: {
-                                "Authorization": authHeader
-                            }
+                            headers: { "Authorization": authHeader }
                         }
                     });
                 }
         
-                // Sample 2
                 if (file2) {
                     const folder2 = file2.split('_')[0];
-        
                     tracks.push({
                         name: "Sample 2 - " + folder2,
-                        url:
-                            PROXY_URL +
-                            encodeURIComponent(
-                                `${SCIEBO_CONFIG.baseUrl}${folder2}/${file2}`
-                            ),
-                        indexURL:
-                            `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file2}.bai`,
+                        url: PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}${folder2}/${file2}`),
+                        indexURL: `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/Bai/${file2}.bai`,
                         format: "bam",
                         height: 200,
                         fetchConfig: {
-                            headers: {
-                                "Authorization": authHeader
-                            }
+                            headers: { "Authorization": authHeader }
                         }
                     });
                 }
@@ -946,23 +902,16 @@
                         fastaURL: fastaUrl,
                         indexURL: faiUrl,
                         fetchConfig: {
-                            headers: {
-                                "Authorization": authHeader
-                            }
+                            headers: { "Authorization": authHeader }
                         }
                     },
-        
                     locus: "NC_031768.1:15000-35000",
-        
                     showTrackLabels: true,
-        
                     tracks: tracks
                 };
         
-                // Create new browser
                 igvBrowser = await igv.createBrowser(container, options);
         
-                // Resize after tab becomes visible
                 setTimeout(() => {
                     if (igvBrowser) {
                         igvBrowser.resize();
@@ -971,60 +920,36 @@
         
             } catch (err) {
                 console.error("IGV Creation Error:", err);
-        
                 container.innerHTML = `
-                    <div style="
-                        padding:20px;
-                        color:#dc2626;
-                        text-align:center;
-                    ">
+                    <div style="padding:20px; color:#dc2626; text-align:center;">
                         <strong>IGV Loading Error</strong><br>
                         ${err.message}
                     </div>
                 `;
-        
                 igvBrowser = null;
-        
             } finally {
-            igvLoading = false;
-        
-            // If the user changed a sample while IGV was loading,
-            // reload IGV using the latest selections.
-            if (igvUpdatePending) {
-                igvUpdatePending = false;
-                setTimeout(() => {
-                    updateIGV();
-                }, 100);
+                igvLoading = false;
+                if (igvUpdatePending) {
+                    igvUpdatePending = false;
+                    setTimeout(() => {
+                        updateIGV();
+                    }, 100);
+                }
             }
         }
         
-        
-        // تابع دریافت کلیک از داخل آی‌فریم جدول
         window.loadSampleInIGV = async function(sampleFileName) {
-
             const select1 = document.getElementById('sampleSelect1');
             const select2 = document.getElementById('sampleSelect2');
         
             if (!select1 || !select2) return;
         
             const cleanInput = String(sampleFileName).trim();
+            let targetValue = bamFiles.find(file => file === cleanInput);
         
-            // Find exact BAM filename
-            let targetValue = bamFiles.find(
-                file => file === cleanInput
-            );
-        
-            // Fallback: match by SRR ID
             if (!targetValue) {
-        
-                const cleanId =
-                    cleanInput
-                        .replace(/\.[^/.]+$/, '')
-                        .split('_')[0];
-        
-                targetValue = bamFiles.find(
-                    file => file.split('_')[0] === cleanId
-                );
+                const cleanId = cleanInput.replace(/\.[^/.]+$/, '').split('_')[0];
+                targetValue = bamFiles.find(file => file.split('_')[0] === cleanId);
             }
         
             if (!targetValue) {
@@ -1032,76 +957,54 @@
                 return;
             }
         
-            let activeSelect;
-        
-            // First slot
             if (!select1.value) {
-        
                 select1.value = targetValue;
-                activeSelect = select1;
                 igvSlotToggle = 1;
-        
-            }
-        
-            // Second slot
-            else if (!select2.value) {
-        
+            } else if (!select2.value) {
                 select2.value = targetValue;
-                activeSelect = select2;
                 igvSlotToggle = 0;
-        
-            }
-        
-            // Both slots already occupied
-            else {
-        
+            } else {
                 if (igvSlotToggle === 0) {
-        
                     select1.value = targetValue;
-                    activeSelect = select1;
                     igvSlotToggle = 1;
-        
                 } else {
-        
                     select2.value = targetValue;
-                    activeSelect = select2;
                     igvSlotToggle = 0;
-        
                 }
             }
         
-            // Open IGV tab
-            openTab('visualTab');
-        
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth'
-            });
-        
-            // Directly update IGV
+            openTab('visualTab', document.getElementById('btnVisual'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
             await updateIGV();
         };
- 
 
-
-        function openTab(tabId) {
+        function openTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
             
-            document.getElementById(tabId).classList.add('active');
+            const activeTab = document.getElementById(tabId);
+            if (activeTab) activeTab.classList.add('active');
             
-            if(tabId === 'mapTab') document.getElementById('btnMap').classList.add('active');
-            if(tabId === 'pipelineTab') document.getElementById('btnPipeline').classList.add('active');
-            if(tabId === 'tableTab') document.getElementById('btnTable').classList.add('active');
-            if(tabId === 'infoTab') document.getElementById('btnInfo').classList.add('active');
-            if(tabId === 'pubTab') document.getElementById('btnPub').classList.add('active');
-            if(tabId === 'contactTab') document.getElementById('btnContact').classList.add('active');
-            if(tabId === 'visualTab') {
-                document.getElementById('btnVisual').classList.add('active');
-                if(igvBrowser) igvBrowser.resize();
+            if (btnElement) {
+                btnElement.classList.add('active');
+            } else {
+                const fallbackMap = {
+                    'mapTab': 'btnMap',
+                    'tableTab': 'btnTable',
+                    'infoTab': 'btnInfo',
+                    'visualTab': 'btnVisual',
+                    'pipelineTab': 'btnPipeline',
+                    'pubTab': 'btnPub',
+                    'contactTab': 'btnContact'
+                };
+                const mappedBtn = document.getElementById(fallbackMap[tabId]);
+                if (mappedBtn) mappedBtn.classList.add('active');
+            }
+            
+            if (tabId === 'visualTab' && igvBrowser) {
+                setTimeout(() => igvBrowser.resize(), 100);
             }
         }
-        
 
         function toggleTheme() {
             const body = document.body;
@@ -1109,6 +1012,7 @@
             body.classList.toggle('dark-mode');
             icon.innerText = body.classList.contains('dark-mode') ? '☀️' : '🌙';
         }
+
         function switchMap(type) {
             const bamIframe = document.getElementById('iframeMapBAM');
             const snpIframe = document.getElementById('iframeMapSNP');
@@ -1120,7 +1024,6 @@
                 bamIframe.style.opacity = '1';
                 snpIframe.style.zIndex = '1';
                 snpIframe.style.opacity = '0';
-        
                 bamBtn.classList.add('active');
                 snpBtn.classList.remove('active');
             } else {
@@ -1128,11 +1031,11 @@
                 bamIframe.style.opacity = '0';
                 snpIframe.style.zIndex = '2';
                 snpIframe.style.opacity = '1';
-        
                 bamBtn.classList.remove('active');
                 snpBtn.classList.add('active');
             }
         }
+
         function switchTableContent(type) {
             const bamIframe = document.getElementById('tableIframe');
             const snpIframe = document.getElementById('tableSnpIframe');
