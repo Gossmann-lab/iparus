@@ -472,7 +472,7 @@
 
     <header class="hero">
         <div class="logo-container">
-            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="IPARUS Logo" class="hero-logo">
+            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="UPARUS Logo" class="hero-logo">
         </div>
         
         <h1 class="reveal-title">IPARUS: Genomic Resources for the Parus genus</h1>
@@ -487,13 +487,13 @@
             
             <div class="tabs-container">
                 <div class="tabs">
-                    <button class="tab-btn active" onclick="openTab('mapTab', this)" id="btnMap"><i class="fas fa-map-marked-alt"></i> Map View</button>
-                    <button class="tab-btn" onclick="openTab('tableTab', this)" id="btnTable"><i class="fas fa-dna"></i> Sequence Data</button>
-                    <button class="tab-btn" onclick="openTab('infoTab', this)" id="btnInfo"><i class="fas fa-table"></i> Sample Information</button>
-                    <button class="tab-btn" onclick="openTab('visualTab', this)" id="btnVisual"><i class="fas fa-microscope"></i> IGV Browser</button>
-                    <button class="tab-btn" onclick="openTab('pipelineTab', this)" id="btnPipeline"><i class="fas fa-terminal"></i> Pipeline & Reference</button>
-                    <button class="tab-btn" onclick="openTab('pubTab', this)" id="btnPub"><i class="fas fa-book"></i> Publications</button>
-                    <button class="tab-btn" onclick="openTab('contactTab', this)" id="btnContact"><i class="fas fa-envelope"></i> Contact</button>
+                    <button class="tab-btn active" onclick="openTab('mapTab')" id="btnMap"><i class="fas fa-map-marked-alt"></i> Map View</button>
+                    <button class="tab-btn" onclick="openTab('tableTab')" id="btnTable"><i class="fas fa-dna"></i> Sequence Data</button>
+                    <button class="tab-btn" onclick="openTab('infoTab')" id="btnInfo"><i class="fas fa-table"></i> Sample Information</button>
+                    <button class="tab-btn" onclick="openTab('visualTab')" id="btnVisual"><i class="fas fa-microscope"></i> IGV Browser</button>
+                    <button class="tab-btn" onclick="openTab('pipelineTab')" id="btnPipeline"><i class="fas fa-terminal"></i> Pipeline & Reference</button>
+                    <button class="tab-btn" onclick="openTab('pubTab')" id="btnPub"><i class="fas fa-book"></i> Publications</button>
+                    <button class="tab-btn" onclick="openTab('contactTab')" id="btnContact"><i class="fas fa-envelope"></i> Contact</button>
                 </div>
             </div>
 
@@ -600,7 +600,7 @@
 
                 <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 15px; text-align: left;">
                     🔬 You can directly visualize and inspect these alignment files here in our 
-                    <a href="javascript:void(0);" onclick="openTab('visualTab', document.getElementById('btnVisual')); window.scrollTo({ top: 0, behavior: 'smooth' });" style="color: var(--primary); font-weight: 600; text-decoration: underline;">
+                    <a href="javascript:void(0);" onclick="openTab('visualTab'); window.scrollTo({ top: 0, behavior: 'smooth' });" style="color: var(--primary); font-weight: 600; text-decoration: underline;">
                         IGV Browser
                     </a> tab.
                 </p>
@@ -793,6 +793,10 @@
             "SRR9656368_sorted_dedup.bam", "SRR9656369_sorted_dedup.bam"
         ];
 
+        let igvBrowser = null;
+        let igvLoading = false;
+        let igvUpdatePending = false;
+
         window.addEventListener('DOMContentLoaded', () => {
             const select1 = document.getElementById('sampleSelect1');
             const select2 = document.getElementById('sampleSelect2');
@@ -809,31 +813,26 @@
             });
         });
 
-        let igvBrowser = null;
-        let igvLoading = false;
-        let igvUpdatePending = false;
-        let igvSlotToggle = 1;
-        
         async function updateIGV() {
             const select1 = document.getElementById('sampleSelect1');
             const select2 = document.getElementById('sampleSelect2');
             const container = document.getElementById('igv-div');
-        
+
             if (!select1 || !select2 || !container) return;
-        
+
             const file1 = select1.value;
             const file2 = select2.value;
-        
+
             if (!file1 && !file2) return;
-        
+
             if (igvLoading) {
                 igvUpdatePending = true;
                 return;
             }
-        
+
             igvLoading = true;
             igvUpdatePending = false;
-        
+
             try {
                 if (igvBrowser) {
                     try {
@@ -843,17 +842,17 @@
                     }
                     igvBrowser = null;
                 }
-        
+
                 container.innerHTML = `
                     <div style="padding: 25px; font-weight: 600; color: #2563eb; text-align: center;">
                         ⌛ Initializing IGV Browser & Loading Alignments...
                     </div>
                 `;
-        
+
                 const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
                 const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
                 const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
-        
+
                 const tracks = [
                     {
                         name: "Gene Annotations (NCBI)",
@@ -867,7 +866,7 @@
                         order: 0
                     }
                 ];
-        
+
                 if (file1) {
                     const folder1 = file1.split('_')[0];
                     tracks.push({
@@ -881,7 +880,7 @@
                         }
                     });
                 }
-        
+
                 if (file2) {
                     const folder2 = file2.split('_')[0];
                     tracks.push({
@@ -895,7 +894,7 @@
                         }
                     });
                 }
-        
+
                 const options = {
                     genome: {
                         id: "ParusMajor",
@@ -909,15 +908,15 @@
                     showTrackLabels: true,
                     tracks: tracks
                 };
-        
+
                 igvBrowser = await igv.createBrowser(container, options);
-        
+
                 setTimeout(() => {
                     if (igvBrowser) {
                         igvBrowser.resize();
                     }
                 }, 300);
-        
+
             } catch (err) {
                 console.error("IGV Creation Error:", err);
                 container.innerHTML = `
@@ -937,74 +936,53 @@
                 }
             }
         }
-        
-        window.loadSampleInIGV = async function(sampleFileName) {
-            const select1 = document.getElementById('sampleSelect1');
-            const select2 = document.getElementById('sampleSelect2');
-        
-            if (!select1 || !select2) return;
-        
-            const cleanInput = String(sampleFileName).trim();
-            let targetValue = bamFiles.find(file => file === cleanInput);
-        
-            if (!targetValue) {
-                const cleanId = cleanInput.replace(/\.[^/.]+$/, '').split('_')[0];
-                targetValue = bamFiles.find(file => file.split('_')[0] === cleanId);
-            }
-        
-            if (!targetValue) {
-                alert("Sample file not found: " + sampleFileName);
-                return;
-            }
-        
-            if (!select1.value) {
-                select1.value = targetValue;
-                igvSlotToggle = 1;
-            } else if (!select2.value) {
-                select2.value = targetValue;
-                igvSlotToggle = 0;
-            } else {
-                if (igvSlotToggle === 0) {
-                    select1.value = targetValue;
-                    igvSlotToggle = 1;
-                } else {
-                    select2.value = targetValue;
-                    igvSlotToggle = 0;
-                }
-            }
-        
-            openTab('visualTab', document.getElementById('btnVisual'));
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            await updateIGV();
-        };
 
-        function openTab(tabId, btnElement) {
+        function openTab(tabId) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             
-            const activeTab = document.getElementById(tabId);
-            if (activeTab) activeTab.classList.add('active');
+            document.getElementById(tabId).classList.add('active');
             
-            if (btnElement) {
-                btnElement.classList.add('active');
-            } else {
-                const fallbackMap = {
-                    'mapTab': 'btnMap',
-                    'tableTab': 'btnTable',
-                    'infoTab': 'btnInfo',
-                    'visualTab': 'btnVisual',
-                    'pipelineTab': 'btnPipeline',
-                    'pubTab': 'btnPub',
-                    'contactTab': 'btnContact'
-                };
-                const mappedBtn = document.getElementById(fallbackMap[tabId]);
-                if (mappedBtn) mappedBtn.classList.add('active');
-            }
-            
-            if (tabId === 'visualTab' && igvBrowser) {
-                setTimeout(() => igvBrowser.resize(), 100);
+            if(tabId === 'mapTab') document.getElementById('btnMap').classList.add('active');
+            if(tabId === 'pipelineTab') document.getElementById('btnPipeline').classList.add('active');
+            if(tabId === 'tableTab') document.getElementById('btnTable').classList.add('active');
+            if(tabId === 'infoTab') document.getElementById('btnInfo').classList.add('active');
+            if(tabId === 'pubTab') document.getElementById('btnPub').classList.add('active');
+            if(tabId === 'contactTab') document.getElementById('btnContact').classList.add('active');
+            if(tabId === 'visualTab') {
+                document.getElementById('btnVisual').classList.add('active');
+                if(igvBrowser) igvBrowser.resize();
             }
         }
+
+        window.switchToTable = function(urlHash) {
+            const [tableName, hash] = urlHash.split('#');
+    
+            const bamIframe = document.getElementById('tableIframe');
+            const snpIframe = document.getElementById('tableSnpIframe');
+            const bamBtn = document.getElementById('btnTableBAM');
+            const snpBtn = document.getElementById('btnTableSNP');
+    
+            if (tableName === 'vcf_samples_table.html') {
+                bamBtn.classList.remove('active');
+                snpBtn.classList.add('active');
+        
+                bamIframe.style.display = 'none';
+                snpIframe.style.display = 'block';
+        
+                snpIframe.src = 'vcf_samples_table.html#' + hash;
+            } else {
+                snpBtn.classList.remove('active');
+                bamBtn.classList.add('active');
+        
+                snpIframe.style.display = 'none';
+                bamIframe.style.display = 'block';
+        
+                bamIframe.src = 'samples_table.html#' + hash;
+            }
+    
+            openTab('tableTab');
+        };
 
         function toggleTheme() {
             const body = document.body;
