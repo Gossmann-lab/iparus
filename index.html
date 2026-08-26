@@ -820,9 +820,11 @@
 
         let igvBrowser = null;
         let igvLoading = false;
+        let igvUpdatePending = false;
         let igvSlotToggle = 1;
         
         async function updateIGV() {
+
             const select1 = document.getElementById('sampleSelect1');
             const select2 = document.getElementById('sampleSelect2');
             const container = document.getElementById('igv-div');
@@ -834,12 +836,14 @@
         
             if (!file1 && !file2) return;
         
-            // Prevent multiple IGV initializations at the same time
+            // If IGV is already loading, remember that another update is needed
             if (igvLoading) {
+                igvUpdatePending = true;
                 return;
             }
         
             igvLoading = true;
+            igvUpdatePending = false;
         
             try {
                 // Dispose previous IGV browser
@@ -982,7 +986,15 @@
                 igvBrowser = null;
         
             } finally {
-                igvLoading = false;
+            igvLoading = false;
+        
+            // If the user changed a sample while IGV was loading,
+            // reload IGV using the latest selections.
+            if (igvUpdatePending) {
+                igvUpdatePending = false;
+                setTimeout(() => {
+                    updateIGV();
+                }, 100);
             }
         }
         
