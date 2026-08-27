@@ -913,7 +913,7 @@
                 showTrackLabels: true,
                 tracks: tracks
             };
-    
+            container.innerHTML = "";
             igvBrowser = await igv.createBrowser(container, options);
     
             setTimeout(() => {
