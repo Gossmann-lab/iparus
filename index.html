@@ -600,7 +600,7 @@
 
                 <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 15px; text-align: left;">
                     🔬 You can directly visualize and inspect these alignment files here in our 
-                    <a href="javascript:void(0);" onclick="openTab('visualTab', document.getElementById('btnVisual')); window.scrollTo({ top: 0, behavior: 'smooth' });" style="color: var(--primary); font-weight: 600; text-decoration: underline;">
+                    <a href="javascript:void(0);" onclick="openTab('visualTab', document.getElementById('btnVisual')); document.querySelector('.dashboard-card').scrollIntoView({ behavior: 'smooth', block: 'start' });" ...>
                         IGV Browser
                     </a> tab.
                 </p>
@@ -971,7 +971,7 @@
             }
         
             openTab('visualTab', document.getElementById('btnVisual'));
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.querySelector('.dashboard-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
             await updateIGV();
         };
 
@@ -1003,7 +1003,7 @@
             }
         
             openTab('tableTab', document.getElementById('btnTable'));
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            document.querySelector('.dashboard-card').scrollIntoView({ behavior: 'smooth', block: 'start' });
         };
 
 
