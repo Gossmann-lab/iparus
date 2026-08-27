@@ -844,11 +844,8 @@
                     igvBrowser = null;
                 }
         
-                container.innerHTML = `
-                    <div style="padding: 25px; font-weight: 600; color: #2563eb; text-align: center;">
-                        ⌛ Initializing IGV Browser & Loading Alignments...
-                    </div>
-                `;
+                container.innerHTML = '';
+                    
         
                 const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
                 const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
