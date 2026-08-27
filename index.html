@@ -975,6 +975,41 @@
             await updateIGV();
         };
 
+
+        window.switchToTable = function(urlHash) {
+            const [tableName, hash] = urlHash.split('#');
+        
+            const bamIframe = document.getElementById('tableIframe');
+            const snpIframe = document.getElementById('tableSnpIframe');
+            const bamBtn = document.getElementById('btnTableBAM');
+            const snpBtn = document.getElementById('btnTableSNP');
+        
+            if (tableName === 'vcf_samples_table.html') {
+                bamBtn.classList.remove('active');
+                snpBtn.classList.add('active');
+        
+                bamIframe.style.display = 'none';
+                snpIframe.style.display = 'block';
+        
+                snpIframe.src = 'vcf_samples_table.html#' + (hash || '');
+            } else {
+                snpBtn.classList.remove('active');
+                bamBtn.classList.add('active');
+        
+                snpIframe.style.display = 'none';
+                bamIframe.style.display = 'block';
+        
+                bamIframe.src = 'samples_table.html#' + (hash || '');
+            }
+        
+            openTab('tableTab', document.getElementById('btnTable'));
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        };
+
+
+
+        
+
         function openTab(tabId, btnElement) {
             document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
             document.querySelectorAll('.tabs .tab-btn').forEach(btn => btn.classList.remove('active'));
