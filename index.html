@@ -822,40 +822,49 @@
     let igvBrowser = null;
     let igvLoading = false;
     let igvUpdatePending = false;
-    
-    let igvSlotToggle = 0;
-    let isUpdatingIGV = false; // قفل برای جلوگیری از اجرای همزمان
+    let igvSlotToggle = 1;
     
     async function updateIGV() {
-        if (isUpdatingIGV) return; // اگر در حال رندر قبلیه، صبر کن
-        isUpdatingIGV = true;
+        const select1 = document.getElementById('sampleSelect1');
+        const select2 = document.getElementById('sampleSelect2');
+        const container = document.getElementById('igv-div');
+    
+        if (!select1 || !select2 || !container) return;
+    
+        const file1 = select1.value;
+        const file2 = select2.value;
+    
+        if (!file1 && !file2) return;
+    
+        if (igvLoading) {
+            igvUpdatePending = true;
+            return;
+        }
+    
+        igvLoading = true;
+        igvUpdatePending = false;
+    
         try {
-            const select1 = document.getElementById('sampleSelect1');
-            const select2 = document.getElementById('sampleSelect2');
-            if (!select1 || !select2) return;
-    
-            const file1 = select1.value;
-            const file2 = select2.value;
-            if (!file1 && !file2) return;
-    
-            const container = document.getElementById("igv-div");
-    
-            if (typeof igv !== 'undefined' && igv.removeAllBrowsers) {
-                igv.removeAllBrowsers();
+            if (igvBrowser) {
+                try {
+                    await igvBrowser.dispose();
+                } catch (e) {
+                    console.warn("IGV dispose warning:", e);
+                }
+                igvBrowser = null;
             }
-            igvBrowser = null;
-            container.innerHTML = "";
     
-            const loadingMsg = document.createElement("div");
-            loadingMsg.style.cssText = "padding: 25px; font-weight: 600; color: #2563eb; text-align: center;";
-            loadingMsg.innerHTML = "⌛ Initializing IGV Browser & Loading Alignments...";
-            container.appendChild(loadingMsg);
+            container.innerHTML = `
+                <div style="padding: 25px; font-weight: 600; color: #2563eb; text-align: center;">
+                    ⌛ Initializing IGV Browser & Loading Alignments...
+                </div>
+            `;
     
             const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
             const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
             const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
     
-            let tracks = [
+            const tracks = [
                 {
                     name: "Gene Annotations (NCBI)",
                     url: "https://raw.githubusercontent.com/Gossmann-lab/iparus/main/sorted_genomic.gff.gz",
@@ -865,8 +874,7 @@
                     indexed: true,
                     displayMode: "EXPANDED",
                     visibilityWindow: 0,
-                    order: 0,
-                    fetchConfig: { headers: {} }
+                    order: 0
                 }
             ];
     
@@ -906,78 +914,69 @@
                 tracks: tracks
             };
     
-            try {
-                container.innerHTML = "";
-                igvBrowser = await igv.createBrowser(container, options);
-                setTimeout(() => { if (igvBrowser) igvBrowser.resize(); }, 200);
-            } catch (err) {
-                console.error("IGV Creation Error:", err);
-                container.innerHTML = `<div style="padding:20px; color:red;">Loading Error: ${err.message}</div>`;
-            }
+            igvBrowser = await igv.createBrowser(container, options);
+    
+            setTimeout(() => {
+                if (igvBrowser) igvBrowser.resize();
+            }, 300);
+    
+        } catch (err) {
+            console.error("IGV Creation Error:", err);
+            container.innerHTML = `
+                <div style="padding:20px; color:#dc2626; text-align:center;">
+                    <strong>IGV Loading Error</strong><br>
+                    ${err.message}
+                </div>
+            `;
+            igvBrowser = null;
         } finally {
-            isUpdatingIGV = false;
+            igvLoading = false;
+            if (igvUpdatePending) {
+                igvUpdatePending = false;
+                setTimeout(() => { updateIGV(); }, 100);
+            }
         }
     }
-        
-        window.loadSampleInIGV = function(sampleFileName) {
-            const select1 = document.getElementById('sampleSelect1');
-            const select2 = document.getElementById('sampleSelect2');
-            if (!select1 || !select2) return;
-        
-            const cleanInput = String(sampleFileName).trim();
-            const cleanId = cleanInput.split('.')[0].split('_')[0];
-        
-            [select1, select2].forEach(sel => {
-                if (sel.options.length <= 1 && typeof bamFiles !== 'undefined') {
-                    bamFiles.forEach(file => {
-                        let opt = document.createElement('option');
-                        opt.value = file;
-                        opt.innerHTML = file.split('_')[0];
-                        sel.appendChild(opt);
-                    });
-                }
-            });
-        
-            let targetValue = "";
-            if (typeof bamFiles !== 'undefined') {
-                targetValue = bamFiles.find(f => f === cleanInput || f.startsWith(cleanId) || cleanInput.startsWith(f.split('.')[0]));
-            }
-            if (!targetValue) {
-                for (let opt of select1.options) {
-                    if (opt.value && (opt.value === cleanInput || opt.value.includes(cleanId))) {
-                        targetValue = opt.value;
-                        break;
-                    }
-                }
-            }
-        
-            if (targetValue) {
-                if (!select1.value) {
-                    select1.value = targetValue;
-                    igvSlotToggle = 1;
-                } else if (!select2.value) {
-                    select2.value = targetValue;
-                    igvSlotToggle = 0;
-                } else {
-                    if (igvSlotToggle === 0) {
-                        select1.value = targetValue;
-                        igvSlotToggle = 1;
-                    } else {
-                        select2.value = targetValue;
-                        igvSlotToggle = 0;
-                    }
-                }
-        
-                openTab('visualTab');
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-        
-                // به‌جای dispatchEvent، مستقیم صدا بزنید
-                updateIGV();
-        
+    
+    window.loadSampleInIGV = async function(sampleFileName) {
+        const select1 = document.getElementById('sampleSelect1');
+        const select2 = document.getElementById('sampleSelect2');
+    
+        if (!select1 || !select2) return;
+    
+        const cleanInput = String(sampleFileName).trim();
+        let targetValue = bamFiles.find(file => file === cleanInput);
+    
+        if (!targetValue) {
+            const cleanId = cleanInput.replace(/\.[^/.]+$/, '').split('_')[0];
+            targetValue = bamFiles.find(file => file.split('_')[0] === cleanId);
+        }
+    
+        if (!targetValue) {
+            alert("Sample file not found: " + sampleFileName);
+            return;
+        }
+    
+        if (!select1.value) {
+            select1.value = targetValue;
+            igvSlotToggle = 1;
+        } else if (!select2.value) {
+            select2.value = targetValue;
+            igvSlotToggle = 0;
+        } else {
+            if (igvSlotToggle === 0) {
+                select1.value = targetValue;
+                igvSlotToggle = 1;
             } else {
-                alert("Sample file not found: " + sampleFileName);
+                select2.value = targetValue;
+                igvSlotToggle = 0;
             }
-        };
+        }
+    
+        openTab('visualTab');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        await updateIGV();
+    };
 
 
 
