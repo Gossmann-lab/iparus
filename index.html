@@ -752,7 +752,6 @@
     <script>
         const SCIEBO_CONFIG = {
             token: "o6CpwRbCfPN7d6c",
-            pass: "rKKbnToMwe",
             baseUrl: "https://tu-dortmund.sciebo.de/public.php/dav/files/o6CpwRbCfPN7d6c/"
         };
 
@@ -847,7 +846,7 @@
                 container.innerHTML = '';
                     
         
-                const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":" + SCIEBO_CONFIG.pass);
+                const authHeader = "Basic " + btoa(SCIEBO_CONFIG.token + ":");
                 const fastaUrl = PROXY_URL + encodeURIComponent(`${SCIEBO_CONFIG.baseUrl}GCF_001522545.3/GCF_001522545.3_Parus_major1.1_genomic.fna`);
                 const faiUrl = `https://raw.githubusercontent.com/${GITHUB_CONFIG.user}/${GITHUB_CONFIG.repo}/main/GCF_001522545.3_Parus_major1.1_genomic.fna.fai`;
         
