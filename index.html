@@ -340,16 +340,17 @@
         .contact-grid { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
-            gap: 25px; 
-            margin-top: 25px; 
+            gap: 45px; /* فاصله بیشتر بین کارت‌ها برای جایگیری عکس‌های بیرون‌زده */
+            margin-top: 50px; /* فاصله از بالا برای اینکه نصف عکس‌ها بیرون از کارت قرار گیرند */
         }
         
         .contact-person { 
             background: #f8fafc; 
-            padding: 25px; 
+            padding: 55px 25px 25px 25px; /* پدینگ بالای بیشتر تا متن‌ها زیر عکس قرار بگیرند */
             border-radius: 16px; 
             text-align: center; 
             border: 1px solid var(--border-light);
+            position: relative; /* برای تنظیم موقعیت مطلق عکس */
             transition: background 0.3s ease, transform 0.2s ease; 
         }
 
@@ -362,23 +363,28 @@
         }
 
         .contact-avatar {
-            width: 90px;
-            height: 90px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             object-fit: cover;
-            margin: 0 auto 15px auto;
-            border: 3px solid var(--primary);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            position: absolute;
+            top: -55px; /* نصف ارتفاع عکس (110 تقسیم بر 2) تا دقیقا روی لبه بالایی قرار بگیرد */
+            left: 50%;
+            transform: translateX(-50%); /* وسط‌چین دقیق افقی */
+            border: none !important; /* حذف کامل خط دور عکس */
+            outline: none !important;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+            background: var(--card-bg);
         }
 
         .contact-person h4 { 
-            margin: 0 0 10px 0; 
+            margin: 0 0 6px 0; 
             color: var(--text-main); 
             font-size: 1.15rem; 
         }
 
         .contact-role {
-            font-size: 0.85rem;
+            font-size: 0.8rem;
             color: var(--primary);
             font-weight: 600;
             margin-bottom: 15px;
@@ -395,9 +401,24 @@
             align-items: center; 
             justify-content: center;
             gap: 8px; 
-            margin-bottom: 8px; 
+            margin-bottom: 6px; 
             color: var(--text-muted); 
-            font-size: 0.95rem; 
+            font-size: 0.88rem; 
+        }
+
+        .contact-item i {
+            font-size: 0.82rem;
+            color: var(--primary);
+        }
+
+        body.dark-mode .contact-item i {
+            color: #60a5fa;
+        }
+
+        /* کوچک‌تر کردن فونت ایمیل‌های طولانی مثل ایمیل شما */
+        .contact-item .long-email {
+            font-size: 0.76rem !important; 
+            word-break: break-all;
         }
 
         .site-footer {
@@ -744,36 +765,36 @@
 
             <div id="contactTab" class="tab-content">
                 <div class="info-card">
-                    <p style="color: var(--text-main); font-size: 1.05rem; margin-bottom: 25px; text-align: center;">
+                    <p style="color: var(--text-main); font-size: 1.05rem; margin-bottom: 35px; text-align: center;">
                         The <strong>IPARUS</strong> database and this website are maintained by the <a href="https://csb.bci.tu-dortmund.de/" target="_blank" style="color: #10b981; font-weight: 600; text-decoration: underline;">Gossmann lab</a> at TU Dortmund University.
                     </p>   
                     
                     <div class="contact-grid">
-                        <!-- شخص اول (Prof. Dr. Toni Gossmann) -->
+                        <!-- شخص اول -->
                         <div class="contact-person">
                             <img src="csm_Gossmann_2023_658139aa58.jpg" alt="Prof. Dr. Toni Gossmann" class="contact-avatar">
                             <h4>Prof. Dr. Toni Gossmann</h4>
                             <div class="contact-role">Principal Investigator</div>
-                            <div class="contact-item"><i class="fas fa-envelope"></i> <a href="mailto:toni.gossmann@tu-dortmund.de" class="custom-link" style="font-size: 0.88rem;">toni.gossmann@tu-dortmund.de</a></div>
-                            <div class="contact-item"><i class="fas fa-phone-alt"></i> <a href="tel:+492317556857" class="custom-link" style="font-size: 0.88rem;">+49 231 755 6857</a></div>
+                            <div class="contact-item"><i class="fas fa-envelope"></i> <a href="mailto:toni.gossmann@tu-dortmund.de" class="custom-link" style="font-size: 0.86rem;">toni.gossmann@tu-dortmund.de</a></div>
+                            <div class="contact-item"><i class="fas fa-phone-alt"></i> <a href="tel:+492317556857" class="custom-link" style="font-size: 0.86rem;">+49 231 755 6857</a></div>
                         </div>
                         
-                        <!-- شخص دوم (Dr. Nikolas Vellnow) -->
+                        <!-- شخص دوم -->
                         <div class="contact-person">
                             <img src="screencontact.png" alt="Nikolas Vellnow" class="contact-avatar">
                             <h4>Dr. Nikolas Vellnow</h4>
                             <div class="contact-role">Scientific Coordinator</div>
-                            <div class="contact-item"><i class="fas fa-envelope"></i> <a href="mailto:nikolas.vellnow@tu-dortmund.de" class="custom-link" style="font-size: 0.88rem;">nikolas.vellnow@tu-dortmund.de</a></div>
-                            <div class="contact-item"><i class="fas fa-phone-alt"></i> <a href="tel:+492317556863" class="custom-link" style="font-size: 0.88rem;">+49 231 755 6863</a></div>
+                            <div class="contact-item"><i class="fas fa-envelope"></i> <a href="mailto:nikolas.vellnow@tu-dortmund.de" class="custom-link" style="font-size: 0.86rem;">nikolas.vellnow@tu-dortmund.de</a></div>
+                            <div class="contact-item"><i class="fas fa-phone-alt"></i> <a href="tel:+492317556863" class="custom-link" style="font-size: 0.86rem;">+49 231 755 6863</a></div>
                         </div>
                         
-                        <!-- شخص سوم (Moein Gazestani) -->
+                        <!-- شخص سوم (شما) -->
                         <div class="contact-person">
                             <img src="FIC_31092.jpg" alt="Mohammadmoein Hajihoseinigazestani" class="contact-avatar">
                             <h4>Moein Gazestani</h4>
                             <div class="contact-role">Web Developer & Student Assistant</div>
-                            <div class="contact-item"><i class="fas fa-envelope"></i> <a href="mailto:mohammadmoein.hajihoseinigazestani@tu-dortmund.de" class="custom-link" style="font-size: 0.88rem;">mohammadmoein.hajihoseinigazestani@tu-dortmund.de</a></div>
-                            <div class="contact-item"><i class="fas fa-phone-alt"></i> <a href="tel:+492317556863" class="custom-link" style="font-size: 0.88rem;">+49 231 755 6863</a></div>
+                            <div class="contact-item"><i class="fas fa-envelope"></i> <a href="mailto:mohammadmoein.hajihoseinigazestani@tu-dortmund.de" class="custom-link long-email">mohammadmoein.hajihoseinigazestani@tu-dortmund.de</a></div>
+                            <div class="contact-item"><i class="fas fa-phone-alt"></i> <a href="tel:+492317556863" class="custom-link" style="font-size: 0.86rem;">+49 231 755 6863</a></div>
                         </div>
                         
                     </div>
