@@ -69,39 +69,17 @@
             opacity: 0;
             animation: fadeIn 1.2s ease-out 0.3s forwards;
         }
-        
-        @media (min-width: 992px) {
-            .logo-container {
-                position: absolute;
-                top: 25px;
-                left: 40px;
-                width: 140px;
-                height: 140px;
-                margin: 0;
-            }
-            .hero-logo {
-                width: 105px;
-            }
-            .hero {
-                text-align: left;
-                padding: 60px 40px 60px 200px;
-            }
-        }
-
 
         .hero {
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
             color: white;
-            padding: 50px 30px; 
+            padding: 50px 20px 60px 20px; 
+            text-align: center;
+            position: relative; 
+            overflow: hidden;
             border-bottom: 4px solid #e74c3c;
-            /* این سه خط جادو می‌کند تا لوگو و متن‌ها همیشه کنار هم و مرتب باشند */
-            display: flex;
-            align-items: center;
-            gap: 40px;
-            text-align: left;
         }
         
-        /* کانتینر لوگو دیگر absolute نیست، خودش یک باکس منظم است */
         .logo-container {
             position: absolute;
             top: 0;
@@ -110,7 +88,7 @@
             height: 310px;  
             z-index: 10;
         }
-        
+
         .hero-logo {
             position: absolute;
             top: 45%;  
@@ -121,28 +99,52 @@
             filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.2)); 
             transition: transform 0.3s ease;
         }
-        
+
         .logo-container:hover .hero-logo {
-            transform: scale(1.08) rotate(3deg);
+            transform: translate(-50%, -50%) scale(1.08) rotate(3deg); 
         }
-        
-        /* متن‌های داخل هدر یک باکس جدا می‌شوند که فضای خالی را پر کند */
-        .hero-content {
-            flex: 1;
+
+        @media (max-width: 768px) {
+            .logo-container {
+                position: relative;
+                width: 160px;
+                height: 160px;
+                margin: 0 auto 25px auto;
+                border-radius: 50%; 
+                top: auto;
+                left: auto;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                background-color: white; 
+            }
+            
+            .hero-logo {
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%); 
+                width: 130px;
+                filter: drop-shadow(2px 5px 5px rgba(0,0,0,0.2));
+            }
+
+            .logo-container:hover .hero-logo {
+                transform: translate(-50%, -50%) scale(1.08);
+            }
         }
-        
+
         .hero h1 { 
             font-size: 2.2rem; 
             font-weight: 700; 
             margin: 0 0 15px 0; 
             letter-spacing: -0.5px;
+            position: relative;
+            z-index: 5; 
         }
-        
         .hero p { 
             max-width: 900px; 
-            margin: 0 0 10px 0; 
+            margin: 0 auto 10px auto; 
             color: #cbd5e1; 
             font-size: 1.05rem; 
+            position: relative;
+            z-index: 5;
         }
         .hero p strong { color: #f8fafc; }
 
@@ -167,17 +169,17 @@
             justify-content: center;
             margin-bottom: 25px;
             position: sticky; 
-            top: 15px; 
+            top: 20px; 
             z-index: 1000; 
             background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(10px); 
             padding: 6px 12px;
             border-radius: 50px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.08); 
-            max-width: 100%;
-            overflow-x: auto; /* این خط اضافه شود برای اسکرول افقی در موبایل */
+            width: fit-content; 
             margin-left: auto; 
             margin-right: auto;
+            transition: background-color 0.3s ease;
         }
         body.dark-mode .tabs-container { background: rgba(30, 41, 59, 0.85); }
 
@@ -188,7 +190,6 @@
             border-radius: 50px;
             gap: 4px;
             position: relative; 
-            white-space: nowrap; /* جلوگیری از شکستن خط متن تب‌ها */
         }
 
         body.dark-mode .tabs {
@@ -363,18 +364,19 @@
         }
 
         .contact-avatar {
-            width: 100px;
-            height: 100px;
+            width: 110px;
+            height: 110px;
             border-radius: 50%;
             object-fit: cover;
             position: absolute;
-            top: -50px; /* نصف ارتفاع عکس برای قرار گرفتن روی لبه کارت */
+            top: -55px; /* نصف ارتفاع عکس (110 تقسیم بر 2) تا دقیقا روی لبه بالایی قرار بگیرد */
             left: 50%;
-            transform: translateX(-50%); 
-            border: 4px solid var(--card-bg); /* ایجاد حاشیه تمیز با پس‌زمینه کارت */
+            transform: translateX(-50%); /* وسط‌چین دقیق افقی */
+            border: none !important; /* حذف کامل خط دور عکس */
+            outline: none !important;
             box-shadow: 0 6px 15px rgba(0,0,0,0.15);
             background: var(--card-bg);
-}
+        }
 
         .contact-person h4 { 
             margin: 0 0 6px 0; 
@@ -400,10 +402,9 @@
             align-items: center; 
             justify-content: center;
             gap: 8px; 
-            margin-bottom: 8px; 
+            margin-bottom: 6px; 
             color: var(--text-muted); 
             font-size: 0.88rem; 
-            word-break: break-word; /* شکستن کلمات طولانی مثل ایمیل‌ها در موبایل */
         }
 
         .contact-item i {
@@ -532,15 +533,14 @@
             background: #f1f5f9; 
             border-radius: 12px; 
             display: flex; 
-            flex-wrap: wrap; /* اجازه شکستن خط در موبایل */
             align-items: center; 
             gap: 15px; 
         }
+        body.dark-mode .visualizer-controls { background: #334155; }
         #sampleSelect1, #sampleSelect2 { 
             padding: 10px; 
             border-radius: 8px; 
             flex-grow: 1; 
-            min-width: 200px; /* حداقل عرض برای عدم فشرده شدن بیش از حد در موبایل */
             background: var(--card-bg); 
             color: var(--text-main); 
             border: 1px solid var(--border-light); 
