@@ -18,6 +18,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/igv@2.15.7/dist/igv.min.js"></script>
+
     
     <style>
         :root {
@@ -550,6 +551,59 @@
             min-height: 600px; 
             background: white; 
         }
+        @media (max-width: 768px) {
+          .tabs-container {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            justify-content: flex-start;
+            padding: 6px 10px;
+            top: 10px;
+          }
+          .tabs {
+            flex-wrap: nowrap;
+            width: max-content;
+          }
+          .tab-btn {
+            flex: 0 0 auto;
+            padding: 8px 14px;
+            font-size: 0.78rem;
+            white-space: nowrap;
+          }
+        
+          .hero { padding: 35px 15px 45px 15px; }
+          .hero h1 { font-size: 1.5rem; }
+          .hero p { font-size: 0.92rem; }
+        
+          .container { padding: 0 12px; margin-top: -15px; }
+          .dashboard-card { padding: 18px; }
+        
+          iframe { height: 480px; }
+          #igv-div { min-height: 400px; }
+        
+          .visualizer-controls {
+            flex-direction: column;
+            align-items: stretch;
+            gap: 10px;
+          }
+          #sampleSelect1, #sampleSelect2 { width: 100%; }
+        
+          .pipeline-layout { gap: 20px; }
+          .pipeline-text, .pipeline-image { min-width: 100%; }
+        
+          .contact-grid { margin-top: 60px; gap: 35px; }
+        }
+        
+        @media (max-width: 480px) {
+          .tab-btn { padding: 7px 10px; font-size: 0.72rem; gap: 5px; }
+          .hero h1 { font-size: 1.3rem; }
+          iframe { height: 400px; }
+        }
+        
+        /* مخفی کردن اسکرول‌بار نوار تب‌ها (اختیاری) */
+        .tabs-container::-webkit-scrollbar { display: none; }
+        .tabs-container { scrollbar-width: none; }
     </style>
 </head>
 <body>
