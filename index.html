@@ -38,7 +38,7 @@
             --card-bg: #1e293b;
             --border-light: #334155;
         }
-
+    
         body { 
             font-family: 'Inter', sans-serif; 
             margin: 0; 
@@ -50,26 +50,27 @@
             -moz-osx-font-smoothing: grayscale;
             transition: background-color 0.3s ease, color 0.3s ease;
         }
-
+    
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
-
+    
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-
+    
         .reveal-title {
             animation: fadeInDown 0.8s ease-out forwards;
         }
-
+    
         .reveal-text {
             opacity: 0;
             animation: fadeIn 1.2s ease-out 0.3s forwards;
         }
-
+    
+        /* تغییرات اعمال شده برای جلوگیری از تداخل در سایزهای مختلف */
         .hero {
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
             color: white;
@@ -82,34 +83,35 @@
         
         .logo-container {
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 310px;  
-            height: 310px;  
+            top: 20px;
+            left: 30px;
+            width: 180px;  
+            height: 180px;  
             z-index: 10;
         }
-
+    
         .hero-logo {
             position: absolute;
-            top: 45%;  
-            left: 35%; 
+            top: 50%;  
+            left: 50%; 
             transform: translate(-50%, -50%); 
-            width: 360px; 
+            width: 150px; 
             height: auto;
             filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.2)); 
             transition: transform 0.3s ease;
         }
-
+    
         .logo-container:hover .hero-logo {
             transform: translate(-50%, -50%) scale(1.08) rotate(3deg); 
         }
-
-        @media (max-width: 768px) {
+    
+        /* مدیا کوئری هوشمند برای تبلت‌ها و صفحات زیر ۱۱۰۰ پیکسل جهت جلوگیری از تداخل متن و لوگو */
+        @media (max-width: 1100px) {
             .logo-container {
                 position: relative;
-                width: 160px;
-                height: 160px;
-                margin: 0 auto 25px auto;
+                width: 140px;
+                height: 140px;
+                margin: 0 auto 20px auto;
                 border-radius: 50%; 
                 top: auto;
                 left: auto;
@@ -121,15 +123,14 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%); 
-                width: 130px;
-                filter: drop-shadow(2px 5px 5px rgba(0,0,0,0.2));
+                width: 110px;
             }
-
+    
             .logo-container:hover .hero-logo {
                 transform: translate(-50%, -50%) scale(1.08);
             }
         }
-
+    
         .hero h1 { 
             font-size: 2.2rem; 
             font-weight: 700; 
@@ -147,7 +148,8 @@
             z-index: 5;
         }
         .hero p strong { color: #f8fafc; }
-
+    
+        /* مابقی استایل‌های شما بدون کوچک‌ترین تغییری سر جای خود محفوظ هستند */
         .container { 
             max-width: 1300px; 
             margin: -30px auto 40px auto; 
