@@ -69,6 +69,24 @@
             opacity: 0;
             animation: fadeIn 1.2s ease-out 0.3s forwards;
         }
+        
+        @media (min-width: 992px) {
+            .logo-container {
+                position: absolute;
+                top: 25px;
+                left: 40px;
+                width: 140px;
+                height: 140px;
+                margin: 0;
+            }
+            .hero-logo {
+                width: 105px;
+            }
+            .hero {
+                text-align: left;
+                padding: 60px 40px 60px 200px;
+            }
+        }
 
         .hero {
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
@@ -81,22 +99,23 @@
         }
         
         .logo-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 310px;  
-            height: 310px;  
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0 auto 20px auto;
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background-color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: relative;
             z-index: 10;
         }
-
         .hero-logo {
-            position: absolute;
-            top: 45%;  
-            left: 35%; 
-            transform: translate(-50%, -50%); 
-            width: 360px; 
+            width: 120px;
             height: auto;
-            filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.2)); 
+            object-fit: contain;
+            filter: drop-shadow(2px 5px 5px rgba(0,0,0,0.2));
             transition: transform 0.3s ease;
         }
 
@@ -169,17 +188,17 @@
             justify-content: center;
             margin-bottom: 25px;
             position: sticky; 
-            top: 20px; 
+            top: 15px; 
             z-index: 1000; 
             background: rgba(255, 255, 255, 0.85); 
             backdrop-filter: blur(10px); 
             padding: 6px 12px;
             border-radius: 50px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.08); 
-            width: fit-content; 
+            max-width: 100%;
+            overflow-x: auto; /* این خط اضافه شود برای اسکرول افقی در موبایل */
             margin-left: auto; 
             margin-right: auto;
-            transition: background-color 0.3s ease;
         }
         body.dark-mode .tabs-container { background: rgba(30, 41, 59, 0.85); }
 
@@ -190,6 +209,7 @@
             border-radius: 50px;
             gap: 4px;
             position: relative; 
+            white-space: nowrap; /* جلوگیری از شکستن خط متن تب‌ها */
         }
 
         body.dark-mode .tabs {
@@ -364,19 +384,18 @@
         }
 
         .contact-avatar {
-            width: 110px;
-            height: 110px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
             object-fit: cover;
             position: absolute;
-            top: -55px; /* نصف ارتفاع عکس (110 تقسیم بر 2) تا دقیقا روی لبه بالایی قرار بگیرد */
+            top: -50px; /* نصف ارتفاع عکس برای قرار گرفتن روی لبه کارت */
             left: 50%;
-            transform: translateX(-50%); /* وسط‌چین دقیق افقی */
-            border: none !important; /* حذف کامل خط دور عکس */
-            outline: none !important;
+            transform: translateX(-50%); 
+            border: 4px solid var(--card-bg); /* ایجاد حاشیه تمیز با پس‌زمینه کارت */
             box-shadow: 0 6px 15px rgba(0,0,0,0.15);
             background: var(--card-bg);
-        }
+}
 
         .contact-person h4 { 
             margin: 0 0 6px 0; 
@@ -402,9 +421,10 @@
             align-items: center; 
             justify-content: center;
             gap: 8px; 
-            margin-bottom: 6px; 
+            margin-bottom: 8px; 
             color: var(--text-muted); 
             font-size: 0.88rem; 
+            word-break: break-word; /* شکستن کلمات طولانی مثل ایمیل‌ها در موبایل */
         }
 
         .contact-item i {
@@ -533,14 +553,15 @@
             background: #f1f5f9; 
             border-radius: 12px; 
             display: flex; 
+            flex-wrap: wrap; /* اجازه شکستن خط در موبایل */
             align-items: center; 
             gap: 15px; 
         }
-        body.dark-mode .visualizer-controls { background: #334155; }
         #sampleSelect1, #sampleSelect2 { 
             padding: 10px; 
             border-radius: 8px; 
             flex-grow: 1; 
+            min-width: 200px; /* حداقل عرض برای عدم فشرده شدن بیش از حد در موبایل */
             background: var(--card-bg); 
             color: var(--text-main); 
             border: 1px solid var(--border-light); 
@@ -551,59 +572,7 @@
             min-height: 600px; 
             background: white; 
         }
-        @media (max-width: 768px) {
-          .tabs-container {
-            width: 100%;
-            max-width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
-            justify-content: flex-start;
-            padding: 6px 10px;
-            top: 10px;
-          }
-          .tabs {
-            flex-wrap: nowrap;
-            width: max-content;
-          }
-          .tab-btn {
-            flex: 0 0 auto;
-            padding: 8px 14px;
-            font-size: 0.78rem;
-            white-space: nowrap;
-          }
         
-          .hero { padding: 35px 15px 45px 15px; }
-          .hero h1 { font-size: 1.5rem; }
-          .hero p { font-size: 0.92rem; }
-        
-          .container { padding: 0 12px; margin-top: -15px; }
-          .dashboard-card { padding: 18px; }
-        
-          iframe { height: 480px; }
-          #igv-div { min-height: 400px; }
-        
-          .visualizer-controls {
-            flex-direction: column;
-            align-items: stretch;
-            gap: 10px;
-          }
-          #sampleSelect1, #sampleSelect2 { width: 100%; }
-        
-          .pipeline-layout { gap: 20px; }
-          .pipeline-text, .pipeline-image { min-width: 100%; }
-        
-          .contact-grid { margin-top: 60px; gap: 35px; }
-        }
-        
-        @media (max-width: 480px) {
-          .tab-btn { padding: 7px 10px; font-size: 0.72rem; gap: 5px; }
-          .hero h1 { font-size: 1.3rem; }
-          iframe { height: 400px; }
-        }
-        
-        /* مخفی کردن اسکرول‌بار نوار تب‌ها (اختیاری) */
-        .tabs-container::-webkit-scrollbar { display: none; }
-        .tabs-container { scrollbar-width: none; }
     </style>
 </head>
 <body>
