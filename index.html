@@ -103,21 +103,22 @@
         
         /* کانتینر لوگو دیگر absolute نیست، خودش یک باکس منظم است */
         .logo-container {
-            flex-shrink: 0;
-            width: 160px;
-            height: 160px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background: white;
-            border-radius: 50%;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 310px;  
+            height: 310px;  
+            z-index: 10;
         }
         
         .hero-logo {
-            width: 130px;
+            position: absolute;
+            top: 45%;  
+            left: 35%; 
+            transform: translate(-50%, -50%); 
+            width: 360px; 
             height: auto;
-            object-fit: contain;
+            filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.2)); 
             transition: transform 0.3s ease;
         }
         
