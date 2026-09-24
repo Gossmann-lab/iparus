@@ -88,81 +88,71 @@
             }
         }
 
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column; /* آمدن لوگو بالای متن در موبایل */
+                text-align: center;
+                padding: 40px 20px;
+                gap: 20px;
+            }
+            .hero h1 {
+                font-size: 1.6rem;
+            }
+        }
+
         .hero {
             background: radial-gradient(circle at 50% 0%, #1e293b 0%, #0f172a 100%);
             color: white;
-            padding: 50px 20px 60px 20px; 
-            text-align: center;
-            position: relative; 
-            overflow: hidden;
+            padding: 50px 30px; 
             border-bottom: 4px solid #e74c3c;
+            /* این سه خط جادو می‌کند تا لوگو و متن‌ها همیشه کنار هم و مرتب باشند */
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            text-align: left;
         }
         
+        /* کانتینر لوگو دیگر absolute نیست، خودش یک باکس منظم است */
         .logo-container {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 310px;  
-            height: 310px;  
-            z-index: 10;
+            flex-shrink: 0;
+            width: 160px;
+            height: 160px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: white;
+            border-radius: 50%;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         
         .hero-logo {
-            position: absolute;
-            top: 45%;  
-            left: 35%; 
-            transform: translate(-50%, -50%); 
-            width: 360px; 
+            width: 130px;
             height: auto;
-            filter: drop-shadow(2px 5px 8px rgba(0,0,0,0.2)); 
+            object-fit: contain;
             transition: transform 0.3s ease;
         }
-
+        
         .logo-container:hover .hero-logo {
-            transform: translate(-50%, -50%) scale(1.08) rotate(3deg); 
+            transform: scale(1.08) rotate(3deg);
         }
-
-        @media (max-width: 768px) {
-            .logo-container {
-                position: relative;
-                width: 160px;
-                height: 160px;
-                margin: 0 auto 25px auto;
-                border-radius: 50%; 
-                top: auto;
-                left: auto;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                background-color: white; 
-            }
-            
-            .hero-logo {
-                top: 50%;
-                left: 50%;
-                transform: translate(-50%, -50%); 
-                width: 130px;
-                filter: drop-shadow(2px 5px 5px rgba(0,0,0,0.2));
-            }
-
-            .logo-container:hover .hero-logo {
-                transform: translate(-50%, -50%) scale(1.08);
-            }
+        
+        /* متن‌های داخل هدر یک باکس جدا می‌شوند که فضای خالی را پر کند */
+        .hero-content {
+            flex: 1;
         }
-
+        
         .hero h1 { 
             font-size: 2.2rem; 
             font-weight: 700; 
             margin: 0 0 15px 0; 
             letter-spacing: -0.5px;
-            position: relative;
-            z-index: 5; 
         }
+        
         .hero p { 
             max-width: 900px; 
-            margin: 0 auto 10px auto; 
+            margin: 0 0 10px 0; 
             color: #cbd5e1; 
             font-size: 1.05rem; 
-            position: relative;
-            z-index: 5;
         }
         .hero p strong { color: #f8fafc; }
 
@@ -581,11 +571,13 @@
             <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="IPARUS Logo" class="hero-logo">
         </div>
         
-        <h1 class="reveal-title">IPARUS: Genomic Resources for the Parus genus</h1>
-        
-        <p class="reveal-text">This website hosts the <strong>IPARUS</strong> (<strong>I</strong>ntegrated <strong>P</strong>latform for <em>Parus</em> <strong>A</strong>lignments, <strong>R</strong>esources and <strong>U</strong>seful <strong>S</strong>equences) project, providing public access to genomic resources from birds of the <em>Parus</em> genus. The great tit (Parus major) is currently the most represented species, with data from other Parus species and subspecies potentially added in the future.</p>
-        
-        <p class="reveal-text">The platform provides sequence data and sample metadata, along with an embedded IGV browser for interactive genomic visualization, supporting research collaboration and open access to genomic data.</p>
+        <div class="hero-content">
+            <h1 class="reveal-title">IPARUS: Genomic Resources for the Parus genus</h1>
+            
+            <p class="reveal-text">This website hosts the <strong>IPARUS</strong> (<strong>I</strong>ntegrated <strong>P</strong>latform for <em>Parus</em> <strong>A</strong>lignments, <strong>R</strong>esources and <strong>U</strong>seful <strong>S</strong>equences) project, providing public access to genomic resources from birds of the <em>Parus</em> genus. The great tit (Parus major) is currently the most represented species, with data from other Parus species and subspecies potentially added in the future.</p>
+            
+            <p class="reveal-text">The platform provides sequence data and sample metadata, along with an embedded IGV browser for interactive genomic visualization, supporting research collaboration and open access to genomic data.</p>
+        </div>
     </header>
 
     <div class="container">
