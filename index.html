@@ -663,12 +663,68 @@
                 color: white !important;
             }
         }
+
+
+        /* ===== DNA canvas ===== */
+        #dnaCanvas {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.55;
+        }
+        
+        /* ===== Animated counters ===== */
+        .stats-row {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 16px;
+            max-width: 900px;
+            margin: 30px auto 0 auto;
+        }
+        .stat {
+            flex: 1 1 150px;
+            max-width: 200px;
+            padding: 16px 12px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            backdrop-filter: blur(6px);
+            transition: transform 0.3s ease, background 0.3s ease;
+        }
+        .stat:hover {
+            transform: translateY(-4px);
+            background: rgba(255, 255, 255, 0.1);
+        }
+        .stat-number {
+            display: block;
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #f8fafc;
+            line-height: 1.1;
+            font-variant-numeric: tabular-nums;
+        }
+        .stat-number::after { content: attr(data-suffix); color: #60a5fa; }
+        .stat-label {
+            display: block;
+            margin-top: 6px;
+            font-size: 0.75rem;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #94a3b8;
+        }
         
     </style>
 </head>
 <body>
 
     <header class="hero">
+        <canvas id="dnaCanvas"></canvas>
         <div class="logo-container">
             <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="IPARUS Logo" class="hero-logo">
         </div>
@@ -678,6 +734,24 @@
         <p class="reveal-text">This website hosts the <strong>IPARUS</strong> (<strong>I</strong>ntegrated <strong>P</strong>latform for <em>Parus</em> <strong>A</strong>lignments, <strong>R</strong>esources and <strong>U</strong>seful <strong>S</strong>equences) project, providing public access to genomic resources from birds of the <em>Parus</em> genus. The great tit (Parus major) is currently the most represented species, with data from other Parus species and subspecies potentially added in the future.</p>
         
         <p class="reveal-text">The platform provides sequence data and sample metadata, along with an embedded IGV browser for interactive genomic visualization, supporting research collaboration and open access to genomic data.</p>
+        <div class="stats-row reveal-text">
+            <div class="stat">
+                <span class="stat-number" id="statBam" data-target="0">0</span>
+                <span class="stat-label">WGS Samples</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number" data-target="100">0</span>
+                <span class="stat-label">SNP-Chip Samples</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number" data-target="10">0</span>
+                <span class="stat-label">Locations</span>
+            </div>
+            <div class="stat">
+                <span class="stat-number" id="statPubs" data-target="0">0</span>
+                <span class="stat-label">Publications</span>
+            </div>
+        </div>
     </header>
 
    <div class="container">
@@ -1346,6 +1420,106 @@
                 }
             }
         };
+    </script>
+    <script>
+    /* ============ DNA double-helix background ============ */
+    (function () {
+        const canvas = document.getElementById('dnaCanvas');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+        const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        let w, h;
+    
+        function resize() {
+            const dpr = window.devicePixelRatio || 1;
+            const r = canvas.parentElement.getBoundingClientRect();
+            w = r.width; h = r.height;
+            canvas.width = w * dpr;
+            canvas.height = h * dpr;
+            ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        }
+    
+        const pairColors = [
+            ['#3b82f6', '#e74c3c'],   // A-T
+            ['#10b981', '#fbbf24']    // G-C
+        ];
+    
+        function draw(t) {
+            ctx.clearRect(0, 0, w, h);
+            const amp = Math.min(h * 0.28, 70);
+            const step = 20;
+            const cy = h * 0.5;
+            const shift = t * 0.0007;
+            let prev1 = null, prev2 = null;
+    
+            for (let x = -step, i = 0; x < w + step; x += step, i++) {
+                const phase = x * 0.011 + shift;
+                const s = Math.sin(phase);
+                const depth = Math.cos(phase);          // -1..1 → عمق سه‌بعدی
+                const y1 = cy + s * amp;
+                const y2 = cy - s * amp;
+    
+                // rung (پله‌ی بین دو رشته)
+                ctx.strokeStyle = 'rgba(148,163,184,0.25)';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2); ctx.stroke();
+    
+                // backbone
+                ctx.strokeStyle = 'rgba(203,213,225,0.35)';
+                ctx.lineWidth = 2;
+                if (prev1) {
+                    ctx.beginPath(); ctx.moveTo(prev1[0], prev1[1]); ctx.lineTo(x, y1); ctx.stroke();
+                    ctx.beginPath(); ctx.moveTo(prev2[0], prev2[1]); ctx.lineTo(x, y2); ctx.stroke();
+                }
+                prev1 = [x, y1]; prev2 = [x, y2];
+    
+                // nucleotide dots
+                const [c1, c2] = pairColors[i % 2];
+                const r1 = 3.5 + depth * 1.5;
+                const r2 = 3.5 - depth * 1.5;
+                ctx.fillStyle = c1;
+                ctx.beginPath(); ctx.arc(x, y1, Math.max(r1, 1.5), 0, Math.PI * 2); ctx.fill();
+                ctx.fillStyle = c2;
+                ctx.beginPath(); ctx.arc(x, y2, Math.max(r2, 1.5), 0, Math.PI * 2); ctx.fill();
+            }
+            if (!reduceMotion) requestAnimationFrame(draw);
+        }
+    
+        resize();
+        window.addEventListener('resize', resize);
+        requestAnimationFrame(draw);
+    })();
+    
+    /* ============ Animated counters ============ */
+    (function () {
+        // مقدارهای خودکار
+        const bam = document.getElementById('statBam');
+        const pubs = document.getElementById('statPubs');
+        if (bam && typeof bamFiles !== 'undefined') bam.dataset.target = bamFiles.length;
+        if (pubs) pubs.dataset.target = document.querySelectorAll('.pub-list li').length;
+    
+        const easeOut = t => 1 - Math.pow(1 - t, 4);
+    
+        function animate(el) {
+            const target = parseInt(el.dataset.target, 10) || 0;
+            const duration = 1800;
+            const start = performance.now();
+            (function tick(now) {
+                const p = Math.min((now - start) / duration, 1);
+                el.textContent = Math.round(target * easeOut(p)).toLocaleString('en-US');
+                if (p < 1) requestAnimationFrame(tick);
+            })(start);
+        }
+    
+        const counters = document.querySelectorAll('.stat-number');
+        const io = new IntersectionObserver((entries, obs) => {
+            entries.forEach(e => {
+                if (e.isIntersecting) { animate(e.target); obs.unobserve(e.target); }
+            });
+        }, { threshold: 0.4 });
+    
+        counters.forEach(c => io.observe(c));
+    })();
     </script>
 </body>
 </html>
