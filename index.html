@@ -718,6 +718,76 @@
             text-transform: uppercase;
             color: #94a3b8;
         }
+
+        /* ===== Global search (Ctrl+K) ===== */
+        .gs-overlay {
+            position: fixed; inset: 0; z-index: 3000;
+            background: rgba(15, 23, 42, 0.55);
+            backdrop-filter: blur(4px);
+            display: none; align-items: flex-start; justify-content: center;
+            padding-top: 12vh;
+        }
+        .gs-overlay.open { display: flex; animation: fadeIn 0.15s ease; }
+        .gs-box {
+            width: min(640px, 92vw);
+            background: var(--card-bg);
+            color: var(--text-main);
+            border: 1px solid var(--border-light);
+            border-radius: 16px;
+            box-shadow: 0 25px 60px rgba(0,0,0,0.35);
+            overflow: hidden;
+        }
+        .gs-input-row {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 18px;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .gs-input-row i { color: var(--text-muted); }
+        .gs-input {
+            flex: 1; border: none; outline: none; background: transparent;
+            color: var(--text-main); font: inherit; font-size: 1.05rem;
+        }
+        .gs-kbd {
+            font-size: 0.7rem; padding: 2px 6px; border-radius: 6px;
+            border: 1px solid var(--border-light); color: var(--text-muted);
+        }
+        .gs-results { max-height: 50vh; overflow-y: auto; padding: 8px; }
+        .gs-group {
+            padding: 8px 10px 4px; font-size: 0.7rem; font-weight: 700;
+            letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted);
+        }
+        .gs-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 12px; border-radius: 10px; cursor: pointer;
+        }
+        .gs-item .gs-ico {
+            width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            background: rgba(37, 99, 235, 0.1); color: var(--primary); font-size: 0.85rem;
+        }
+        .gs-item .gs-text { flex: 1; min-width: 0; }
+        .gs-item .gs-title { font-weight: 600; font-size: 0.92rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .gs-item .gs-sub { font-size: 0.78rem; color: var(--text-muted); }
+        .gs-item.active { background: var(--primary); color: #fff; }
+        .gs-item.active .gs-sub { color: rgba(255,255,255,0.8); }
+        .gs-item.active .gs-ico { background: rgba(255,255,255,0.2); color: #fff; }
+        .gs-empty { padding: 28px; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+        .gs-footer {
+            display: flex; gap: 16px; padding: 8px 16px;
+            border-top: 1px solid var(--border-light);
+            font-size: 0.72rem; color: var(--text-muted);
+        }
+        .gs-fab {
+            position: fixed; right: 20px; bottom: 20px; z-index: 900;
+            display: flex; align-items: center; gap: 8px;
+            padding: 11px 16px; border: none; border-radius: 30px; cursor: pointer;
+            background: var(--primary); color: #fff; font: inherit; font-size: 0.85rem; font-weight: 600;
+            box-shadow: 0 6px 18px rgba(0,0,0,0.25); transition: transform 0.2s ease, background 0.2s ease;
+        }
+        .gs-fab:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        @keyframes gsFlash { 0%,100% { background: transparent; } 30% { background: rgba(37,99,235,0.18); } }
+        .gs-flash { animation: gsFlash 1.8s ease; border-radius: 6px; }
+        @media (max-width: 600px) { .gs-kbd, .gs-footer { display: none; } }
         
     </style>
 </head>
@@ -1519,6 +1589,179 @@
         }, { threshold: 0.4 });
     
         counters.forEach(c => io.observe(c));
+    })();
+    </script>
+    <script>
+    (function () {
+        /* ---------- data sources ---------- */
+        const TABS = [
+            { title: 'Map View',              tab: 'mapTab',      btn: 'btnMap',      icon: 'fa-map-marked-alt' },
+            { title: 'Sequence Data',         tab: 'tableTab',    btn: 'btnTable',    icon: 'fa-dna' },
+            { title: 'Sample Information',    tab: 'infoTab',     btn: 'btnInfo',     icon: 'fa-table' },
+            { title: 'IGV Browser',           tab: 'visualTab',   btn: 'btnVisual',   icon: 'fa-microscope' },
+            { title: 'Pipeline & Reference',  tab: 'pipelineTab', btn: 'btnPipeline', icon: 'fa-terminal' },
+            { title: 'Publications',          tab: 'pubTab',      btn: 'btnPub',      icon: 'fa-book' },
+            { title: 'Contact',               tab: 'contactTab',  btn: 'btnContact',  icon: 'fa-envelope' }
+        ];
+    
+        function goTab(tabId, btnId) {
+            window.openTab(tabId, document.getElementById(btnId));
+            const card = document.querySelector('.dashboard-card');
+            if (card) card.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    
+        function buildItems(q) {
+            const query = q.trim().toLowerCase();
+            const groups = [];
+    
+            // نمونه‌ها
+            const sampleItems = [];
+            if (query) {
+                const ids = (typeof bamFiles !== 'undefined' ? bamFiles : [])
+                    .map(f => ({ file: f, id: f.split('_')[0] }))
+                    .filter(s => s.id.toLowerCase().includes(query))
+                    .slice(0, 6);
+                ids.forEach(s => {
+                    sampleItems.push({
+                        icon: 'fa-microscope', title: s.id, sub: 'Open in IGV Browser',
+                        run: () => window.loadSampleInIGV(s.file)
+                    });
+                    sampleItems.push({
+                        icon: 'fa-dna', title: s.id, sub: 'Show in sequence data table',
+                        run: () => window.switchToTable('samples_table.html#' + s.id)
+                    });
+                });
+            }
+            if (sampleItems.length) groups.push({ name: 'Samples', items: sampleItems });
+    
+            // تب‌ها
+            const tabItems = TABS
+                .filter(t => !query || t.title.toLowerCase().includes(query))
+                .map(t => ({ icon: t.icon, title: t.title, sub: 'Go to tab', run: () => goTab(t.tab, t.btn) }));
+            if (tabItems.length) groups.push({ name: 'Navigation', items: tabItems });
+    
+            // مقاله‌ها
+            if (query) {
+                const pubItems = [];
+                document.querySelectorAll('.pub-list li').forEach(li => {
+                    const title = (li.querySelector('.pub-title') || {}).textContent || '';
+                    const authors = (li.querySelector('.pub-authors') || {}).textContent || '';
+                    if ((title + ' ' + authors).toLowerCase().includes(query)) {
+                        pubItems.push({
+                            icon: 'fa-book', title: title.trim(), sub: authors.trim().slice(0, 90),
+                            run: () => {
+                                goTab('pubTab', 'btnPub');
+                                li.classList.remove('gs-flash'); void li.offsetWidth;
+                                li.classList.add('gs-flash');
+                                setTimeout(() => li.scrollIntoView({ behavior: 'smooth', block: 'center' }), 350);
+                            }
+                        });
+                    }
+                });
+                if (pubItems.length) groups.push({ name: 'Publications', items: pubItems.slice(0, 5) });
+            }
+            return groups;
+        }
+    
+        /* ---------- DOM ---------- */
+        const overlay = document.createElement('div');
+        overlay.className = 'gs-overlay';
+        overlay.innerHTML = `
+            <div class="gs-box" role="dialog" aria-modal="true" aria-label="Search">
+                <div class="gs-input-row">
+                    <i class="fas fa-search"></i>
+                    <input class="gs-input" type="text" placeholder="Search samples (e.g. SRR1793405), tabs, publications…" autocomplete="off" spellcheck="false">
+                    <span class="gs-kbd">Esc</span>
+                </div>
+                <div class="gs-results"></div>
+                <div class="gs-footer"><span>↑↓ navigate</span><span>↵ select</span><span>Esc close</span></div>
+            </div>`;
+        document.body.appendChild(overlay);
+    
+        const input = overlay.querySelector('.gs-input');
+        const resultsEl = overlay.querySelector('.gs-results');
+        let flat = [];       // لیست تخت آیتم‌ها برای ناوبری با کیبورد
+        let active = 0;
+    
+        function render() {
+            const groups = buildItems(input.value);
+            resultsEl.innerHTML = '';
+            flat = [];
+            if (!groups.length) {
+                resultsEl.innerHTML = '<div class="gs-empty">No results found.</div>';
+                return;
+            }
+            groups.forEach(g => {
+                const head = document.createElement('div');
+                head.className = 'gs-group';
+                head.textContent = g.name;
+                resultsEl.appendChild(head);
+                g.items.forEach(item => {
+                    const el = document.createElement('div');
+                    el.className = 'gs-item';
+                    el.innerHTML = '<div class="gs-ico"><i class="fas ' + item.icon + '"></i></div>' +
+                                   '<div class="gs-text"><div class="gs-title"></div><div class="gs-sub"></div></div>';
+                    el.querySelector('.gs-title').textContent = item.title;
+                    el.querySelector('.gs-sub').textContent = item.sub;
+                    const idx = flat.length;
+                    el.addEventListener('mousemove', () => setActive(idx));
+                    el.addEventListener('click', () => choose(idx));
+                    resultsEl.appendChild(el);
+                    flat.push({ el, item });
+                });
+            });
+            active = 0;
+            setActive(0);
+        }
+    
+        function setActive(i) {
+            if (!flat.length) return;
+            flat.forEach(f => f.el.classList.remove('active'));
+            active = (i + flat.length) % flat.length;
+            flat[active].el.classList.add('active');
+            flat[active].el.scrollIntoView({ block: 'nearest' });
+        }
+    
+        function choose(i) {
+            const f = flat[i];
+            if (!f) return;
+            close();
+            f.item.run();
+        }
+    
+        function open() {
+            overlay.classList.add('open');
+            input.value = '';
+            render();
+            setTimeout(() => input.focus(), 30);
+        }
+        function close() { overlay.classList.remove('open'); input.blur(); }
+        const isOpen = () => overlay.classList.contains('open');
+    
+        /* ---------- events ---------- */
+        input.addEventListener('input', render);
+        overlay.addEventListener('mousedown', e => { if (e.target === overlay) close(); });
+    
+        document.addEventListener('keydown', e => {
+            if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+                e.preventDefault();
+                isOpen() ? close() : open();
+                return;
+            }
+            if (!isOpen()) return;
+            if (e.key === 'Escape')         { e.preventDefault(); close(); }
+            else if (e.key === 'ArrowDown') { e.preventDefault(); setActive(active + 1); }
+            else if (e.key === 'ArrowUp')   { e.preventDefault(); setActive(active - 1); }
+            else if (e.key === 'Enter')     { e.preventDefault(); choose(active); }
+        });
+    
+        /* ---------- floating button (برای موبایل و کشف‌پذیری) ---------- */
+        const fab = document.createElement('button');
+        fab.className = 'gs-fab';
+        fab.setAttribute('aria-label', 'Open search');
+        fab.innerHTML = '<i class="fas fa-search"></i> <span>Search</span>';
+        fab.addEventListener('click', open);
+        document.body.appendChild(fab);
     })();
     </script>
 </body>
