@@ -1492,13 +1492,94 @@
         };
     </script>
     <script>
+    <script>
     /* ============ DNA double-helix background ============ */
     (function () {
         const canvas = document.getElementById('dnaCanvas');
         if (!canvas) return;
         const ctx = canvas.getContext('2d');
+    
+        // کاربران reduced-motion هم حرکت می‌بینند، ولی آهسته‌تر
         const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-        let w, h;
+        const SPEED = reduceMotion ? 0.00015 : 0.0007;
+    
+        let w, h, lastT = 0;
+    
+        const pairColors = [
+            ['#3b82f6', '#e74c3c'],   // A-T
+            ['#10b981', '#fbbf24']    // G-C
+        ];
+    
+        function draw(t) {
+            lastT = t || 0;
+            ctx.clearRect(0, 0, w, h);
+            const amp = Math.min(h * 0.28, 70);
+            const step = 14;
+            const cy = h * 0.5;
+            const shift = lastT * SPEED;
+            const pts = [];
+    
+            for (let x = -step, i = 0; x < w + step; x += step, i++) {
+                const phase = x * 0.011 + shift;
+                pts.push({
+                    x, i,
+                    y1: cy + Math.sin(phase) * amp,
+                    y2: cy - Math.sin(phase) * amp,
+                    z: Math.cos(phase)
+                });
+            }
+    
+            // 1) پله‌ها
+            pts.forEach(p => {
+                if (p.i % 2) return;
+                const a = 0.12 + (1 - Math.abs(p.z)) * 0.25;
+                ctx.strokeStyle = 'rgba(148,163,184,' + a + ')';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath(); ctx.moveTo(p.x, p.y1); ctx.lineTo(p.x, p.y2); ctx.stroke();
+            });
+    
+            // 2) رشته‌ها (اول عقب، بعد جلو)
+            function strand(key, sign, front) {
+                for (let k = 1; k < pts.length; k++) {
+                    const a = pts[k - 1], b = pts[k];
+                    const z = ((a.z + b.z) / 2) * sign;
+                    if ((z > 0) !== front) continue;
+                    const depth = (z + 1) / 2;
+                    ctx.strokeStyle = front
+                        ? 'rgba(226,232,240,' + (0.45 + depth * 0.45) + ')'
+                        : 'rgba(148,163,184,' + (0.15 + depth * 0.25) + ')';
+                    ctx.lineWidth = 1.5 + depth * 2.5;
+                    ctx.beginPath();
+                    ctx.moveTo(a.x, a[key]);
+                    ctx.lineTo(b.x, b[key]);
+                    ctx.stroke();
+                }
+            }
+            strand('y1', 1, false);
+            strand('y2', -1, false);
+            strand('y1', 1, true);
+            strand('y2', -1, true);
+    
+            // 3) نوکلئوتیدها
+            const dots = [];
+            pts.forEach(p => {
+                if (p.i % 2) return;
+                const [c1, c2] = pairColors[(p.i / 2) % 2];
+                dots.push({ x: p.x, y: p.y1, z: p.z,  c: c1 });
+                dots.push({ x: p.x, y: p.y2, z: -p.z, c: c2 });
+            });
+            dots.sort((a, b) => a.z - b.z);
+            dots.forEach(d => {
+                ctx.globalAlpha = 0.45 + ((d.z + 1) / 2) * 0.55;
+                ctx.fillStyle = d.c;
+                ctx.beginPath();
+                ctx.arc(d.x, d.y, 2.5 + ((d.z + 1) / 2) * 3, 0, Math.PI * 2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1;
+    
+            requestAnimationFrame(draw);   // همیشه ادامه بده
+        }
     
         function resize() {
             const dpr = window.devicePixelRatio || 1;
@@ -1507,58 +1588,15 @@
             canvas.width = w * dpr;
             canvas.height = h * dpr;
             ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        }
-    
-        const pairColors = [
-            ['#3b82f6', '#e74c3c'],   // A-T
-            ['#10b981', '#fbbf24']    // G-C
-        ];
-    
-        function draw(t) {
+            // بعد از resize بوم پاک می‌شود، پس بلافاصله یک فریم بکش
             ctx.clearRect(0, 0, w, h);
-            const amp = Math.min(h * 0.28, 70);
-            const step = 20;
-            const cy = h * 0.5;
-            const shift = t * 0.0007;
-            let prev1 = null, prev2 = null;
-    
-            for (let x = -step, i = 0; x < w + step; x += step, i++) {
-                const phase = x * 0.011 + shift;
-                const s = Math.sin(phase);
-                const depth = Math.cos(phase);          // -1..1 → عمق سه‌بعدی
-                const y1 = cy + s * amp;
-                const y2 = cy - s * amp;
-    
-                // rung (پله‌ی بین دو رشته)
-                ctx.strokeStyle = 'rgba(148,163,184,0.25)';
-                ctx.lineWidth = 1.5;
-                ctx.beginPath(); ctx.moveTo(x, y1); ctx.lineTo(x, y2); ctx.stroke();
-    
-                // backbone
-                ctx.strokeStyle = 'rgba(203,213,225,0.35)';
-                ctx.lineWidth = 2;
-                if (prev1) {
-                    ctx.beginPath(); ctx.moveTo(prev1[0], prev1[1]); ctx.lineTo(x, y1); ctx.stroke();
-                    ctx.beginPath(); ctx.moveTo(prev2[0], prev2[1]); ctx.lineTo(x, y2); ctx.stroke();
-                }
-                prev1 = [x, y1]; prev2 = [x, y2];
-    
-                // nucleotide dots
-                const [c1, c2] = pairColors[i % 2];
-                const r1 = 3.5 + depth * 1.5;
-                const r2 = 3.5 - depth * 1.5;
-                ctx.fillStyle = c1;
-                ctx.beginPath(); ctx.arc(x, y1, Math.max(r1, 1.5), 0, Math.PI * 2); ctx.fill();
-                ctx.fillStyle = c2;
-                ctx.beginPath(); ctx.arc(x, y2, Math.max(r2, 1.5), 0, Math.PI * 2); ctx.fill();
-            }
-            if (!reduceMotion) requestAnimationFrame(draw);
         }
     
         resize();
         window.addEventListener('resize', resize);
         requestAnimationFrame(draw);
     })();
+    </script>
     
     /* ============ Animated counters ============ */
     (function () {
