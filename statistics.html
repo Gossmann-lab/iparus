@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPARUS Statistics</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root { --bg:#f8fafc; --card:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0; --primary:#2563eb; --pill:#e2e8f0; }
+body.dark { --bg:#0f172a; --card:#1e293b; --text:#f1f5f9; --muted:#94a3b8; --border:#334155; --pill:#334155; }
+* { box-sizing: border-box; }
+body { margin:0; padding:16px; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
+.toolbar { display:flex; justify-content:center; margin-bottom:18px; }
+.filter { display:inline-flex; gap:4px; padding:5px; border-radius:30px; background:var(--pill); flex-wrap:wrap; justify-content:center; }
+.filter button { border:none; background:transparent; cursor:pointer; font:inherit; font-size:.8rem; font-weight:700;
+                 padding:6px 16px; border-radius:25px; color:var(--muted); }
+.filter button.active { background:var(--primary); color:#fff; }
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:16px; }
+.kpi { padding:16px; border-radius:14px; border:1px solid var(--border); background:var(--card); text-align:center; }
+.kpi b { display:block; font-size:1.8rem; line-height:1.15; font-variant-numeric:tabular-nums; }
+.kpi span { font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.grid { display:grid; gap:16px; grid-template-columns:repeat(3,1fr); }
+.card { padding:18px; border-radius:16px; border:1px solid var(--border); background:var(--card); min-width:0; }
+.card h4 { margin:0 0 12px; font-size:.95rem; }
+.chart { position:relative; height:240px; }
+.chart.tall { height:300px; }
+.span2 { grid-column:span 2; }
+.note { margin:16px 0 0; font-size:.8rem; color:var(--muted); text-align:center; }
+@media (max-width:900px) { .grid { grid-template-columns:1fr; } .span2 { grid-column:auto; } }
+</style>
+</head>
+<body>
+<div class="toolbar"><div class="filter" id="filter"></div></div>
+
+<div class="kpis">
+  <div class="kpi"><b id="kN">–</b><span>WGS samples</span></div>
+  <div class="kpi"><b id="kLoc">–</b><span>Sampling locations</span></div>
+  <div class="kpi"><b id="kCov">–</b><span>Mean coverage</span></div>
+  <div class="kpi"><b id="kSize">–</b><span>BAM data volume</span></div>
+</div>
+
+<div class="grid">
+  <div class="card"><h4>Species</h4><div class="chart"><canvas id="cSpecies"></canvas></div></div>
+  <div class="card"><h4>Sex</h4><div class="chart"><canvas id="cSex"></canvas></div></div>
+  <div class="card"><h4>Tissue</h4><div class="chart"><canvas id="cTissue"></canvas></div></div>
+  <div class="card span2"><h4>Samples per publication</h4><div class="chart tall"><canvas id="cPubs"></canvas></div></div>
+  <div class="card"><h4>Coverage distribution</h4><div class="chart tall"><canvas id="cCov"></canvas></div></div>
+  <div class="card span2"><h4>Top sampling locations</h4><div class="chart tall"><canvas id="cLocs"></canvas></div></div>
+</div>
+<p class="note">Statistics refer to the whole-genome sequencing (BAM) dataset. Generated 2026-10-28.</p>
+
+<script>
+/* [accession, species, sex, tissue, coverage, publication, location, sizeGB] */
+const DATA = [["SRR1793405","Parus minor","Male","Muscle",4.3,"Qu et al. 2015","Yanbian, Sichuan",5.7],["SRR1793406","Parus minor","Male","Muscle",4.5,"Qu et al. 2015","Yanbian, Sichuan",5.9],["SRR1793407","Parus minor","Male","Muscle",5.3,"Qu et al. 2015","Gaoligong, Yunnan",6.5],["SRR1793415","Parus minor","Female","Muscle",5.4,"Qu et al. 2015","Gaoligong, Yunnan",6.6],["SRR1793417","Parus minor","Male","Muscle",5.7,"Qu et al. 2015","Gaoligong, Yunnan",6.9],["SRR1793419","Parus minor","Female","Muscle",5.0,"Qu et al. 2015","Gaoligong, Yunnan",6.2],["SRR1793420","Parus minor","Male","Muscle",4.5,"Qu et al. 2015","Gaoligong, Yunnan",5.9],["SRR1793421","Parus minor","Female","Muscle",4.1,"Qu et al. 2015","Lijiang, Yunnan",5.8],["SRR1793422","Parus minor","Male","Muscle",4.8,"Qu et al. 2015","Lijiang, Yunnan",5.9],["SRR1793423","Parus minor","Female","Muscle",4.2,"Qu et al. 2015","Lijiang, Yunnan",5.6],["SRR1793424","Parus minor","Male","Muscle",4.0,"Qu et al. 2015","Lijiang, Yunnan",5.4],["SRR1793425","Parus major","Female","Muscle",4.9,"Qu et al. 2015","Eerguna, Inner Mongolia",6.0],["SRR1793427","Parus major","Male","Muscle",5.3,"Qu et al. 2015","Eerguna, Inner Mongolia",6.8],["SRR1793428","Parus major","Male","Muscle",5.1,"Qu et al. 2015","Eerguna, Inner Mongolia",6.4],["SRR1793429","Parus major","Female","Muscle",4.0,"Qu et al. 2015","Eerguna, Inner Mongolia",5.3],["SRR1793430","Parus major","Male","Muscle",4.7,"Qu et al. 2015","Teshig, Mongolia",5.9],["SRR1793431","Parus major","Female","Muscle",5.3,"Qu et al. 2015","Teshig, Mongolia",6.8],["SRR1793432","Parus major","Male","Muscle",4.4,"Qu et al. 2015","Tushig, Mongolia",5.9],["SRR1793433","Parus major","Male","Muscle",4.2,"Qu et al. 2015","Tushig, Mongolia",5.7],["SRR1793434","Parus major","Female","Muscle",4.2,"Qu et al. 2015","Tushig, Mongolia",5.8],["SRR1793435","Parus major","Male","Muscle",4.9,"Qu et al. 2015","Altai Region, Russia",6.3],["SRR1793436","Parus minor","Female","Muscle",4.7,"Qu et al. 2015","Shennongjia, Hubei",6.3],["SRR1793437","Parus minor","Male","Muscle",4.8,"Qu et al. 2015","Shennongjia, Hubei",6.0],["SRR1793438","Parus minor","Male","Muscle",5.1,"Qu et al. 2015","Jixi, Anhui",6.3],["SRR1793439","Parus minor","Male","Muscle",5.0,"Qu et al. 2015","Panjin, Liaoning",6.3],["SRR1793440","Parus minor","Male","Muscle",4.5,"Qu et al. 2015","Panjin, Liaoning",6.0],["SRR1793441","Parus minor","Male","Muscle",4.7,"Qu et al. 2015","Panjin, Liaoning",6.5],["SRR1793442","Parus minor","Male","Muscle",3.9,"Qu et al. 2015","Kuandian, Liaoning",5.2],["SRR1793443","Parus minor","Male","Muscle",4.2,"Qu et al. 2015","Kuandian, Liaoning",5.9],["SRR1793444","Parus minor","Female","Muscle",4.9,"Qu et al. 2015","Sunan, Gansu",6.5],["SRR1793445","Parus minor","Male","Muscle",4.9,"Qu et al. 2015","Sunan, Gansu",6.5],["SRR1793447","Parus minor","Female","Muscle",4.7,"Qu et al. 2015","Yongdeng, Gansu",6.3],["SRR2961328","Parus major","Female","Blood",14.4,"Laine et al. 2016","Vienna, Austria",18.2],["SRR2961671","Parus major","Male","Blood",9.2,"Laine et al. 2016","Antwerp, Belgium",11.7],["SRR2961674","Parus major","Male","Blood",8.1,"Laine et al. 2016","Cambridge, UK",10.4],["SRR2961676","Parus major","Male","Blood",10.3,"Laine et al. 2016","Pirio/Muro, Corsica",11.6],["SRR2961678","Parus major","Male","Blood",6.8,"Laine et al. 2016","Velky Kosr, Czech Republic",8.0],["SRR2961680","Parus major","Male","Blood",14.9,"Laine et al. 2016","Tartu, Estonia",16.7],["SRR2961684","Parus major","Male","Blood",6.7,"Laine et al. 2016","Tartu, Estonia",7.4],["SRR2961689","Parus major","Male","Blood",13.9,"Laine et al. 2016","Oulu, Finland",15.6],["SRR2961695","Parus major","Male","Blood",9.1,"Laine et al. 2016","La Rouviere, France",11.8],["SRR2961697","Parus major","Female","Blood",11.3,"Laine et al. 2016","Montpellier, France",15.0],["SRR2961699","Parus major","Male","Blood",6.9,"Laine et al. 2016","La Rouviere, France",8.3],["SRR2961701","Parus major","Male","Blood",9.0,"Laine et al. 2016","Seewisen, Germany",10.4],["SRR2961712","Parus major","Male","Blood",9.5,"Laine et al. 2016","Pilis Mountains, Hungary",10.6],["SRR2961716","Parus major","Female","Blood",11.5,"Laine et al. 2016","Tromso, Norway",14.9],["SRR2961718","Parus major","Female","Blood",4.8,"Laine et al. 2016","Groblas, Poland",6.3],["SRR2961722","Parus major","Male","Blood",9.1,"Laine et al. 2016","Loch Lomond, Scotland",10.3],["SRR2961725","Parus major","Male","Blood",6.9,"Laine et al. 2016","Mariola, Spain",9.0],["SRR2961728","Parus major","Male","Blood",8.4,"Laine et al. 2016","Font Roja, Spain",9.9],["SRR2961731","Parus major","Male","Blood",9.6,"Laine et al. 2016","Gotland, Sweden",11.1],["SRR2961736","Parus major","Male","Blood",13.2,"Laine et al. 2016",NaN,14.4],["SRR2961746","Parus major","Male","Blood",8.6,"Laine et al. 2016","Wytham Woods, Oxford, Uk",9.9],["SRR2961750","Parus major","Male","Blood",8.7,"Laine et al. 2016","Wytham Woods, Oxford, Uk",10.1],["SRR2961753","Parus major","Male","Blood",9.8,"Laine et al. 2016","Wytham Woods, Oxford, Uk",11.6],["SRR2961756","Parus major","Female","Blood",11.7,"Laine et al. 2016","Wytham Woods, Oxford, Uk",15.0],["SRR2961759","Parus major","Male","Blood",7.8,"Laine et al. 2016","Wytham Woods, Oxford, Uk",9.2],["SRR2961762","Parus major","Female","Blood",8.9,"Laine et al. 2016","Wytham Woods, Oxford, Uk",10.3],["SRR2961765","Parus major","Male","Blood",7.3,"Laine et al. 2016","Wytham Woods, Oxford, Uk",8.3],["SRR2961769","Parus major","Female","Blood",9.2,"Laine et al. 2016","Wytham Woods, Oxford, Uk",10.8],["SRR2961773","Parus major","Male","Blood",12.0,"Laine et al. 2016","Wytham Woods, Oxford, Uk",14.0],["SRR2961775","Parus major","Female","Blood",6.7,"Laine et al. 2016","Wytham Woods, Oxford, Uk",8.1],["SRR3085443","Parus major","Male","Blood",18.6,"Laine et al. 2016","Animal Breeding and Genomics Centre, Wageningen, The Netherlands",31.8],["SRR5423293","Parus major","Male","Blood",52.7,"Corcoran et al. 2017","Oxford, Great Britain",35.6],["SRR5423294","Parus major","Male","Blood",57.5,"Corcoran et al. 2017","Pirio/Muro, Corsica",33.9],["SRR5423295","Parus major","Male","Blood",49.1,"Corcoran et al. 2017","La Rouviere, France",43.5],["SRR5423296","Parus major","Male","Blood",54.0,"Corcoran et al. 2017","Velky Kosr, Czech Republic",47.6],["SRR5423297","Parus major","Male","Blood",63.2,"Corcoran et al. 2017","Oulu, Finland",54.6],["SRR5423298","Parus major","Male","Blood",54.2,"Corcoran et al. 2017","Loch Lomond, Scotland",34.0],["SRR5423299","Parus major","Male","Blood",54.5,"Corcoran et al. 2017","Gotland, Sweden",48.5],["SRR5423300","Parus major","Male","Blood",59.9,"Corcoran et al. 2017","Pilis Mountains, Hungary",52.9],["SRR5423301","Parus major","Male","Blood",52.2,"Corcoran et al. 2017","Austria",36.5],["SRR5423302","Parus major","Male","Blood",51.8,"Corcoran et al. 2017","Mariola, Spain",49.8],["SRR765717","Parus minor","Female","Liver",12.6,"Qu et al. 2013","Lijiang, Yunnan",16.2],["SRR9656355","Parus minor","Male","Muscle",16.0,"Cheng et al. 2020/2021","Foping, Shanxi",11.9],["SRR9656356","Parus minor","Female","Muscle",11.9,"Cheng et al. 2020/2021","Libo, Guizhou",10.7],["SRR9656357","Parus minor","Male","Muscle",13.4,"Cheng et al. 2020/2021","Chaoan, Guangdong",11.8],["SRR9656367","Parus minor","Male","Muscle",12.9,"Cheng et al. 2020/2021","Baishan, Jilin",11.3],["SRR9656368","Parus minor","Female","Muscle",15.9,"Cheng et al. 2020/2021","Huairou, Beijing",14.1],["SRR9656369","Parus minor","Male","Muscle",14.8,"Cheng et al. 2020/2021","Mangkang, Tibet",11.4]];
+const SPECIES = ["Parus major", "Parus minor"];
+const COL = ['#3b82f6', '#e74c3c', '#10b981', '#fbbf24', '#8b5cf6', '#14b8a6'];
+let filter = 'all';
+const charts = {};
+
+/* ---- theme: follow the parent page's dark-mode toggle (same origin), else the OS setting ---- */
+function parentDark() {
+  try { return window.parent !== window && window.parent.document.body.classList.contains('dark-mode'); }
+  catch (e) { return null; }
+}
+function applyTheme() {
+  const p = parentDark();
+  const dark = p === null ? window.matchMedia('(prefers-color-scheme: dark)').matches : p;
+  if (document.body.classList.contains('dark') !== dark) {
+    document.body.classList.toggle('dark', dark);
+    render();
+  }
+}
+try {
+  if (window.parent !== window)
+    new MutationObserver(applyTheme).observe(window.parent.document.body, { attributes: true, attributeFilter: ['class'] });
+} catch (e) { setInterval(applyTheme, 1500); }
+
+/* ---- helpers ---- */
+const count = (rows, fn) => {
+  const m = new Map();
+  rows.forEach(r => m.set(fn(r), (m.get(fn(r)) || 0) + 1));
+  return [...m.entries()].sort((a, b) => b[1] - a[1]);
+};
+const css = n => getComputedStyle(document.body).getPropertyValue(n).trim();
+function make(id, cfg) {
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(id), cfg);
+}
+
+function render() {
+  const rows = DATA.filter(r => filter === 'all' || r[1] === filter);
+  const grid = css('--border');
+  Chart.defaults.color = css('--muted');
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.borderColor = grid;
+
+  const cov = rows.map(r => r[4]).filter(v => v !== null);
+  const size = rows.reduce((s, r) => s + r[7], 0);
+  document.getElementById('kN').textContent = rows.length;
+  document.getElementById('kLoc').textContent = new Set(rows.map(r => r[6])).size;
+  document.getElementById('kCov').textContent = cov.length ? (cov.reduce((a, b) => a + b, 0) / cov.length).toFixed(1) + '×' : '–';
+  document.getElementById('kSize').textContent = size >= 1000 ? (size / 1000).toFixed(2) + ' TB' : Math.round(size) + ' GB';
+
+  const donut = (id, entries) => make(id, {
+    type: 'doughnut',
+    data: { labels: entries.map(e => e[0]),
+            datasets: [{ data: entries.map(e => e[1]), backgroundColor: COL, borderColor: css('--card'), borderWidth: 3 }] },
+    options: { cutout: '62%', maintainAspectRatio: false,
+               plugins: { legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true } } } }
+  });
+  donut('cSpecies', count(rows, r => r[1]));
+  donut('cSex', count(rows, r => r[2]));
+  donut('cTissue', count(rows, r => r[3]));
+
+  const bar = (id, entries, color) => make(id, {
+    type: 'bar',
+    data: { labels: entries.map(e => e[0]),
+            datasets: [{ data: entries.map(e => e[1]), backgroundColor: color, borderRadius: 6, maxBarThickness: 26 }] },
+    options: { indexAxis: 'y', maintainAspectRatio: false, plugins: { legend: { display: false } },
+               scales: { x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: grid } }, y: { grid: { display: false } } } }
+  });
+  bar('cPubs', count(rows, r => r[5]), COL[0]);
+  bar('cLocs', count(rows, r => r[6]).slice(0, 10), COL[2]);
+
+  const bins = [['<5×', 0, 5], ['5–10×', 5, 10], ['10–15×', 10, 15], ['15–20×', 15, 20], ['20–30×', 20, 30], ['>30×', 30, 1e9]];
+  make('cCov', {
+    type: 'bar',
+    data: { labels: bins.map(b => b[0]),
+            datasets: [{ data: bins.map(b => cov.filter(v => v >= b[1] && v < b[2]).length), backgroundColor: COL[3], borderRadius: 6 }] },
+    options: { maintainAspectRatio: false, plugins: { legend: { display: false } },
+               scales: { y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: grid } }, x: { grid: { display: false } } } }
+  });
+}
+
+/* ---- species filter buttons ---- */
+const fbox = document.getElementById('filter');
+[['all', 'All samples'], ...SPECIES.map(s => [s, s])].forEach(([key, label], i) => {
+  const b = document.createElement('button');
+  b.textContent = label;
+  if (key !== 'all') b.style.fontStyle = 'italic';
+  if (i === 0) b.classList.add('active');
+  b.onclick = () => {
+    filter = key;
+    fbox.querySelectorAll('button').forEach(x => x.classList.toggle('active', x === b));
+    render();
+  };
+  fbox.appendChild(b);
+});
+
+applyTheme();
+render();
+</script>
+</body>
+</html>
