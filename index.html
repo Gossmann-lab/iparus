@@ -788,7 +788,29 @@
         @keyframes gsFlash { 0%,100% { background: transparent; } 30% { background: rgba(37,99,235,0.18); } }
         .gs-flash { animation: gsFlash 1.8s ease; border-radius: 6px; }
         @media (max-width: 600px) { .gs-kbd, .gs-footer { display: none; } }
-        
+
+
+
+        /* ===== About tab: sub-tabs (Pipeline / Publications / Contact) ===== */
+        .sub-nav-wrap { display: flex; justify-content: center; margin-bottom: 25px; }
+        .sub-nav {
+            display: inline-flex; flex-wrap: wrap; justify-content: center; gap: 4px;
+            padding: 5px; border-radius: 30px; background: #e2e8f0; border: 1px solid #cbd5e1;
+        }
+        body.dark-mode .sub-nav { background: #1e293b; border-color: #334155; }
+        .sub-btn {
+            border: none; background: transparent; cursor: pointer; font: inherit;
+            font-size: 0.8rem; font-weight: 700; padding: 6px 16px; border-radius: 25px;
+            color: var(--text-muted); display: inline-flex; align-items: center; gap: 8px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .sub-btn:hover:not(.active) { color: var(--text-main); background: rgba(255, 255, 255, 0.5); }
+        body.dark-mode .sub-btn:hover:not(.active) { background: rgba(255, 255, 255, 0.05); }
+        .sub-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08); }
+        body.dark-mode .sub-btn.active { background: #334155; color: #60a5fa; }
+        .sub-panel { display: none; }
+        .sub-panel.active { display: block; animation: fadeInUp 0.4s ease forwards; }
+                
     </style>
 </head>
 <body>
@@ -1816,6 +1838,25 @@
         fab.innerHTML = '<i class="fas fa-search"></i> <span>Search</span>';
         fab.addEventListener('click', open);
         document.body.appendChild(fab);
+    })();
+    </script>
+
+    <script>
+    /* About tab: sub-tab switching + keeps old tab ids (pipelineTab, pubTab, contactTab) working */
+    function showAboutSub(id) {
+        document.querySelectorAll('#aboutTab .sub-panel').forEach(p => p.classList.toggle('active', p.id === id));
+        document.querySelectorAll('#aboutTab .sub-btn').forEach(b => b.classList.toggle('active', b.dataset.sub === id));
+    }
+    (function () {
+        const LEGACY = ['pipelineTab', 'pubTab', 'contactTab'];
+        const prevOpenTab = window.openTab;
+        window.openTab = function (tabId, btnElement) {
+            if (LEGACY.indexOf(tabId) !== -1) {
+                showAboutSub(tabId);
+                return prevOpenTab.call(this, 'aboutTab', document.getElementById('btnAbout'));
+            }
+            return prevOpenTab.apply(this, arguments);
+        };
     })();
     </script>
 </body>
