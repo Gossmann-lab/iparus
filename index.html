@@ -846,10 +846,9 @@
                     <button class="tab-btn" onclick="openTab('infoTab', this)" id="btnInfo"><i class="fas fa-table"></i> Sample Information</button>
                     <button class="tab-btn" onclick="openTab('tableTab', this)" id="btnTable"><i class="fas fa-dna"></i> Sequence Data & Download</button>
                     <button class="tab-btn" onclick="openTab('visualTab', this)" id="btnVisual"><i class="fas fa-microscope"></i> IGV Browser</button>
-                    <button class="tab-btn" onclick="openTab('pipelineTab', this)" id="btnPipeline"><i class="fas fa-terminal"></i> Pipeline & Reference</button>
-                    <button class="tab-btn" onclick="openTab('pubTab', this)" id="btnPub"><i class="fas fa-book"></i> Publications</button>
                     <button class="tab-btn" onclick="openTab('statsTab', this)" id="btnStats"><i class="fas fa-chart-bar"></i> Statistics</button>
-                    <button class="tab-btn" onclick="openTab('contactTab', this)" id="btnContact"><i class="fas fa-envelope"></i> Contact</button>
+                    <button class="tab-btn" onclick="openTab('aboutTab', this)" id="btnAbout"><i class="fas fa-circle-info"></i> About & Resources</button>
+                    
                 </div>
             </div>
 
@@ -908,7 +907,40 @@
                 <iframe src="statistics.html" id="statsIframe"></iframe>
             </div>
 
-            <div id="pipelineTab" class="tab-content">
+            
+
+            <div id="tableTab" class="tab-content">
+                <div style="display: flex; justify-content: center; margin-bottom: 25px;">
+                    <div style="background: #e2e8f0; padding: 5px; border-radius: 30px; display: inline-flex; gap: 4px; border: 1px solid #cbd5e1;">
+                        <button id="btnTableBAM" class="tab-btn active" onclick="switchTableContent('bam')" style="box-shadow: none; font-size: 0.8rem; font-weight: 700; padding: 6px 16px; border-radius: 25px;">
+                            <i class="fas fa-list"></i> Whole Genome Sequencing (BAM)
+                        </button>
+                        <button id="btnTableSNP" class="tab-btn" onclick="switchTableContent('snp')" style="box-shadow: none; font-size: 0.8rem; font-weight: 700; padding: 6px 16px; border-radius: 25px;">
+                            <i class="fas fa-table"></i> Genotyping Dataset (SNP Chip)
+                        </button>
+                    </div>
+                </div>
+
+                <iframe src="samples_table.html" id="tableIframe" width="100%"></iframe>
+                <iframe src="vcf_samples_table.html" id="tableSnpIframe" style="display: none;" width="100%"></iframe>
+
+            </div>
+
+            <div id="infoTab" class="tab-content">
+                <iframe src="sample_information.html" id="infoIframe"></iframe>
+            </div>
+
+            <div id="aboutTab" class="tab-content">
+                <div class="sub-nav-wrap">
+                    <div class="sub-nav">
+                        <button class="sub-btn active" data-sub="pipelineTab" onclick="showAboutSub('pipelineTab')"><i class="fas fa-terminal"></i> Pipeline &amp; Reference</button>
+                        <button class="sub-btn" data-sub="pubTab" onclick="showAboutSub('pubTab')"><i class="fas fa-book"></i> Publications</button>
+                        <button class="sub-btn" data-sub="contactTab" onclick="showAboutSub('contactTab')"><i class="fas fa-envelope"></i> Contact</button>
+                    </div>
+                </div>
+
+
+            <div id="pipelineTab" class="sub-panel active">
                 <div class="info-card">
                     <h3 style="color: var(--text-main); margin-bottom: 25px;">Bioinformatic Pipeline & Reference Genome</h3>
                     
@@ -942,29 +974,9 @@
                     </div>
                 </div>
             </div>
+ 
 
-            <div id="tableTab" class="tab-content">
-                <div style="display: flex; justify-content: center; margin-bottom: 25px;">
-                    <div style="background: #e2e8f0; padding: 5px; border-radius: 30px; display: inline-flex; gap: 4px; border: 1px solid #cbd5e1;">
-                        <button id="btnTableBAM" class="tab-btn active" onclick="switchTableContent('bam')" style="box-shadow: none; font-size: 0.8rem; font-weight: 700; padding: 6px 16px; border-radius: 25px;">
-                            <i class="fas fa-list"></i> Whole Genome Sequencing (BAM)
-                        </button>
-                        <button id="btnTableSNP" class="tab-btn" onclick="switchTableContent('snp')" style="box-shadow: none; font-size: 0.8rem; font-weight: 700; padding: 6px 16px; border-radius: 25px;">
-                            <i class="fas fa-table"></i> Genotyping Dataset (SNP Chip)
-                        </button>
-                    </div>
-                </div>
-
-                <iframe src="samples_table.html" id="tableIframe" width="100%"></iframe>
-                <iframe src="vcf_samples_table.html" id="tableSnpIframe" style="display: none;" width="100%"></iframe>
-
-            </div>
-
-            <div id="infoTab" class="tab-content">
-                <iframe src="sample_information.html" id="infoIframe"></iframe>
-            </div>
-
-            <div id="pubTab" class="tab-content">
+            <div id="pubTab" class="sub-panel">
                 <div class="grid-layout">
                     <div class="info-card">
                         <p style="color: var(--text-main); font-size: 1.05rem; margin-bottom: 25px;">
@@ -1039,7 +1051,7 @@
                 </div>
             </div>
 
-            <div id="contactTab" class="tab-content">
+            <div id="contactTab" class="sub-panel">
                 <div class="info-card">
                     <p style="color: var(--text-main); font-size: 1.05rem; margin-bottom: 35px; text-align: center;">
                         The <strong>IPARUS</strong> database and this website are maintained by the <a href="https://csb.bci.tu-dortmund.de/" target="_blank" style="color: #10b981; font-weight: 600; text-decoration: underline;">Gossmann lab</a> at TU Dortmund University.
