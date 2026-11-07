@@ -15,9 +15,13 @@
     <meta property="og:type" content="website">
     <link rel="icon" type="image/png" href="favicon-32x32.png">
     
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+    <link rel="preload" as="image" href="New_logo.png" fetchpriority="high">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/igv@2.15.7/dist/igv.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/igv@2.15.7/dist/igv.min.js" defer></script>
 
     
     <style>
@@ -818,7 +822,7 @@
     <header class="hero">
         <canvas id="dnaCanvas"></canvas>
         <div class="logo-container">
-            <img src="https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true" alt="IPARUS Logo" class="hero-logo">
+            <img src="New_logo.png" fetchpriority="high" decoding="async" onerror="this.onerror=null;this.src='https://github.com/Gossmann-lab/iparus/blob/main/New_logo.png?raw=true'" alt="IPARUS Logo" class="hero-logo">
         </div>
         
         <h1 class="reveal-title">IPARUS: Genomic Resources for the Parus genus</h1>
@@ -980,7 +984,7 @@
                         </div>
 
                         <div class="pipeline-image">
-                            <img src="https://github.com/Gossmann-lab/iparus/blob/main/pipeline.png?raw=true" alt="Bioinformatic Pipeline Diagram">
+                            <img src="pipeline.png"  decoding="async" onerror="this.onerror=null;this.src='https://github.com/Gossmann-lab/iparus/blob/main/pipeline.png?raw=true'" alt="Bioinformatic Pipeline Diagram">
                         </div>
                     </div>
 
@@ -1110,6 +1114,7 @@
                     </div>
                 </div>
             </div>
+            </div> <!-- end #aboutTab -->
 
         </div>
     </div>
@@ -1117,7 +1122,7 @@
     <footer class="site-footer">
         <div class="footer-content">
             <div class="footer-section">
-                <img src="https://github.com/Gossmann-lab/iparus/blob/main/CSB_logo_white_font.png?raw=true" alt="CSB Lab Logo" class="footer-logo">
+                <img src="CSB_logo_white_font.png"  decoding="async" onerror="this.onerror=null;this.src='https://github.com/Gossmann-lab/iparus/blob/main/CSB_logo_white_font.png?raw=true'" alt="CSB Lab Logo" class="footer-logo">
                 
                 <p><strong style="color: white;">Laboratory of Computational Systems Biology</strong></p>
                 <p>Faculty of Biochemical and Chemical Engineering<br>
