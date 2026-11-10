@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPARUS Statistics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root { --bg:#f8fafc; --card:#ffffff; --text:#0f172a; --muted:#64748b; --border:#e2e8f0; --primary:#2563eb; --pill:#e2e8f0; }
+body.dark { --bg:#0f172a; --card:#1e293b; --text:#f1f5f9; --muted:#94a3b8; --border:#334155; --pill:#334155; }
+* { box-sizing: border-box; }
+body { margin:0; padding:16px; font-family:'Inter',sans-serif; background:var(--bg); color:var(--text); }
+button { font:inherit; }
+
+/* toolbar */
+.toolbar { display:flex; justify-content:center; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px; }
+.filter { display:inline-flex; gap:4px; padding:5px; border-radius:30px; background:var(--pill); flex-wrap:wrap; justify-content:center; }
+.filter button { border:none; background:transparent; cursor:pointer; font-size:.8rem; font-weight:700;
+                 padding:6px 16px; border-radius:25px; color:var(--muted); }
+.filter button.active { background:var(--primary); color:#fff; }
+.tool-btn { border:1px solid var(--border); background:var(--card); color:var(--text); cursor:pointer; font-size:.8rem; font-weight:600;
+            padding:7px 14px; border-radius:25px; transition:transform .2s, box-shadow .2s; }
+.tool-btn:hover { transform:translateY(-1px); box-shadow:0 4px 10px rgba(0,0,0,.12); }
+.chips { display:flex; justify-content:center; flex-wrap:wrap; gap:8px; min-height:30px; margin-bottom:12px; }
+.chip { display:inline-flex; align-items:center; gap:6px; font-size:.78rem; font-weight:600; padding:4px 10px; border-radius:20px;
+        background:rgba(37,99,235,.12); color:var(--primary); border:1px solid rgba(37,99,235,.3); cursor:pointer; }
+body.dark .chip { color:#93c5fd; }
+.chip.clear { background:transparent; color:var(--muted); border-color:var(--border); }
+.hint { text-align:center; font-size:.78rem; color:var(--muted); margin:0 0 14px; }
+#emptyMsg { display:none; text-align:center; padding:18px; margin-bottom:14px; border-radius:12px; border:1px dashed var(--border); color:var(--muted); }
+
+/* KPI boxes */
+.kpis { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:14px; margin-bottom:16px; }
+.kpi { padding:16px 12px; border-radius:14px; border:1px solid var(--border); border-top:3px solid var(--accent,#3b82f6);
+       background:var(--card); text-align:center; transition:transform .25s, box-shadow .25s; }
+.kpi:hover { transform:translateY(-3px); box-shadow:0 8px 20px rgba(0,0,0,.1); }
+.kpi b { display:block; font-size:1.8rem; line-height:1.15; font-variant-numeric:tabular-nums; }
+.kpi span { font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+.kpi small { display:block; min-height:1em; margin-top:2px; font-size:.68rem; color:var(--muted); }
+
+/* cards + charts */
+.grid { display:grid; gap:16px; grid-template-columns:repeat(3,1fr); }
+.card { padding:18px; border-radius:16px; border:1px solid var(--border); background:var(--card); min-width:0;
+        transition:transform .25s, box-shadow .25s; }
+.card:hover { transform:translateY(-2px); box-shadow:0 10px 24px rgba(0,0,0,.08); }
+.card-head { display:flex; justify-content:space-between; align-items:center; gap:8px; margin-bottom:12px; }
+.card h4 { margin:0; font-size:.95rem; }
+.icon-btn { border:1px solid var(--border); background:transparent; color:var(--muted); cursor:pointer; font-size:.68rem; font-weight:700;
+            padding:3px 8px; border-radius:8px; }
+.icon-btn:hover { color:var(--primary); border-color:var(--primary); }
+.chart { position:relative; height:250px; }
+.chart.tall { height:300px; }
+.span2 { grid-column:span 2; }
+.span3 { grid-column:span 3; }
+
+/* QC panel */
+.qc details { border:1px solid var(--border); border-radius:10px; padding:8px 12px; margin-bottom:8px; }
+.qc summary { cursor:pointer; font-size:.88rem; font-weight:600; display:flex; justify-content:space-between; gap:10px; }
+.qc summary b { font-variant-numeric:tabular-nums; }
+.qc .ok { color:#10b981; }
+.qc .warn { color:#f59e0b; }
+.qc ul { margin:8px 0 2px; padding-left:18px; font-size:.8rem; color:var(--muted); max-height:180px; overflow:auto; }
+.qc li { margin-bottom:3px; }
+.qc code { color:var(--text); }
+
+.note { margin:16px 0 0; font-size:.8rem; color:var(--muted); text-align:center; }
+
+@media (max-width:900px) { .grid { grid-template-columns:1fr; } .span2, .span3 { grid-column:auto; } }
+@keyframes rise { from { opacity:0; transform:translateY(12px); } to { opacity:1; transform:none; } }
+@media (prefers-reduced-motion: no-preference) {
+  .kpi, .card { animation:rise .5s ease both; }
+  .kpi:nth-child(2), .card:nth-child(2) { animation-delay:.05s; }
+  .kpi:nth-child(3), .card:nth-child(3) { animation-delay:.1s; }
+  .kpi:nth-child(4), .card:nth-child(4) { animation-delay:.15s; }
+  .kpi:nth-child(5), .card:nth-child(5) { animation-delay:.2s; }
+  .card:nth-child(6) { animation-delay:.25s; }
+}
+</style>
+</head>
+<body>
+<div class="toolbar">
+  <div class="filter" id="filter"></div>
+  <button class="tool-btn" id="csvBtn" title="Download the currently selected samples as CSV">&#11015; CSV</button>
+</div>
+<div class="chips" id="chips"></div>
+<p class="hint">Tip: click a slice, bar or legend entry to filter all charts. Click it again to clear.</p>
+<div id="emptyMsg">No samples match the current selection.</div>
+
+<div class="kpis">
+  <div class="kpi" style="--accent:#3b82f6"><b id="kN">–</b><span>WGS samples</span><small>&nbsp;</small></div>
+  <div class="kpi" style="--accent:#10b981"><b id="kLoc">–</b><span>Sampling locations</span><small>&nbsp;</small></div>
+  <div class="kpi" style="--accent:#8b5cf6"><b id="kHap">–</b><span>HapMap samples</span><small id="kHapNote">&nbsp;</small></div>
+  <div class="kpi" style="--accent:#f59e0b"><b id="kCov">–</b><span>Mean coverage</span><small>&nbsp;</small></div>
+  <div class="kpi" style="--accent:#e74c3c"><b id="kSize">–</b><span>BAM data volume</span><small>&nbsp;</small></div>
+</div>
+
+<div class="grid">
+  <div class="card"><div class="card-head"><h4>Species</h4><button class="icon-btn" data-png="cSpecies">PNG</button></div><div class="chart"><canvas id="cSpecies"></canvas></div></div>
+  <div class="card"><div class="card-head"><h4>Sex</h4><button class="icon-btn" data-png="cSex">PNG</button></div><div class="chart"><canvas id="cSex"></canvas></div></div>
+  <div class="card"><div class="card-head"><h4>Tissue</h4><button class="icon-btn" data-png="cTissue">PNG</button></div><div class="chart"><canvas id="cTissue"></canvas></div></div>
+  <div class="card span2"><div class="card-head"><h4>Samples per publication</h4><button class="icon-btn" data-png="cPubs">PNG</button></div><div class="chart tall"><canvas id="cPubs"></canvas></div></div>
+  <div class="card"><div class="card-head"><h4>Coverage distribution</h4><button class="icon-btn" data-png="cCov">PNG</button></div><div class="chart tall"><canvas id="cCov"></canvas></div></div>
+  <div class="card span2"><div class="card-head"><h4>Top sampling locations</h4><button class="icon-btn" data-png="cLocs">PNG</button></div><div class="chart tall"><canvas id="cLocs"></canvas></div></div>
+  <div class="card qc"><div class="card-head"><h4>Data quality checks</h4></div><div id="qc"></div></div>
+</div>
+<p class="note">Statistics refer to the whole-genome sequencing (BAM) dataset. Generated 2026-11-10.</p>
+
+<script>
+/* [0 accession, 1 species, 2 sex, 3 tissue, 4 coverage, 5 publication, 6 location, 7 sizeGB, 8 curation note] */
+const DATA = [["SRR1793405","Parus minor","Male","Muscle",4.3,"Qu et al. 2015","Yanbian, Sichuan, China",5.7,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793406","Parus minor","Male","Muscle",4.5,"Qu et al. 2015","Yanbian, Sichuan, China",5.9,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793407","Parus minor","Male","Muscle",5.3,"Qu et al. 2015","Gaoligong, Yunnan, China",6.5,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793415","Parus minor","Female","Muscle",5.4,"Qu et al. 2015","Gaoligong, Yunnan, China",6.6,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793417","Parus minor","Male","Muscle",5.7,"Qu et al. 2015","Gaoligong, Yunnan, China",6.9,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793419","Parus minor","Female","Muscle",5.0,"Qu et al. 2015","Gaoligong, Yunnan, China",6.2,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793420","Parus minor","Male","Muscle",4.5,"Qu et al. 2015","Gaoligong, Yunnan, China",5.9,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793421","Parus minor","Female","Muscle",4.1,"Qu et al. 2015","Lijiang, Yunnan, China",5.8,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793422","Parus minor","Male","Muscle",4.8,"Qu et al. 2015","Lijiang, Yunnan, China",5.9,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793423","Parus minor","Female","Muscle",4.2,"Qu et al. 2015","Lijiang, Yunnan, China",5.6,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793424","Parus minor","Male","Muscle",4.0,"Qu et al. 2015","Lijiang, Yunnan, China",5.4,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793425","Parus major","Female","Muscle",4.9,"Qu et al. 2015","Eerguna, Inner Mongolia, China",6.0,""],["SRR1793427","Parus major","Male","Muscle",5.3,"Qu et al. 2015","Eerguna, Inner Mongolia, China",6.8,""],["SRR1793428","Parus major","Male","Muscle",5.1,"Qu et al. 2015","Eerguna, Inner Mongolia, China",6.4,""],["SRR1793429","Parus major","Female","Muscle",4.0,"Qu et al. 2015","Eerguna, Inner Mongolia, China",5.3,""],["SRR1793430","Parus major","Male","Muscle",4.7,"Qu et al. 2015","Teshig, Mongolia",5.9,""],["SRR1793431","Parus major","Female","Muscle",5.3,"Qu et al. 2015","Teshig, Mongolia",6.8,""],["SRR1793432","Parus major","Male","Muscle",4.4,"Qu et al. 2015","Tushig, Mongolia",5.9,""],["SRR1793433","Parus major","Male","Muscle",4.2,"Qu et al. 2015","Tushig, Mongolia",5.7,""],["SRR1793434","Parus major","Female","Muscle",4.2,"Qu et al. 2015","Tushig, Mongolia",5.8,""],["SRR1793435","Parus major","Male","Muscle",4.9,"Qu et al. 2015","Altai Region, Russia",6.3,""],["SRR1793436","Parus minor","Female","Muscle",4.7,"Qu et al. 2015","Shennongjia, Hubei, China",6.3,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793437","Parus minor","Male","Muscle",4.8,"Qu et al. 2015","Shennongjia, Hubei, China",6.0,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793438","Parus minor","Male","Muscle",5.1,"Qu et al. 2015","Jixi, Anhui, China",6.3,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793439","Parus minor","Male","Muscle",5.0,"Qu et al. 2015","Panjin, Liaoning, China",6.3,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793440","Parus minor","Male","Muscle",4.5,"Qu et al. 2015","Panjin, Liaoning, China",6.0,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793441","Parus minor","Male","Muscle",4.7,"Qu et al. 2015","Panjin, Liaoning, China",6.5,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793442","Parus minor","Male","Muscle",3.9,"Qu et al. 2015","Kuandian, Liaoning, China",5.2,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793443","Parus minor","Male","Muscle",4.2,"Qu et al. 2015","Kuandian, Liaoning, China",5.9,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793444","Parus minor","Female","Muscle",4.9,"Qu et al. 2015","Sunan, Gansu, China",6.5,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793445","Parus minor","Male","Muscle",4.9,"Qu et al. 2015","Sunan, Gansu, China",6.5,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR1793447","Parus minor","Female","Muscle",4.7,"Qu et al. 2015","Yongdeng, Gansu, China",6.3,"Qu et al. 2015 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR2961328","Parus major","Female","Blood",14.4,"Laine et al. 2016","Vienna, Austria",18.2,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961671","Parus major","Male","Blood",9.2,"Laine et al. 2016","Antwerp, Belgium",11.7,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961674","Parus major","Male","Blood",8.1,"Laine et al. 2016","Cambridge, UK",10.4,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961676","Parus major","Male","Blood",10.3,"Laine et al. 2016","Pirio/Muro, Corsica, France",11.6,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961678","Parus major","Male","Blood",6.8,"Laine et al. 2016","Velky Kosr, Czech Republic",8.0,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961680","Parus major","Male","Blood",14.9,"Laine et al. 2016","Tartu, Estonia",16.7,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961684","Parus major","Male","Blood",6.7,"Laine et al. 2016","Tartu, Estonia",7.4,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961689","Parus major","Male","Blood",13.9,"Laine et al. 2016","Oulu, Finland",15.6,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961695","Parus major","Male","Blood",9.1,"Laine et al. 2016","La Rouviere, France",11.8,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961697","Parus major","Female","Blood",11.3,"Laine et al. 2016","Montpellier, France",15.0,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961699","Parus major","Male","Blood",6.9,"Laine et al. 2016","La Rouviere, France",8.3,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961701","Parus major","Male","Blood",9.0,"Laine et al. 2016","Seewiesen, Germany",10.4,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961712","Parus major","Male","Blood",9.5,"Laine et al. 2016","Pilis Mountains, Hungary",10.6,""],["SRR2961716","Parus major","Female","Blood",11.5,"Laine et al. 2016","Tromso, Norway",14.9,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961718","Parus major","Female","Blood",4.8,"Laine et al. 2016","Groblas, Poland",6.3,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961722","Parus major","Male","Blood",9.1,"Laine et al. 2016","Loch Lomond, Scotland, UK",10.3,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961725","Parus major","Male","Blood",6.9,"Laine et al. 2016","Mariola, Spain",9.0,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961728","Parus major","Male","Blood",8.4,"Laine et al. 2016","Font Roja, Spain",9.9,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961731","Parus major","Male","Blood",9.6,"Laine et al. 2016","Gotland, Sweden",11.1,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961736","Parus major","Male","Blood",13.2,"Laine et al. 2016",null,14.4,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961746","Parus major","Male","Blood",8.6,"Laine et al. 2016","Wytham Woods, Oxford, UK",9.9,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961750","Parus major","Male","Blood",8.7,"Laine et al. 2016","Wytham Woods, Oxford, UK",10.1,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961753","Parus major","Male","Blood",9.8,"Laine et al. 2016","Wytham Woods, Oxford, UK",11.6,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961756","Parus major","Female","Blood",11.7,"Laine et al. 2016","Wytham Woods, Oxford, UK",15.0,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961759","Parus major","Male","Blood",7.8,"Laine et al. 2016","Wytham Woods, Oxford, UK",9.2,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961762","Parus major","Female","Blood",8.9,"Laine et al. 2016","Wytham Woods, Oxford, UK",10.3,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961765","Parus major","Male","Blood",7.3,"Laine et al. 2016","Wytham Woods, Oxford, UK",8.3,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961769","Parus major","Female","Blood",9.2,"Laine et al. 2016","Wytham Woods, Oxford, UK",10.8,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961773","Parus major","Male","Blood",12.0,"Laine et al. 2016","Wytham Woods, Oxford, UK",14.0,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR2961775","Parus major","Female","Blood",6.7,"Laine et al. 2016","Wytham Woods, Oxford, UK",8.1,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR3085443","Parus major","Male","Blood",18.6,"Laine et al. 2016","Wageningen, The Netherlands",31.8,"fastq files from two sequencing runs of the same sample were merged for mapping (see SRA_acc_2nd_run column)"],["SRR5423293","Parus major","Male","Blood",52.7,"Corcoran et al. 2017","Oxford, UK",35.6,""],["SRR5423294","Parus major","Male","Blood",57.5,"Corcoran et al. 2017","Pirio/Muro, Corsica, France",33.9,""],["SRR5423295","Parus major","Male","Blood",49.1,"Corcoran et al. 2017","La Rouviere, France",43.5,""],["SRR5423296","Parus major","Male","Blood",54.0,"Corcoran et al. 2017","Velky Kosr, Czech Republic",47.6,""],["SRR5423297","Parus major","Male","Blood",63.2,"Corcoran et al. 2017","Oulu, Finland",54.6,""],["SRR5423298","Parus major","Male","Blood",54.2,"Corcoran et al. 2017","Loch Lomond, Scotland, UK",34.0,""],["SRR5423299","Parus major","Male","Blood",54.5,"Corcoran et al. 2017","Gotland, Sweden",48.5,""],["SRR5423300","Parus major","Male","Blood",59.9,"Corcoran et al. 2017","Pilis Mountains, Hungary",52.9,""],["SRR5423301","Parus major","Male","Blood",52.2,"Corcoran et al. 2017","Vienna, Austria",36.5,""],["SRR5423302","Parus major","Male","Blood",51.8,"Corcoran et al. 2017","Mariola, Spain",49.8,""],["SRR765717","Parus minor","Female","Liver",12.6,"Qu et al. 2013","Lijiang, Yunnan, China",16.2,"Qu et al. 2013 and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR9656355","Parus minor","Male","Muscle",16.0,"Cheng et al. 2020/2021","Foping, Shaanxi, China",11.9,"Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR9656356","Parus minor","Female","Muscle",11.9,"Cheng et al. 2020/2021","Libo, Guizhou, China",10.7,"Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR9656357","Parus minor","Male","Muscle",13.4,"Cheng et al. 2020/2021","Chaoan, Guangdong, China",11.8,"Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR9656367","Parus minor","Male","Muscle",12.9,"Cheng et al. 2020/2021","Baishan, Jilin, China",11.3,"Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR9656368","Parus minor","Female","Muscle",15.9,"Cheng et al. 2020/2021","Huairou, Beijing, China",14.1,"Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor"],["SRR9656369","Parus minor","Male","Muscle",14.8,"Cheng et al. 2020/2021","Mangkang, Tibet",11.4,"Cheng et al. 2020 and Cheng et al. 2021, and the NCBI entry call this P. major, but we consider this to be P. minor"],["B1538","Parus bokharensis","Male","Blood",41.8,"Javaheri Tehrani et al. 2026 (bioRxiv)","Yarodar, Kyrgyzstan",20.1,""],["B1602","Parus bokharensis","Male","Muscle",32.4,"Javaheri Tehrani et al. 2026 (bioRxiv)","Ili river near Kapcagai, Kazakhstan",24.4,""],["B2888","Parus bokharensis","Male","Muscle",35.1,"Javaheri Tehrani et al. 2026 (bioRxiv)","Chokpak, Kazakhstan",24.7,""],["B3957","Parus bokharensis","Female","Blood",37.1,"Javaheri Tehrani et al. 2026 (bioRxiv)","Chokpak, Kazakhstan",24.6,""],["B3958","Parus bokharensis","Female","Blood",40.3,"Javaheri Tehrani et al. 2026 (bioRxiv)","Chokpak, Kazakhstan",25.6,""],["B3959","Parus bokharensis","Male","Blood",40.0,"Javaheri Tehrani et al. 2026 (bioRxiv)","Chokpak, Kazakhstan",25.6,""],["B3960","Parus bokharensis","Female","Blood",142.2,"Javaheri Tehrani et al. 2026 (bioRxiv)","Chokpak, Kazakhstan",89.4,""],["C2761","Parus cinereus","Male","Blood",35.9,"Javaheri Tehrani et al. 2026 (bioRxiv)","West of Tumlingtar, Bhojpur District, Nepal",25.8,""],["C2762","Parus cinereus","Female","Blood",38.4,"Javaheri Tehrani et al. 2026 (bioRxiv)","West of Tumlingtar, Bhojpur District, Nepal",26.0,""],["C4242","Parus cinereus","Female","Blood",39.8,"Javaheri Tehrani et al. 2026 (bioRxiv)","Trisuli outskirts, Rasuwa District, Nepal",23.4,"Collected at 14. camp"]];
+const SPECIES = ["Parus major", "Parus minor", "Parus bokharensis", "Parus cinereus"];
+const HAPMAP = {"Parus major": 647};
+const LOWCOV = 5;
+
+const DIM = { species: 1, sex: 2, tissue: 3, pub: 5, loc: 6 };
+const LABEL = { species: 'Species', sex: 'Sex', tissue: 'Tissue', pub: 'Publication', loc: 'Location' };
+const filters = { species: null, sex: null, tissue: null, pub: null, loc: null };
+const charts = {};
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+/* ---- colours: each category keeps the same colour in every chart ---- */
+const SPECIES_COL = { 'Parus major': '#3b82f6', 'Parus minor': '#e74c3c', 'Parus bokharensis': '#8b5cf6', 'Parus cinereus': '#ec4899' };
+const SEX_COL = { Male: '#14b8a6', Female: '#f59e0b', Unknown: '#94a3b8' };
+const TISSUE_COL = { Blood: '#8b5cf6', Muscle: '#10b981', Liver: '#fbbf24' };
+const EXTRA = ['#8b5cf6', '#14b8a6', '#f59e0b', '#64748b', '#ec4899'];
+function colorOf(dim, key, i) {
+  const m = dim === 'species' ? SPECIES_COL : dim === 'sex' ? SEX_COL : dim === 'tissue' ? TISSUE_COL : null;
+  return (m && m[key]) || EXTRA[i % EXTRA.length];
+}
+const alpha = (hex, a) => hex + Math.round(a * 255).toString(16).padStart(2, '0');
+
+/* ---- theme: follow the parent page's dark-mode toggle (same origin), else the OS setting.
+        Chart colours are fixed constants, so the first render never depends on CSS being resolved. ---- */
+const THEMES = {
+  light: { text: '#0f172a', muted: '#64748b', grid: '#e2e8f0', card: '#ffffff' },
+  dark:  { text: '#f1f5f9', muted: '#94a3b8', grid: '#334155', card: '#1e293b' }
+};
+const theme = () => document.body.classList.contains('dark') ? THEMES.dark : THEMES.light;
+function parentDark() {
+  try { return window.parent !== window && window.parent.document.body.classList.contains('dark-mode'); }
+  catch (e) { return null; }
+}
+function applyTheme() {
+  const p = parentDark();
+  const dark = p === null ? window.matchMedia('(prefers-color-scheme: dark)').matches : p;
+  if (document.body.classList.contains('dark') !== dark) {
+    document.body.classList.toggle('dark', dark);
+    render();
+  }
+}
+try {
+  if (window.parent !== window)
+    new MutationObserver(applyTheme).observe(window.parent.document.body, { attributes: true, attributeFilter: ['class'] });
+} catch (e) { setInterval(applyTheme, 1500); }
+
+/* ---- helpers ---- */
+const count = (rows, fn) => {
+  const m = new Map();
+  rows.forEach(r => { const k = fn(r); m.set(k, (m.get(k) || 0) + 1); });
+  return [...m.entries()].sort((a, b) => b[1] - a[1]);
+};
+const rowsExcept = skip => DATA.filter(r =>
+  Object.keys(filters).every(k => k === skip || filters[k] === null || r[DIM[k]] === filters[k]));
+const anyFilter = () => Object.values(filters).some(v => v !== null);
+
+function toggle(dim, key) {
+  filters[dim] = filters[dim] === key ? null : key;
+  render();
+}
+function make(id, cfg) {
+  if (charts[id]) charts[id].destroy();
+  charts[id] = new Chart(document.getElementById(id), cfg);
+}
+const pointer = (evt, els) => { if (evt && evt.native && evt.native.target) evt.native.target.style.cursor = els.length ? 'pointer' : 'default'; };
+
+/* animated numbers */
+function setNum(id, to, fmt) {
+  const el = document.getElementById(id);
+  const from = el._v || 0;
+  el._v = to;
+  cancelAnimationFrame(el._raf); clearTimeout(el._t);
+  if (reduceMotion || from === to) { el.textContent = fmt(to); return; }
+  const t0 = performance.now(), dur = 650;
+  el.textContent = fmt(from);
+  el._raf = requestAnimationFrame(function tick(now) {
+    const p = Math.min((now - t0) / dur, 1), e = 1 - Math.pow(1 - p, 3);
+    el.textContent = fmt(from + (to - from) * e);
+    if (p < 1) el._raf = requestAnimationFrame(tick);
+  });
+  el._t = setTimeout(() => { el.textContent = fmt(to); }, dur + 800);   // safety net (e.g. hidden iframe)
+}
+
+/* number in the middle of a doughnut */
+const centerText = (valueFn, label) => ({
+  id: 'centerText',
+  afterDraw(chart) {
+    const ctx = chart.ctx, a = chart.chartArea;
+    if (!a) return;
+    const x = (a.left + a.right) / 2, y = (a.top + a.bottom) / 2;
+    ctx.save();
+    ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillStyle = theme().text;  ctx.font = "700 26px 'Inter', sans-serif"; ctx.fillText(valueFn(), x, y - 6);
+    ctx.fillStyle = theme().muted; ctx.font = "500 11px 'Inter', sans-serif"; ctx.fillText(label, x, y + 16);
+    ctx.restore();
+  }
+});
+
+/* ---- charts ---- */
+function donut(id, dim) {
+  const rows = rowsExcept(dim);
+  const entries = count(rows, r => r[DIM[dim]]);
+  const sel = filters[dim], total = rows.length;
+  make(id, {
+    type: 'doughnut',
+    data: {
+      labels: entries.map(e => e[0]),
+      datasets: [{
+        data: entries.map(e => e[1]),
+        backgroundColor: entries.map((e, i) => { const c = colorOf(dim, e[0], i); return sel === null || sel === e[0] ? c : alpha(c, 0.3); }),
+        borderWidth: 0, spacing: 2, hoverOffset: 6
+      }]
+    },
+    options: {
+      cutout: '64%', maintainAspectRatio: false,
+      onClick: (evt, els) => { if (els.length) toggle(dim, entries[els[0].index][0]); },
+      onHover: pointer,
+      plugins: {
+        legend: { position: 'bottom', labels: { boxWidth: 10, usePointStyle: true },
+                  onClick: (e, item) => toggle(dim, entries[item.index][0]) },
+        tooltip: { callbacks: { label: c => ` ${c.label}: ${c.parsed} · ${(100 * c.parsed / (total || 1)).toFixed(1)}%` } }
+      }
+    },
+    plugins: [centerText(() => sel === null ? total : ((entries.find(e => e[0] === sel) || [0, 0])[1]), 'samples')]
+  });
+}
+
+function stackedBySpecies(rows, labels, matchFn, selected) {
+  const present = SPECIES.filter(s => rows.some(r => r[1] === s));
+  return present.map(s => {
+    const base = colorOf('species', s, SPECIES.indexOf(s));
+    return {
+      label: s,
+      data: labels.map(l => rows.filter(r => r[1] === s && matchFn(r, l)).length),
+      backgroundColor: labels.map(l => selected === null || selected === l ? base : alpha(base, 0.3)),
+      borderRadius: 4, maxBarThickness: 26, stack: 's'
+    };
+  });
+}
+
+function pubsChart() {
+  const rows = rowsExcept('pub');
+  const pubs = count(rows, r => r[5]).map(e => e[0]);
+  make('cPubs', {
+    type: 'bar',
+    data: { labels: pubs, datasets: stackedBySpecies(rows, pubs, (r, l) => r[5] === l, filters.pub) },
+    options: {
+      indexAxis: 'y', maintainAspectRatio: false,
+      onClick: (evt, els) => { if (els.length) toggle('pub', pubs[els[0].index]); },
+      onHover: pointer,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 10, usePointStyle: true },
+                           onClick: (e, item) => toggle('species', item.text) } },
+      scales: { x: { stacked: true, beginAtZero: true, ticks: { precision: 0 }, grid: { color: theme().grid } },
+                y: { stacked: true, grid: { display: false } } }
+    }
+  });
+}
+
+function covChart() {
+  const rows = rowsExcept(null);
+  const bins = [['<5×', 0, 5], ['5–10×', 5, 10], ['10–15×', 10, 15], ['15–20×', 15, 20], ['20–30×', 20, 30], ['>30×', 30, 1e9]];
+  const present = SPECIES.filter(s => rows.some(r => r[1] === s));
+  make('cCov', {
+    type: 'bar',
+    data: {
+      labels: bins.map(b => b[0]),
+      datasets: present.map(s => ({
+        label: s,
+        data: bins.map(b => rows.filter(r => r[1] === s && r[4] !== null && r[4] >= b[1] && r[4] < b[2]).length),
+        backgroundColor: colorOf('species', s, SPECIES.indexOf(s)), borderRadius: 4, stack: 's'
+      }))
+    },
+    options: {
+      maintainAspectRatio: false,
+      plugins: { legend: { position: 'top', labels: { boxWidth: 10, usePointStyle: true },
+                           onClick: (e, item) => toggle('species', item.text) } },
+      scales: { y: { stacked: true, beginAtZero: true, ticks: { precision: 0 }, grid: { color: theme().grid } },
+                x: { stacked: true, grid: { display: false } } }
+    }
+  });
+}
+
+function locsChart() {
+  const rows = rowsExcept('loc').filter(r => r[6] !== null);
+  let entries = count(rows, r => r[6]).slice(0, 10);
+  const sel = filters.loc;
+  if (sel !== null && !entries.some(e => e[0] === sel)) entries.push([sel, 0]);     // keep the selected bar visible
+  make('cLocs', {
+    type: 'bar',
+    data: {
+      labels: entries.map(e => e[0]),
+      datasets: [{ data: entries.map(e => e[1]),
+                   backgroundColor: entries.map(e => sel === null || sel === e[0] ? '#10b981' : alpha('#10b981', 0.3)),
+                   borderRadius: 6, maxBarThickness: 26 }]
+    },
+    options: {
+      indexAxis: 'y', maintainAspectRatio: false,
+      onClick: (evt, els) => { if (els.length) toggle('loc', entries[els[0].index][0]); },
+      onHover: pointer,
+      plugins: { legend: { display: false } },
+      scales: { x: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: theme().grid } }, y: { grid: { display: false } } }
+    }
+  });
+}
+
+/* ---- QC panel ---- */
+function qcPanel(rows) {
+  const box = document.getElementById('qc');
+  box.textContent = '';
+  const checks = [
+    ['Low coverage (<' + LOWCOV + '×)', rows.filter(r => r[4] !== null && r[4] < LOWCOV), r => r[0] + ' · ' + r[4] + '×'],
+    ['No coverage value',               rows.filter(r => r[4] === null),                  r => r[0]],
+    ['No sampling location',            rows.filter(r => r[6] === null),                  r => r[0]],
+    ['Unknown sex',                     rows.filter(r => r[2] === 'Unknown'),             r => r[0]],
+    ['Curation notes',                  rows.filter(r => r[8] !== ''),                    r => r[0] + ' — ' + r[8]]
+  ];
+  checks.forEach(([title, list, fmt]) => {
+    const d = document.createElement('details');
+    const s = document.createElement('summary');
+    const t = document.createElement('span'); t.textContent = title;
+    const n = document.createElement('b');
+    n.textContent = list.length ? list.length : '✓';
+    n.className = list.length ? 'warn' : 'ok';
+    s.append(t, n); d.appendChild(s);
+    if (list.length) {
+      const ul = document.createElement('ul');
+      list.slice(0, 60).forEach(r => { const li = document.createElement('li'); li.textContent = fmt(r); ul.appendChild(li); });
+      if (list.length > 60) { const li = document.createElement('li'); li.textContent = '… and ' + (list.length - 60) + ' more'; ul.appendChild(li); }
+      d.appendChild(ul);
+    } else { d.open = false; }
+    box.appendChild(d);
+  });
+}
+
+/* ---- export ---- */
+function download(href, name) {
+  const a = document.createElement('a');
+  a.href = href; a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+}
+function exportPng(id) {
+  const ch = charts[id]; if (!ch) return;
+  const src = ch.canvas, c = document.createElement('canvas');
+  c.width = src.width; c.height = src.height;
+  const x = c.getContext('2d');
+  x.fillStyle = theme().card; x.fillRect(0, 0, c.width, c.height);     // solid background instead of transparent
+  x.drawImage(src, 0, 0);
+  download(c.toDataURL('image/png'), 'iparus_' + id.slice(1).toLowerCase() + '.png');
+}
+function exportCsv() {
+  const head = ['Accession', 'Species', 'Sex', 'Tissue', 'Mean coverage', 'Publication', 'Location', 'File size (GB)', 'Note'];
+  const esc = v => { v = v === null ? '' : String(v); return /[",\n;]/.test(v) ? '"' + v.replace(/"/g, '""') + '"' : v; };
+  const lines = [head.join(',')].concat(rowsExcept(null).map(r =>
+    [r[0], r[1], r[2], r[3], r[4], r[5], r[6], r[7], r[8]].map(esc).join(',')));
+  const blob = new Blob(['﻿' + lines.join('\n')], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  download(url, 'iparus_samples.csv');
+  setTimeout(() => URL.revokeObjectURL(url), 2000);
+}
+document.addEventListener('click', e => {
+  const b = e.target.closest('[data-png]');
+  if (b) exportPng(b.dataset.png);
+});
+document.getElementById('csvBtn').addEventListener('click', exportCsv);
+
+/* ---- species buttons + filter chips ---- */
+const fbox = document.getElementById('filter');
+[[null, 'All samples'], ...SPECIES.map(s => [s, s])].forEach(([key, label]) => {
+  const b = document.createElement('button');
+  b.textContent = label; b._key = key;
+  if (key !== null) b.style.fontStyle = 'italic';
+  b.onclick = () => { filters.species = key; render(); };
+  fbox.appendChild(b);
+});
+function renderChips() {
+  fbox.querySelectorAll('button').forEach(b => b.classList.toggle('active', b._key === filters.species));
+  const box = document.getElementById('chips');
+  box.textContent = '';
+  Object.keys(filters).forEach(k => {
+    if (k === 'species' || filters[k] === null) return;
+    const c = document.createElement('button');
+    c.className = 'chip'; c.textContent = LABEL[k] + ': ' + filters[k] + '  ✕';
+    c.onclick = () => { filters[k] = null; render(); };
+    box.appendChild(c);
+  });
+  if (anyFilter()) {
+    const c = document.createElement('button');
+    c.className = 'chip clear'; c.textContent = 'Clear all filters';
+    c.onclick = () => { Object.keys(filters).forEach(k => filters[k] = null); render(); };
+    box.appendChild(c);
+  }
+}
+
+/* ---- main render ---- */
+function render() {
+  if (typeof Chart === 'undefined') {
+    document.getElementById('emptyMsg').style.display = 'block';
+    document.getElementById('emptyMsg').textContent = 'Charts could not be loaded (Chart.js is blocked or offline).';
+    return;
+  }
+  const t = theme();
+  Chart.defaults.color = t.muted;
+  Chart.defaults.font.family = "'Inter', sans-serif";
+  Chart.defaults.borderColor = t.grid;
+
+  const rows = rowsExcept(null);
+  renderChips();
+  document.getElementById('emptyMsg').style.display = rows.length ? 'none' : 'block';
+  document.getElementById('emptyMsg').textContent = 'No samples match the current selection.';
+
+  /* KPI boxes */
+  const cov = rows.map(r => r[4]).filter(v => v !== null);
+  const size = rows.reduce((s, r) => s + r[7], 0);
+  const hap = filters.species === null ? Object.values(HAPMAP).reduce((a, b) => a + b, 0) : (HAPMAP[filters.species] || 0);
+  setNum('kN', rows.length, v => String(Math.round(v)));
+  setNum('kLoc', new Set(rows.map(r => r[6]).filter(v => v !== null)).size, v => String(Math.round(v)));
+  setNum('kHap', hap, v => String(Math.round(v)));
+  document.getElementById('kHapNote').textContent = (hap === 0 && filters.species !== null) ? 'none for this species' : ' ';
+  if (cov.length) setNum('kCov', cov.reduce((a, b) => a + b, 0) / cov.length, v => v.toFixed(1) + '×');
+  else document.getElementById('kCov').textContent = '–';
+  setNum('kSize', size, v => v >= 1000 ? (v / 1000).toFixed(2) + ' TB' : Math.round(v) + ' GB');
+
+  /* charts */
+  donut('cSpecies', 'species');
+  donut('cSex', 'sex');
+  donut('cTissue', 'tissue');
+  pubsChart();
+  covChart();
+  locsChart();
+  qcPanel(rows);
+}
+
+applyTheme();
+render();
+</script>
+</body>
+</html>
