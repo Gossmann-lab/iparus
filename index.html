@@ -847,6 +847,10 @@
                 <span class="stat-number" id="statPubs" data-target="0">0</span>
                 <span class="stat-label">Publications</span>
             </div>
+            <div class="stat">
+                <span class="stat-number stat-version" id="statVersion">v1.0</span>
+                <span class="stat-label">Platform Version</span>
+            </div>
         </div>
     </header>
 
@@ -1672,7 +1676,7 @@
             })(start);
         }
     
-        const counters = document.querySelectorAll('.stat-number');
+        const counters = document.querySelectorAll('.stat-number:not(.stat-version)');
         const io = new IntersectionObserver((entries, obs) => {
             entries.forEach(e => {
                 if (e.isIntersecting) { animate(e.target); obs.unobserve(e.target); }
