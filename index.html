@@ -977,6 +977,14 @@
                     <div class="pipeline-layout">
                         <div class="pipeline-text">
                             <p>Reads were processed following the pipeline described in Chen et al. (2025), developed and run by Yu-Chi Chen during her PhD in the Gossmann lab. Read quality was assessed with <strong>FastQC v0.12.1</strong> and reads were trimmed with <strong>Trimmomatic v0.39</strong> (Bolger et al. 2014). Trimmed reads were aligned to the Parus major reference genome (GCF_001522545.3) with <strong>BWA-MEM2</strong> (Vasimuddin et al. 2019) and processed with <strong>SAMtools</strong> (Li et al. 2009). For individuals sequenced in several runs, each run was aligned separately and the runs were combined during duplicate marking. Duplicate reads were marked with MarkDuplicatesSpark in <strong>GATK</strong> (Auwera and O'Connor 2020). Samples were processed in two batches with slightly different software versions.</p>
+
+                            <div class="download-box">
+                                <p style="margin-top:0;"><strong>🧬 Pipeline Scripts</strong></p>
+                                <p style="font-size: 0.9em; color: var(--text-muted); margin-bottom: 10px;">
+                                    You can access the Github repository containing all IPARUS scripts here:
+                                </p>
+                                <a href="https://github.com/Gossmann-lab/iparus" class="btn-download-ref" target="_blank" rel="noopener">🔗 Link to pipeline GitHub repo</a>
+                            </div>
                             
                             <div class="download-box">
                                 <p style="margin-top:0;"><strong>📥 Download Reference Genome</strong></p>
